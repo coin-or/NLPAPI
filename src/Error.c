@@ -1,3 +1,8 @@
+/*  (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 2/10/1999.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory*/
+
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: @(#)Error.c	3.1 02/03/05 15:24:23 */
 /*      date:   Feb. 10, 1999                         */

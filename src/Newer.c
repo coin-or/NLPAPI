@@ -1,3 +1,11 @@
+/*
+    (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 12/1/2002.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory
+
+    author: Mike Henderson
+*/
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/fullstat.h>

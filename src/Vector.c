@@ -1,3 +1,9 @@
+/*
+    (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 11/11/1997.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory
+*/
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: @(#)Vector.c	3.5 02/12/04 09:43:22 */
 /*      date:   November 11, 1997                     */
