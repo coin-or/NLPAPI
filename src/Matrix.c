@@ -1637,7 +1637,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
   n=H->nRows;
   m=H->nCols;
   rowIndex=(int**)malloc(n*sizeof(int*));
-  if(rowIndex==(int*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
+  if(rowIndex==(int**)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
   for(i=0;i<n;i++)rowIndex[i]=(int*)NULL;
   nCols=(int*)malloc(n*sizeof(int*));
   if(nCols==(int*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
