@@ -7,8 +7,8 @@
 \def\into{\rightarrow}
 \def\QED{\vrule height 6 pt width 5 pt depth 0pt}
 \def\nopageref#1{}
-\def\SYNTAX{2.5in}
-\def\MSG{2.5in}
+\def\SYNTAX{3.5in}
+\def\ERRORMSG{4.5in}
 
 \newtheorem{Definition}{Definition}
 \newtheorem{Lemma}{Lemma}
@@ -463,9 +463,9 @@ name.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem name (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Number of Variables \%d (argument 2) must be positive"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem name (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Number of Variables \%d (argument 2) must be positive"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefProblem}
@@ -506,7 +506,7 @@ Errors return without changing the problem.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeProblem}
@@ -550,7 +550,7 @@ Errors return without changing the problem.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPrintProblem}
@@ -588,8 +588,8 @@ Errors return without printing the problem.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"File pointer (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Problem (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"File pointer (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 2) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPrintProblemShort}
@@ -627,8 +627,8 @@ Errors return without printing the problem.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"File pointer (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Problem (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"File pointer (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 2) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetProblemName}
@@ -666,7 +666,7 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfVariables}
@@ -705,7 +705,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetVariableScale}
@@ -744,8 +744,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetVariableScale}
@@ -783,8 +783,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
 \\
 \end{tabular}
 \newpage
@@ -828,10 +828,10 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"The pointer to the variable name (argument 3) is NULL."}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"The pointer to the variable name (argument 3) is NULL."}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetVariableName}
@@ -871,8 +871,8 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
 \\
 \end{tabular}
 \newpage
@@ -923,8 +923,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetLowerSimpleBound}
@@ -968,8 +968,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetLowerSimpleBound}
@@ -1007,8 +1007,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsLowerSimpleBoundSet}
@@ -1048,8 +1048,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
 \\
 \end{tabular}
 \newpage
@@ -1094,8 +1094,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetUpperSimpleBound}
@@ -1133,8 +1133,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsUpperSimpleBoundSet}
@@ -1174,8 +1174,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12
 \\
 \end{tabular}
 \newpage
@@ -1253,11 +1253,11 @@ name.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Inequality Constraint \%d has \%d groups, only one is allowed currently and it must be the trivial group function"}&4\\
-\parbox[t]{5.in}{"Inequality Constraint \%d group must currently have the trivial group function"}&4\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Inequality Constraint \%d has \%d groups, only one is allowed currently and it must be the trivial group function"}&4\\
+\parbox[t]{\ERRORMSG}{"Inequality Constraint \%d group must currently have the trivial group function"}&4\\
 
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCopyProblem}
@@ -1290,7 +1290,7 @@ name.
 The routine
 {\tt NLCopy\-Problem} makes a ``shallow'' copy of a problem. That is, the lists of constraints
 are duplicated, but the functions defining the objective and constraints (the group and element
-fnctions) are not. 
+functions) are not. 
 
 \leftline{\bf Errors}
 Severity 12 errors return (NLProblem)NULL, severity 4 returns a problem with no
@@ -1298,8 +1298,8 @@ name.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateAugmentedLagrangian}
@@ -1367,11 +1367,11 @@ name.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Equality Constraint \%d has \%d groups. This is not supported yet."}&12\\
-\parbox[t]{5.in}{"Equality Constraint \%d has a nontrivial group function. This is not supported yet."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Equality Constraint \%d has \%d groups. This is not supported yet."}&12\\
+\parbox[t]{\ERRORMSG}{"Equality Constraint \%d has a nontrivial group function. This is not supported yet."}&12\\
 
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLSetLambdaAndMuInAugmentedLagrangian}
@@ -1422,7 +1422,7 @@ Severity 12 errors return (NLProblem)NULL, severity 4 does not cahnge the proble
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLEliminateFixedVariables}
@@ -1470,7 +1470,7 @@ name.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjective}
@@ -1541,10 +1541,10 @@ routine will be called to allow the user to free the data block.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"This problem already has an objective."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"This problem already has an objective."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjectiveByString}
@@ -1601,10 +1601,10 @@ and the usual binary operations can be used. Automatic differentiation is used t
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"This problem already has an objective."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"This problem already has an objective."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddGroupToObjective}
@@ -1648,8 +1648,8 @@ and {\tt NLPSet\-GroupB} (page \pageref{Subroutine:NLPSetGroupB}) routines.\vski
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearElementToObjectiveGroup}
@@ -1689,9 +1689,9 @@ This routine adds a nonlinear element to a group in the objective.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjectiveGroupA}
@@ -1729,8 +1729,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjectiveGroupB}
@@ -1771,8 +1771,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjectiveGroupFunction}
@@ -1809,9 +1809,9 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Can't Set Trivial Group's Group Function, group \%d",group}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Can't Set Trivial Group's Group Function, group \%d",group}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetObjectiveGroupScale}
@@ -1848,8 +1848,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfGroupsInObjective}
@@ -1886,7 +1886,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetObjectiveGroupNumber}
@@ -1924,8 +1924,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateObjective}
@@ -1963,8 +1963,8 @@ The user must create the vector {\it x} and give it the appropriate values.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
 \end{tabular}
 1newpage
 \leftline{\bf NLPEvaluateGradientOfObjective}
@@ -2008,9 +2008,9 @@ a dense vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"g (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"g (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateHessianOfObjective}
@@ -2053,9 +2053,9 @@ of the Hessian when the NLMatrix is created.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"H (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"H (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddEqualityConstraint}
@@ -2127,9 +2127,9 @@ routine will be called to allow the user to free the data block.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddEqualityConstraintByString}
@@ -2189,9 +2189,9 @@ and the usual binary operations can be used. Automatic differentiation is used t
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearEqualityConstraint}
@@ -2236,8 +2236,8 @@ and {\tt NLPSet\-GroupB} (page \pageref{Subroutine:NLPSetGroupB}) routines.\vski
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddLinearEqualityConstraint}
@@ -2289,8 +2289,8 @@ and {\tt NLPSet\-GroupB} (page \pageref{Subroutine:NLPSetGroupB}) routines.\vski
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearElementToEqualityConstraint}
@@ -2328,9 +2328,9 @@ This routine adds a nonlinear element to an equality constraint.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Constraint \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetEqualityConstraintA}
@@ -2368,8 +2368,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetEqualityConstraintB}
@@ -2410,8 +2410,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfEqualityConstraints}
@@ -2446,7 +2446,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetEqualityConstraintGroupNumber}
@@ -2485,8 +2485,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateEqualityConstraint}
@@ -2525,8 +2525,8 @@ The user must create the vector {\it x} and give it the appropriate values.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateGradientOfEqualityConstraint}
@@ -2571,10 +2571,10 @@ a dense vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"g (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"g (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateHessianOfEqualityConstraint}
@@ -2618,10 +2618,10 @@ of the Hessian when the NLMatrix is created.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"H (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"H (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddInequalityConstraint}
@@ -2697,9 +2697,9 @@ routine will be called to allow the user to free the data block.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddInequalityConstraintByString}
@@ -2763,9 +2763,9 @@ and the usual binary operations can be used. Automatic differentiation is used t
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
-\parbox[t]{5.in}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL, you must supply a problem."}&12\\
+\parbox[t]{\ERRORMSG}{"name (second arg.) is NULL, you must supply a name for the constraint."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearInequalityConstraint}
@@ -2816,8 +2816,8 @@ subroutines.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddLinearInequalityConstraint}
@@ -2870,8 +2870,8 @@ subroutines.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearElementToInequalityConstraint}
@@ -2909,9 +2909,9 @@ This routine adds a nonlinear element to an inequality constraint.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Constraint \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetInequalityConstraintA}
@@ -2949,8 +2949,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetInequalityConstraintB}
@@ -2991,8 +2991,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetInequalityConstraintLowerBound}
@@ -3031,8 +3031,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetInequalityConstraintLowerBound}
@@ -3077,8 +3077,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetInequalityConstraintUpperBound}
@@ -3117,8 +3117,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetInequalityConstraintUpperBound}
@@ -3163,8 +3163,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetInequalityConstraintBounds}
@@ -3214,8 +3214,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfInequalityConstraints}
@@ -3250,7 +3250,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetInequalityConstraintGroupNumber}
@@ -3289,8 +3289,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Inequality constraint number \%d (argument 2) is illegal. Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateInequalityConstraint}
@@ -3329,8 +3329,8 @@ The user must create the vector {\it x} and give it the appropriate values.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateGradientOfInequalityConstraint}
@@ -3375,10 +3375,10 @@ a dense vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"g (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"g (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPEvaluateHessianOfInequalityConstraint}
@@ -3422,10 +3422,10 @@ of the Hessian when the NLMatrix is created.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
-\parbox[t]{5.in}{"x (second arg.) is NULL."}&12\\
-\parbox[t]{5.in}{"H (third arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Constraint \%d (argument 2) is Invalid, must be in [0,\%d)."}&12\\
+\parbox[t]{\ERRORMSG}{"x (second arg.) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"H (third arg.) is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLError}
@@ -3692,8 +3692,8 @@ Severity 12 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateVectorWithSparseData}
@@ -3756,11 +3756,11 @@ Severity 12 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
-\parbox[t]{5.in}{"Number of nonzeros in vector \%d (argument 2) is Illegal. Must be nonnegative."}&12\\
-\parbox[t]{5.in}{"The pointer to the array of nonZeros (argument 3) is NULL"}&4\\
-\parbox[t]{5.in}{"The pointer to the array of coordinates (argument 4) is NULL"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
+\parbox[t]{\ERRORMSG}{"Number of nonzeros in vector \%d (argument 2) is Illegal. Must be nonnegative."}&12\\
+\parbox[t]{\ERRORMSG}{"The pointer to the array of nonZeros (argument 3) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"The pointer to the array of coordinates (argument 4) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateVectorWithFullData}
@@ -3819,9 +3819,9 @@ Severity 12 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
-\parbox[t]{5.in}{"The pointer to the array of coordinates (argument 2) is NULL"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
+\parbox[t]{\ERRORMSG}{"The pointer to the array of coordinates (argument 2) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 NLVector NLCreateDenseWrappedVector(int n,double *data)
 \newpage
@@ -3872,8 +3872,8 @@ Severity 12 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Length of Vector \%d (argument 1) is Illegal. Must be positive."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeVector}
@@ -3912,7 +3912,7 @@ Severity 4 errors return without changing the vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefVector}
@@ -3953,7 +3953,7 @@ Severity 4 errors return without changing the vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPrintVector}
@@ -3992,8 +3992,8 @@ Errors return without printing the vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"File pointer (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Vector (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"File pointer (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Vector (argument 2) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVGetNC}
@@ -4030,7 +4030,7 @@ Severity 4 errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVGetC}
@@ -4068,8 +4068,8 @@ Severity 4 errors return a DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVSetC}
@@ -4111,9 +4111,9 @@ Errors return a 0, normal execution returns 1. Errors return without changing th
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCopyVector}
@@ -4149,7 +4149,7 @@ Severity 4 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVSetToZero}
@@ -4183,7 +4183,7 @@ Severity 4 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVIncrementC}
@@ -4220,9 +4220,9 @@ Severity 4 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVInnerProd}
@@ -4258,8 +4258,8 @@ Severity 4 errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Pointer to Vector (argument 2) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 2) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVPlusV}
@@ -4294,8 +4294,8 @@ This routine sets $u=u+a*v$.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"Pointer to Vector (argument 2) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 2) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNegateVector}
@@ -4328,7 +4328,7 @@ This sets a vector to its negative.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVSparse}
@@ -4362,7 +4362,7 @@ This routine returns 1 if the vector is a sparse vector (otherwise returns 0).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVnNonZeros}
@@ -4399,7 +4399,7 @@ nonzero. In that case the pointer is no longer valid and should not be used (get
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVnonZero}
@@ -4436,7 +4436,7 @@ nonzero. In that case the pointer is no longer valid and should not be used (get
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVGetNumberOfNonZeros}
@@ -4471,7 +4471,7 @@ umber of coordinates).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVGetNonZeroCoord}
@@ -4506,8 +4506,8 @@ This routine returns the ith nonzero if the vector is a sparse vector (otherwise
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"NonZero Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"NonZero Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVGetNonZero}
@@ -4545,8 +4545,8 @@ Errors return a DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
-\parbox[t]{5.in}{"NonZero Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"NonZero Coordinate \%d (argument 2) is illegal. Must be in 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVWrapped}
@@ -4580,7 +4580,7 @@ This routine returns 1 if the vector is a wrapped vector (otherwise returns 0).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLVData}
@@ -4615,7 +4615,7 @@ If dense it contains the coordinates.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Vector (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Vector (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateMatrix}
@@ -4666,10 +4666,10 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Number of rows \%d (argument 1) is negative."}&12\\
-\parbox[t]{5.in}{"Number of columns \%d (argument 2) is negative."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of rows \%d (argument 1) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Number of columns \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateMatrixWithData}
@@ -4722,11 +4722,11 @@ Severity 4 errors return a matrix with all entries zero.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Number of rows (argument 1) is negative \%d"}&12\\
-\parbox[t]{5.in}{"Number of columns (argument 2) is negative \%d"}&12\\
-\parbox[t]{5.in}{"Pointer to data (argument 3) is NULL"}&4\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of rows (argument 1) is negative \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of columns (argument 2) is negative \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to data (argument 3) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateSparseMatrix}
@@ -4776,10 +4776,10 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Number of rows \%d (argument 1) is negative."}&12\\
-\parbox[t]{5.in}{"Number of columns \%d (argument 2) is negative."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of rows \%d (argument 1) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Number of columns \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateWSMPSparseMatrix}
@@ -4831,9 +4831,9 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Number of rows \%d (argument 1) is negative."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of rows \%d (argument 1) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%dx\%d matrix (\%d bytes)"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateDenseWrappedMatrix}
@@ -4882,8 +4882,8 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Number of rows \%d (argument 1) is negative."}&12\\
-\parbox[t]{5.in}{"Number of columns \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Number of rows \%d (argument 1) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Number of columns \%d (argument 2) is negative."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefMatrix}
@@ -4927,7 +4927,7 @@ Error returns without changing the matrix.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeMatrix}
@@ -4966,7 +4966,7 @@ Error returns without changing the matrix.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMGetNumberOfRows}
@@ -5006,7 +5006,7 @@ Errors return -1.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMGetNumberOfCols}
@@ -5046,7 +5046,7 @@ Errors return -1.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMGetElement}
@@ -5086,11 +5086,11 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is negative."}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is negative".}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is negative".}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMSetElement}
@@ -5129,11 +5129,11 @@ Errors return 0, with no changes to the matrix. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is negative."}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is negative".}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is negative".}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMIncrementElement}
@@ -5174,11 +5174,11 @@ Errors return 0, with no changes to the matrix. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is negative."}&12\\
-\parbox[t]{5.in}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is negative".}&12\\
-\parbox[t]{5.in}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is negative."}&12\\
+\parbox[t]{\ERRORMSG}{"Row index \%d (argument 2) is too large. Must be less than \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is negative".}&12\\
+\parbox[t]{\ERRORMSG}{"Column index \%d (argument 3) is too large. Must be less than \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMatrixDoubleProduct}
@@ -5216,10 +5216,10 @@ $u$ must be an $n$-vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"left vector (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Matrix (argument 2) is NULL"}&12\\
-\parbox[t]{5.in}{"right vector (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Cannot find $u^TAv$ for a \%d vector a \%dx\%d matrix and a \%d vector."}&12\\
+\parbox[t]{\ERRORMSG}{"left vector (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"right vector (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Cannot find $u^TAv$ for a \%d vector a \%dx\%d matrix and a \%d vector."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMVMult}
@@ -5256,9 +5256,9 @@ of length $m$, and $b$ must be an array of length $n$.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"A (first argument) is NULL"}&12\\
-\parbox[t]{5.in}{"x (second argument) is NULL"}&12\\
-\parbox[t]{5.in}{"b (third argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"A (first argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"x (second argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"b (third argument) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMVMultT}
@@ -5295,9 +5295,9 @@ of length $n$, and $b$ must be an array of length $m$.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"A (first argument) is NULL"}&12\\
-\parbox[t]{5.in}{"x (second argument) is NULL"}&12\\
-\parbox[t]{5.in}{"b (third argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"A (first argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"x (second argument) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"b (third argument) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMSetToZero}
@@ -5334,7 +5334,7 @@ Errors return 0, with no changes to the matrix. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMatrixClone}
@@ -5371,7 +5371,7 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLGetGershgorinBounds}
@@ -5411,9 +5411,9 @@ to use the Gershgorin bounds.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (first argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Address for the lower bound (third argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Address for the upper bound (fourth argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Address for the lower bound (third argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Address for the upper bound (fourth argument), is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMatrixOneNorm}
@@ -5450,7 +5450,7 @@ not null the matrix is scaled by ${\rm diag}(1./sqrt{M})A{\rm diag}(1./sqrt{M})$
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (first argument), is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMSumSubMatrixInto}
@@ -5491,9 +5491,9 @@ A_{r[i],r[j]} = A_{r[i],r[j]} + s*a_{i,j}
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (first argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Array of row indices (fourth argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Array of submatrix elements (fifth argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Array of row indices (fourth argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Array of submatrix elements (fifth argument), is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMSumRankOneInto}
@@ -5532,8 +5532,8 @@ A_{i,j} = A_{i,j} + s*v_{i}v_{j}
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (first argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Vector (third argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Vector (third argument), is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMMMMProd}
@@ -5574,9 +5574,9 @@ B_{i,j} = \sum_k \sum_l M_{i,k}A_{k,l}M_{l,j}
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (first argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Matrix (second argument), is NULL"}&12\\
-\parbox[t]{5.in}{"Result (third argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (second argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Result (third argument), is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMSparse}
@@ -5625,7 +5625,7 @@ A_{row[l],col[i]}=data[i]
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMDetermineHessianSparsityStructure}
@@ -5664,9 +5664,9 @@ the Hessian of the objective or a constraint of a problem.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (first argument), is NULL"}&12\\
-\parbox[t]{5.in}{"type \%c (second argument), is not valid. Must be 'O', 'I', 'E', or 'M'"}&12\\
-\parbox[t]{5.in}{"Hessian (fourth argument), is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (first argument), is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"type \%c (second argument), is not valid. Must be 'O', 'I', 'E', or 'M'"}&12\\
+\parbox[t]{\ERRORMSG}{"Hessian (fourth argument), is NULL."}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMData}
@@ -5702,7 +5702,7 @@ of the uses of the array).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMnE}
@@ -5739,7 +5739,7 @@ number of allocated nonzeros.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMRow}
@@ -5775,7 +5775,7 @@ of the uses of the array).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLMCol}
@@ -5811,7 +5811,7 @@ of the uses of the array).
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Matrix (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPrintMatrix}
@@ -5851,8 +5851,8 @@ Errors return without printing the matrix.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"File pointer (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Matrix (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"File pointer (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Matrix (argument 2) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateGroupFunctionByString}
@@ -5904,11 +5904,11 @@ Errors return (NLGroupFunction)NULL.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"type (argument 2) is NULL"}&12\\
-\parbox[t]{5.in}{"var (argument 3) is NULL"}&12\\
-\parbox[t]{5.in}{"expr (argument 4) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"type (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"var (argument 3) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"expr (argument 4) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateGroupFunction}
@@ -5961,7 +5961,7 @@ Errors return (NLGroupFunction)NULL.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefGroupFunction}
@@ -6005,7 +6005,7 @@ Errors return without changing the group function.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Group Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeGroupFunction}
@@ -6048,7 +6048,7 @@ Errors return with changing the group function.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Group Function (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Group Function (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLGEval}
@@ -6088,8 +6088,8 @@ Errors return DBL\_QNAN.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Group Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group Function function is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function function is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLGEvalDer}
@@ -6128,8 +6128,8 @@ Errors return DBL\_QNAN.
 \noindent
 \begin{tabular}{lc}Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Group Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group Function Derivative function is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function Derivative function is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLGEvalSecDer}
@@ -6169,8 +6169,8 @@ Errors return DBL\_QNAN.
 \begin{tabular}{lc}
 Message&Severity\\
 \hline
-\parbox[t]{5.in}{"Group Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group Function Second Derivative function is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group Function Second Derivative function is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateElementFunctionByString}
@@ -6225,12 +6225,12 @@ Errors return (NLElementFunction)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"type (argument 2) is NULL"}&12\\
-\parbox[t]{5.in}{"vars (argument 5) is NULL"}&12\\
-\parbox[t]{5.in}{"expr (argument 6) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Number of coordinates is not positive \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"type (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"vars (argument 5) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"expr (argument 6) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of coordinates is not positive \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateElementFunction}
@@ -6287,8 +6287,8 @@ Errors return (NLElementFunction)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Number of coordinates is not positive \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of coordinates is not positive \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefElementFunction}
@@ -6330,7 +6330,7 @@ Errors return without chaning the element function.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeElementFunction}
@@ -6371,7 +6371,7 @@ Errors return without chaning the element function.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLEGetDimension}
@@ -6409,7 +6409,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLEEval}
@@ -6447,9 +6447,9 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Number of arguments to Element Function \%d is illegal (argument 2). Must be \%d. Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Pointer to x (argument 3) is NULL. F is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of arguments to Element Function \%d is illegal (argument 2). Must be \%d. Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to x (argument 3) is NULL. F is \%8.8x"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLEEvalDer}
@@ -6488,10 +6488,10 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Direction \%d (argument 2) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Number of arguments to Element Function \%d is illegal (argument 3). Must be \%d. Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Pointer to x (argument 4) is NULL. F is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Direction \%d (argument 2) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of arguments to Element Function \%d is illegal (argument 3). Must be \%d. Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to x (argument 4) is NULL. F is \%8.8x"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLEEvalSecDer}
@@ -6531,11 +6531,11 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Element Function (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Direction \%d (argument 2) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Direction \%d (argument 3) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Number of arguments to Element Function \%d is illegal (argument 4). Must be \%d. Argument 1 is \%8.8x"}&12\\
-\parbox[t]{5.in}{"Pointer to x (argument 5) is NULL. F is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Direction \%d (argument 2) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Direction \%d (argument 3) is illegal. Must be in range 0 to \%d Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Number of arguments to Element Function \%d is illegal (argument 4). Must be \%d. Argument 1 is \%8.8x"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to x (argument 5) is NULL. F is \%8.8x"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateNonlinearElement}
@@ -6584,9 +6584,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL."}&12\\
-\parbox[t]{5.in}{"Element Function (argument 3) is NULL."}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 3) is NULL."}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefNonlinearElement}
@@ -6629,8 +6629,8 @@ Errors return without chaning the element function.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Element Function (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Function (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeNonlinearElement}
@@ -6672,8 +6672,8 @@ Errors return without chaning the element function.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid, "}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid, "}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetName}
@@ -6712,8 +6712,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetElementDimension}
@@ -6752,8 +6752,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetInternalDimension}
@@ -6792,8 +6792,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetElementFunction}
@@ -6832,8 +6832,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetIndex}
@@ -6873,9 +6873,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
-\parbox[t]{5.in}{"Variable (argument 3) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Variable (argument 3) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLNEGetRangeXForm}
@@ -6914,8 +6914,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Nonlinear Element (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Nonlinear Element (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfNonlinearElements}
@@ -6953,7 +6953,7 @@ The routine
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfGroups}
@@ -6990,7 +6990,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetTypeOfGroup}
@@ -7031,8 +7031,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupTypeName}
@@ -7074,8 +7074,8 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupName}
@@ -7115,8 +7115,8 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetGroupFunction}
@@ -7155,9 +7155,9 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Can't Set Trivial Group's Group Function, group \%d",group}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Can't Set Trivial Group's Group Function, group \%d",group}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupFunction}
@@ -7195,8 +7195,8 @@ Errors return (NLGroupFunction)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsGroupFunctionSet}
@@ -7235,8 +7235,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetGroupA}
@@ -7275,8 +7275,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupA}
@@ -7321,8 +7321,8 @@ Errors return (NLVector)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsGroupASet}
@@ -7362,8 +7362,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetGroupB}
@@ -7404,8 +7404,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupB}
@@ -7443,8 +7443,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsGroupBSet}
@@ -7487,8 +7487,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetGroupScale}
@@ -7529,8 +7529,8 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupScale}
@@ -7570,8 +7570,8 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPAddNonlinearElementToGroup}
@@ -7617,9 +7617,9 @@ internal variables, and as many rows as the element function has unknowns.\vskip
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementWeight}
@@ -7657,9 +7657,9 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetElementWeight}
@@ -7698,9 +7698,9 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsElementWeightSet}
@@ -7740,9 +7740,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementFunctionOfGroup}
@@ -7782,9 +7782,9 @@ Errors return (NLElementFunction)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupNonlinearElement}
@@ -7824,9 +7824,9 @@ The routine
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group (argument 2) is invalid"}&12\\
-\parbox[t]{5.in}{"Element (argument 3) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Element (argument 3) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementFunction}
@@ -7865,8 +7865,8 @@ Errors return (NLElementFunction)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetElementFunction}
@@ -7907,10 +7907,10 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPSetElementFunctionWithRange}
@@ -7956,10 +7956,10 @@ Errors return 0 and make no changes to the problem. Normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes",n*sizeof(int)}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes",n*sizeof(int)}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPIsElementFunctionSet}
@@ -7999,9 +7999,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementRangeTransformationOfGroup}
@@ -8041,9 +8041,9 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementRangeTransformation}
@@ -8084,8 +8084,8 @@ Errors return (NLMatrix)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"The global element index \%d (argument 2) is illegal, must be in range 0 to \%d."}&4\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"The global element index \%d (argument 2) is illegal, must be in range 0 to \%d."}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfInternalVariablesInElement}
@@ -8126,9 +8126,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementIndexIntoWhole}
@@ -8168,10 +8168,10 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element Internal Variable index \%d is illegal (argument 4). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element Internal Variable index \%d is illegal (argument 4). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementNumberOfUnknowns}
@@ -8213,9 +8213,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElementsInGroup}
@@ -8251,8 +8251,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElements}
@@ -8287,7 +8287,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElementsO}
@@ -8322,7 +8322,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElementsE}
@@ -8358,7 +8358,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElementsI}
@@ -8394,7 +8394,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementTypeName}
@@ -8435,9 +8435,9 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetTypeOfElement}
@@ -8478,9 +8478,9 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
-\parbox[t]{5.in}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Group \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Element \%d is illegal (argument 3). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfElementTypes}
@@ -8520,7 +8520,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetElementType}
@@ -8560,8 +8560,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Element type \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Element type \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetNumberOfGroupTypes}
@@ -8600,7 +8600,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLPGetGroupType}
@@ -8640,8 +8640,8 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Problem (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Type \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
+\parbox[t]{\ERRORMSG}{"Problem (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Type \%d is illegal (argument 2). Must be in range 0 to \%d"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLCreateLancelot}
@@ -8684,7 +8684,7 @@ Errors return (NLLancelot)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf NLRefLancelot}
@@ -8725,7 +8725,7 @@ Severity 4 errors return without changing the vector.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Pointer to Lancelot (argument 1) is NULL"}&4\\
+\parbox[t]{\ERRORMSG}{"Pointer to Lancelot (argument 1) is NULL"}&4\\
 \end{tabular}
 \newpage
 \leftline{\bf NLFreeLancelot}
@@ -8761,7 +8761,7 @@ Errors return without changing the solver.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNMinimize}
@@ -8814,12 +8814,12 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Pointer to initial guess (argument 2) is NULL"}&12\\
-\parbox[t]{5.in}{"Pointer to area to store the solution (argument 4) is NULL"}&12\\
-\parbox[t]{5.in}{"Error opening file \%s for writing in current directory"}&12\\
-\parbox[t]{5.in}{"Error closing file \%s"}&4\\
-\parbox[t]{5.in}{"Error opening file SOLUTION.d for reading in current directory"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to initial guess (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to area to store the solution (argument 4) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Error opening file \%s for writing in current directory"}&12\\
+\parbox[t]{\ERRORMSG}{"Error closing file \%s"}&4\\
+\parbox[t]{\ERRORMSG}{"Error opening file SOLUTION.d for reading in current directory"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNMaximize and LNMaximizeDLL}
@@ -8873,12 +8873,12 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Pointer to initial guess (argument 2) is NULL"}&12\\
-\parbox[t]{5.in}{"Pointer to area to store the solution (argument 4) is NULL"}&12\\
-\parbox[t]{5.in}{"Error opening file \%s for writing in current directory"}&12\\
-\parbox[t]{5.in}{"Error closing file \%s"}&4\\
-\parbox[t]{5.in}{"Error opening file SOLUTION.d for reading in current directory"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to initial guess (argument 2) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Pointer to area to store the solution (argument 4) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Error opening file \%s for writing in current directory"}&12\\
+\parbox[t]{\ERRORMSG}{"Error closing file \%s"}&4\\
+\parbox[t]{\ERRORMSG}{"Error opening file SOLUTION.d for reading in current directory"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetCheckDerivatives}
@@ -8927,8 +8927,8 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Option \%d (argument 2) is invalid, must be in range 0-4"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Option \%d (argument 2) is invalid, must be in range 0-4"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetCheckDerivatives}
@@ -8976,7 +8976,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetConstraintAccuracy}
@@ -9016,7 +9016,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetConstraintAccuracy}
@@ -9055,7 +9055,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetFirstConstraintAccuracy}
@@ -9095,7 +9095,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetFirstConstraintAccuracy}
@@ -9134,7 +9134,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetFirstGradientAccuracy}
@@ -9174,7 +9174,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetFirstGradientAccuracy}
@@ -9213,7 +9213,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetGradientAccuracy}
@@ -9253,7 +9253,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetGradientAccuracy}
@@ -9292,7 +9292,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetInitialPenalty}
@@ -9333,7 +9333,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetInitialPenalty}
@@ -9373,7 +9373,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetMaximumNumberOfIterations}
@@ -9412,7 +9412,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetMaximumNumberOfIterations}
@@ -9450,7 +9450,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetPenaltyBound}
@@ -9491,7 +9491,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetPenaltyBound}
@@ -9531,7 +9531,7 @@ Errors return DBL\_QNAN.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetPrintEvery}
@@ -9570,7 +9570,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetPrintEvery}
@@ -9608,7 +9608,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetPrintLevel}
@@ -9647,8 +9647,8 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"PrintLevel \%d (argument 2) is invalid, must be nonnegative"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"PrintLevel \%d (argument 2) is invalid, must be nonnegative"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetPrintLevel}
@@ -9686,7 +9686,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetPrintStart}
@@ -9725,7 +9725,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetPrintStart}
@@ -9763,7 +9763,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetPrintStop}
@@ -9802,7 +9802,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetPrintStop}
@@ -9840,7 +9840,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetRequireExactCauchyPoint}
@@ -9883,7 +9883,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetRequireExactCauchyPoint}
@@ -9926,7 +9926,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetSaveDataEvery}
@@ -9965,7 +9965,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetSaveDataEvery}
@@ -10003,7 +10003,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetScalings}
@@ -10053,9 +10053,9 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Scaling "\%s" (argument 2) is invalid, must be one of "No Scaling","Scale Constraints","Scale Variables","Scale Both","Print but don't use""}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Scaling "\%s" (argument 2) is invalid, must be one of "No Scaling","Scale Constraints","Scale Variables","Scale Both","Print but don't use""}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetScalings}
@@ -10104,7 +10104,7 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetSolveBQPAccurately}
@@ -10145,7 +10145,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetSolveBQPAccurately}
@@ -10185,7 +10185,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetLinearSolverMethod}
@@ -10225,73 +10225,73 @@ Legal values of {\it choice}, and the corresponding
 \begin{center}
  \begin{tabular}{l}
   "Diagonal preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt DIAGONAL-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt DIAGONAL-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Munksgaards preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt MUNKSGAARDS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MUNKSGAARDS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Expanding band preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt EXPANDING-BAND-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt EXPANDING-BAND-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Full matrix preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt FULL-MATRIX-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt FULL-MATRIX-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Gill-Murray-Ponceleon-Saunders preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt GILL-MURRAY-PONCELEON-SAUNDERS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt GILL-MURRAY-PONCELEON-SAUNDERS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Modified MA27 preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt MODIFIED-MA27-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MODIFIED-MA27-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Schnabel-Eskow preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt SCHNABEL-ESKOW-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt SCHNABEL-ESKOW-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Users preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt USERS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt USERS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Bandsolver preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt BANDSOLVER-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt BANDSOLVER-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Multifront"\\
-  \parbox[t]{5.in}{\hfill\tt MULTIFRONT-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MULTIFRONT-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Direct modified"\\
-  \parbox[t]{5.in}{\hfill\tt DIRECT-MODIFIED-MULTIFRONTAL-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt DIRECT-MODIFIED-MULTIFRONTAL-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "CG method used"\\
-  \parbox[t]{5.in}{\hfill\tt CG-METHOD-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt CG-METHOD-USED}\\
  \end{tabular}
 \end{center}\vskip .1in
 \leftline{\bf Errors}
@@ -10299,9 +10299,9 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Linear Solver Type "\%s" (argument 2) is invalid"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Linear Solver Type "\%s" (argument 2) is invalid"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetLinearSolverMethod}
@@ -10341,73 +10341,73 @@ Legal values of {\it choice}, and the corresponding
 \begin{center}
  \begin{tabular}{l}
   "Diagonal preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt DIAGONAL-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt DIAGONAL-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Munksgaards preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt MUNKSGAARDS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MUNKSGAARDS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Expanding band preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt EXPANDING-BAND-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt EXPANDING-BAND-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Full matrix preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt FULL-MATRIX-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt FULL-MATRIX-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Gill-Murray-Ponceleon-Saunders preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt GILL-MURRAY-PONCELEON-SAUNDERS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt GILL-MURRAY-PONCELEON-SAUNDERS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Modified MA27 preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt MODIFIED-MA27-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MODIFIED-MA27-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Schnabel-Eskow preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt SCHNABEL-ESKOW-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt SCHNABEL-ESKOW-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Users preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt USERS-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt USERS-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Bandsolver preconditioned"\\
-  \parbox[t]{5.in}{\hfill\tt BANDSOLVER-PRECONDITIONED-CG-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt BANDSOLVER-PRECONDITIONED-CG-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Multifront"\\
-  \parbox[t]{5.in}{\hfill\tt MULTIFRONT-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt MULTIFRONT-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "Direct modified"\\
-  \parbox[t]{5.in}{\hfill\tt DIRECT-MODIFIED-MULTIFRONTAL-SOLVER-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt DIRECT-MODIFIED-MULTIFRONTAL-SOLVER-USED}\\
  \end{tabular}
 \end{center}
 \begin{center}
  \begin{tabular}{l}
   "CG method used"\\
-  \parbox[t]{5.in}{\hfill\tt CG-METHOD-USED}\\
+  \parbox[t]{\ERRORMSG}{\hfill\tt CG-METHOD-USED}\\
  \end{tabular}
 \end{center}\vskip .1in
 \leftline{\bf Errors}
@@ -10415,7 +10415,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetLinearSolverBandwidth}
@@ -10452,7 +10452,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetStopOnBadDerivatives}
@@ -10499,8 +10499,8 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Option \%d (argument 2) is invalid, must be in range 0-2"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Option \%d (argument 2) is invalid, must be in range 0-2"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetStopOnBadDerivatives}
@@ -10546,7 +10546,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetTrustRegionRadius}
@@ -10586,7 +10586,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetTrustRegionRadius}
@@ -10624,7 +10624,7 @@ The {\tt SPEC.SPC} file entry this gets is {\tt TRUST-REGION-RADIUS}.\vskip .1in
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetTrustRegionType}
@@ -10670,9 +10670,9 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"TrustRegionType "\%s" (argument 2) is invalid, must be one of "Two Norm" "Infinity Norm",choice}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"TrustRegionType "\%s" (argument 2) is invalid, must be one of "Two Norm" "Infinity Norm",choice}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetTrustRegionType}
@@ -10717,7 +10717,7 @@ Errors return (char*)NULL.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetUseExactFirstDerivatives}
@@ -10759,7 +10759,7 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetUseExactFirstDerivatives}
@@ -10800,7 +10800,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNSetUseExactSecondDerivatives}
@@ -10842,9 +10842,9 @@ Errors return 0, normal execution returns 1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
-\parbox[t]{5.in}{"Out of memory, trying to allocate \%d bytes"}&12\\
-\parbox[t]{5.in}{"Option "\%s" is invalid, must be one of "Exact", "BFGS","DFP","PSB", "SR1","}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Out of memory, trying to allocate \%d bytes"}&12\\
+\parbox[t]{\ERRORMSG}{"Option "\%s" is invalid, must be one of "Exact", "BFGS","DFP","PSB", "SR1","}&12\\
 \end{tabular}
 \newpage
 \leftline{\bf LNGetUseExactSecondDerivatives}
@@ -10885,7 +10885,7 @@ Errors return -1.
 \vskip .1in
 \noindent
 \begin{tabular}{lc}Message&Severity\\\hline
-\parbox[t]{5.in}{"Solver (argument 1) is NULL"}&12\\
+\parbox[t]{\ERRORMSG}{"Solver (argument 1) is NULL"}&12\\
 \end{tabular}
 
 \end{document}
