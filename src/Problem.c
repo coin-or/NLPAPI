@@ -9815,7 +9815,9 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
 
   if(u<1.e19)NLPSetInequalityConstraintUpperBound(this,constraint,u);
+   else NLPUnSetInequalityConstraintUpperBound(this,constraint);
   if(l>-1.e19)NLPSetInequalityConstraintLowerBound(this,constraint,l);
+   else  NLPUnSetInequalityConstraintLowerBound(this,constraint);
 
   if(tname!=tmpname)free(tname);
 
