@@ -34,13 +34,14 @@ NLVector NLCreateVector(int n)
  {
   static char RoutineName[]="NLCreateVector";
   NLVector this;
-
+#ifndef NL_NOINPUTCHECKS
   if(n<1)
    {
     sprintf(NLVectorErrorMsg,"Length of Vector %d (argument 1) is Illegal. Must be positive.",n);
     NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return((NLVector)NULL);
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -68,6 +69,7 @@ NLVector NLCreateVectorWithSparseData(int n,int nz,int *el,double *vl)
   int i;
   NLVector this;
 
+#ifndef NL_NOINPUTCHECKS
   if(n<1)
    {
     sprintf(NLVectorErrorMsg,"Length of Vector %d (argument 1) is Illegal. Must be positive.",n);
@@ -81,6 +83,7 @@ NLVector NLCreateVectorWithSparseData(int n,int nz,int *el,double *vl)
     NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return((NLVector)NULL);
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -108,6 +111,7 @@ NLVector NLCreateVectorWithSparseData(int n,int nz,int *el,double *vl)
       NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
       return(this);
      }
+#ifndef NL_NOINPUTCHECKS
     if(el==(int*)NULL)
      {
       sprintf(NLVectorErrorMsg,"The pointer to the array of nonZeros (argument 3) is NULL");
@@ -130,6 +134,7 @@ NLVector NLCreateVectorWithSparseData(int n,int nz,int *el,double *vl)
       this->nRefs=1;
       return(this);
      }
+#endif
     for(i=0;i<nz;i++)
      {
       this->nonZero[i]=el[i];
@@ -154,12 +159,14 @@ NLVector NLCreateVectorWithFullData(int n,double *vl)
   int i,j;
   NLVector this;
 
+#ifndef NL_NOINPUTCHECKS
   if(n<1)
    {
     sprintf(NLVectorErrorMsg,"Length of Vector %d (argument 1) is Illegal. Must be positive.",n);
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return((NLVector)NULL);
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -172,6 +179,7 @@ NLVector NLCreateVectorWithFullData(int n,double *vl)
 
   if(n>0)
    {
+#ifndef NL_NOINPUTCHECKS
     if(vl==(double*)NULL)
      {
       sprintf(NLVectorErrorMsg,"The pointer to the array of coordinates (argument 2) is NULL");
@@ -183,6 +191,7 @@ NLVector NLCreateVectorWithFullData(int n,double *vl)
       this->nRefs=1;
       return(this);
      }
+#endif
 
     this->nNonZeros=0;
     this->mNonZeros=0;
@@ -233,12 +242,14 @@ NLVector NLCreateVectorWithFullData(int n,double *vl)
 void NLFreeVector(NLVector this)
  {
   static char RoutineName[]="NLFreeVector";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs--;
 
@@ -254,12 +265,14 @@ void NLFreeVector(NLVector this)
 int NLVGetNC(NLVector this)
  {
   static char RoutineName[]="NLVGetNC";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nC);
  }
@@ -269,6 +282,7 @@ double NLVGetC(NLVector this,int i)
   static char RoutineName[]="NLVGetC";
   int j;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
@@ -281,6 +295,7 @@ double NLVGetC(NLVector this,int i)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   if(this->sparse)
    {
@@ -299,6 +314,7 @@ int NLVSetC(NLVector this,int i,double vl)
   int rc;
   int j;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
@@ -311,6 +327,7 @@ int NLVSetC(NLVector this,int i,double vl)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(!(this->sparse))
    {
@@ -381,12 +398,14 @@ int NLVSetC(NLVector this,int i,double vl)
 void NLRefVector(NLVector this)
  {
   static char RoutineName[]="NLRefVector";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   (this->nRefs)++;
   return;
@@ -396,12 +415,14 @@ int NLVGetNumberOfNonZeros(NLVector v)
  {
   static char RoutineName[]="NLVGetNumberOfNonZeros";
 
+#ifndef NL_NOINPUTCHECKS
   if(v==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(v->sparse)
     return(v->nNonZeros);
@@ -412,27 +433,33 @@ int NLVGetNumberOfNonZeros(NLVector v)
 int NLVGetNonZeroCoord(NLVector v,int n)
  {
   static char RoutineName[]="NLVGetNonZeroCoord";
+#ifndef NL_NOINPUTCHECKS
   if(v==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
   if(v->sparse)
    {
+#ifndef NL_NOINPUTCHECKS
     if(n<0|| !(n<v->nNonZeros))
      {
       sprintf(NLVectorErrorMsg,"NonZero Coordinate %d (argument 2) is illegal. Must be in 0 to %d",n,v->nNonZeros-1);
       NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
       return -1;
      }
+#endif
    }else{
+#ifndef NL_NOINPUTCHECKS
     if(n<0|| !(n<v->nC))
      {
       sprintf(NLVectorErrorMsg,"NonZero Coordinate %d (argument 2) is illegal. Must be in 0 to %d",n,v->nC-1);
       NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
       return -1;
      }
+#endif
    }
 
   if(v->sparse)
@@ -444,6 +471,7 @@ int NLVGetNonZeroCoord(NLVector v,int n)
 double NLVGetNonZero(NLVector v,int n)
  {
   static char RoutineName[]="NLVGetNonZero";
+#ifndef NL_NOINPUTCHECKS
   if(v==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
@@ -456,6 +484,7 @@ double NLVGetNonZero(NLVector v,int n)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return((v->data)[n]);
  }
@@ -465,6 +494,7 @@ void NLPrintVector(FILE *fid, NLVector v)
   static char RoutineName[]="NLPrintVector";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(fid==(FILE*)NULL)
    {
     sprintf(NLVectorErrorMsg,"File identifier (argument 1) is NULL");
@@ -478,6 +508,7 @@ void NLPrintVector(FILE *fid, NLVector v)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   fprintf(fid," [",v->nC);fflush(stdout);
   for(i=0;i<v->nC;i++)
@@ -495,6 +526,7 @@ int NLVIncrementC(NLVector this,int i,double vl)
   int rc;
   int j;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
@@ -507,6 +539,7 @@ int NLVIncrementC(NLVector this,int i,double vl)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(!(this->sparse))
    {
@@ -631,12 +664,14 @@ void NLVectorIncreaseLength(NLVector this,int n)
  {
   static char RoutineName[]="NLVectorIncreaseLength";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(!this->sparse && this->wrapped)
    {
@@ -657,12 +692,14 @@ void NLVectorDecreaseLength(NLVector this,int n)
   static char RoutineName[]="NLVectorDecreaseLength";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(!this->sparse && this->wrapped)
    {
@@ -699,12 +736,14 @@ NLVector NLCreateDenseWrappedVector(int n,double *data)
   static char RoutineName[]="NLCreateDenseWrappedVector";
   NLVector this;
 
+#ifndef NL_NOINPUTCHECKS
   if(n<1)
    {
     sprintf(NLVectorErrorMsg,"Length of Vector %d (argument 1) is Illegal. Must be positive.",n);
     NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return((NLVector)NULL);
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -731,12 +770,14 @@ NLVector NLCreateDenseVector(int n)
   static char RoutineName[]="NLCreateDenseVector";
   NLVector this;
 
+#ifndef NL_NOINPUTCHECKS
   if(n<1)
    {
     sprintf(NLVectorErrorMsg,"Length of Vector %d (argument 1) is Illegal. Must be positive.",n);
     NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return((NLVector)NULL);
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -769,12 +810,14 @@ int NLVSetToZero(NLVector this)
   static char RoutineName[]="NLVSetToZero";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(!(this->sparse))
    {
@@ -792,12 +835,14 @@ int NLZeroVector(NLVector this)
   static char RoutineName[]="NLZeroVector";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(!this->sparse)
    {
@@ -814,12 +859,14 @@ int NLNegateVector(NLVector this)
   static char RoutineName[]="NLNegateVector";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to Vector (argument 1) is NULL");
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(!this->sparse)
    {
@@ -862,12 +909,14 @@ NLVector NLCopyVector(NLVector that)
   NLVector this;
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(that==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Argument 1, the vector to copy, is NULL");
     NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return (NLVector)NULL;
    }
+#endif
 
   this=(NLVector)malloc(sizeof(struct NLGrpPartVec));
   if(this==(NLVector)NULL)
@@ -936,7 +985,7 @@ void NLVPlusV(NLVector u, NLVector v, double a)
   int i;
   double tmp;
 
-#ifdef NOCHECKS
+#ifndef NL_NOINPUTCHECKS
   if(u==(NLVector)NULL)
    {
     sprintf(NLVectorErrorMsg,"Pointer to first Vector (argument 1) is NULL");
