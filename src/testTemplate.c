@@ -27,11 +27,11 @@ int main(int argc,char *argv[])
 
   lancelot=0;
   ipopt=0;
-#ifndef NLPAPI_NO_LANCELOT
+#ifdef HAVE_LANCELOT
   lancelot=1;
   ipopt=0;
 #endif
-#ifndef NLPAPI_NO_IPOPT
+#ifdef HAVE_IPOPT
   lancelot=0;
   ipopt=1;
 #endif
@@ -115,12 +115,15 @@ int main(int argc,char *argv[])
 
   if(ipopt)
    {
+#ifdef HAVE_IPOPT
     Ip=NLCreateIpopt();
     IPAddOption(Ip,"ioutput",1.);
     rc=IPMinimize(Ip,P,x0,(double*)NULL,(double*)NULL,x);
+#endif
    }
   else if(lancelot)
    {
+#ifdef HAVE_LANCELOT
     Lan=NLCreateLancelot();
     LNSetPrintLevel(Lan,1);
     LNSetUseExactFirstDerivatives(Lan,1);
@@ -131,6 +134,7 @@ int main(int argc,char *argv[])
     LNSetMaximumNumberOfIterations(Lan,100000);
     LNSetPrintStop(Lan,100000);
     rc=LNMinimize(Lan,P,x0,(double*)NULL,(double*)NULL,x);
+#endif
    }
 
   if(rc==0)

@@ -1,13 +1,22 @@
 # config.site for configure. 
 
-#    Directory in which Lancelot was installed.
+#    Have Lancelot? Tell me the driectory in which it was installed.
 
-LANDIR="/u/mhender/Lancelot/VanillaLancelot"
-INSTDIR="/appmath/local"
+with_LANCELOT="/u/mhender/Lancelot/VanillaLancelot"
 
-#    Directory in which Lancelot was installed.
+#    Have IPOPT? Tell me the flags to link with IPOPT. (Ipopt uses Harwell, lapack and blas.)
 
-IPOPTDIR="../Ipopt"
+with_ipopt="-L../Ipopt/lib -lipopt -L/home/mhenderson/lib -llapack -lblas -lHSL"
+
+#    Have the Harwell subroutines? Tell me the flags to link with HSL.
+#         Lancelot requires 
+#              Single Precision MC29, MC27A, MC27B, MC27C, MC31D
+#              Double Precision MC29D, MC27AD, MC27BD, MC27CD, MC32DD
+#            but only uses them if certain options are set.
+#         Ipopt requires (and uses) some of the sparse solvers, and determines
+#            at installation which are present.
+
+with_hsl="-L/home/mhenderson/lib -lHSL"
 
 #    Below are things that shouldn't change across UNIX platforms.
 
@@ -26,6 +35,5 @@ FSFX=".f"
 #    Things relavant to the Loader.
 
 OFLAG="-o"            # loader flag for name of output
-OSFX=".o"             # extension of object files
 LIBprefix=lib
 LIBsuffix=".a"

@@ -1,8 +1,19 @@
 This is the subroutine library NLPAPI, for defining nonlinear programming problems. It is a 
 preliminary release.
 
+The API provides routines to invoke LANCELOT and Ipopt. The routines are disabled if the 
+corresponding package is not installed. To use LANCELOT you must provide the top directory in
+which it was installed using the with-LANCELOT=dir option to configure, or in the share/config.site
+file (LANCELOT build object files). In addition, LANCELOT has options to use Harwell routines. You
+can provide these by the with-hsl=<opt> option, where <opt> contains the load flags to link
+the routines (e..g configure with-hsl="-L/local/lib -lHSL"). Finally, Ipopt is done the same
+way, via the with-ipopt=<opt> option. Again <opt> contains the link flags. Ipopt requires
+Lapack, Harwell and BLAS, so -l flags may need to be included for those.
+
 To install:
-        edit share/config.site to define where LANCELOT is installed.
+        edit share/config.site to define where LANCELOT, Ipopt and the Harwell subroutine
+           library are installed.
+
 	./configure
 	make
 

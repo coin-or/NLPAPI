@@ -11,7 +11,7 @@ exdir    = Examples
 bindir    = bin
 CC        = @CC@
 CFLAGS    = @CFLAGS@
-DEFINES=@DEFS@ @DEFLAN@ @DEFIPOPT@ -DVANILLALANCELOT
+DEFINES = @DEFS@
 F77       = @F77@
 FSFX      = @FSFX@
 FFLAGS    = @FFLAGS@
@@ -19,12 +19,11 @@ FLIBS    = @FLIBS@
 INSTALL = @INSTALL@
 installdir = @INSTDIR@
 LD        = @CC@
-LIBS = @LIBS@ -L./lib -lNLPAPI -lExpCmp @LANLIBS@ @IPOPTLIBS@ $(FLIBS) -lm
+LIBS = @LIBS@ $(FLIBS) -lm
 LDFLAGS = @LDFLAGS@
 RM        = @RM@
 RANLIB    = @RANLIB@
 INCLUDES = -I./include
-IPOPTDIR = @IPOPTDIR@
 
 APILIBRARY = lib/libNLPAPI.a
 LANLIBRARY = lib/libLancelot.a
@@ -38,7 +37,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 LANOBJ=@LANDIR@/lancelot/objects/double
 LANSRC=@LANDIR@/lancelot/sources/optimizers
 
-all: lib SIFS @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY LIBRARYEC $(bindir)/decodeSIF
+all: lib SIFS @LAN_TARGS@ APILIBRARY LIBRARYEC $(bindir)/decodeSIF
 
 lib:
 	mkdir lib
@@ -100,7 +99,7 @@ LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/bndsl.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/scaln.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/initw.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/local.o)
-LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/dumhsl.o)
+LANLIBRARY: $(LANLIBRARY)($(srcdir)/dummy_hsl.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/speci.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/linpac.o)
 
@@ -171,10 +170,10 @@ $(srcdir)/drunlan.f: $(LANSRC)/runlan.f
 	$(RM) src/drunlan.o src/temp_drunlan.f
 	$(RANLIB) $(APILIBRARY)
 
-$(bindir)/HS65: @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY LIBRARYEC $(exdir)/HS65.c
+$(bindir)/HS65: @LAN_TARGS@ APILIBRARY LIBRARYEC $(exdir)/HS65.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS65.c $(LIBS) -o$(bindir)/HS65
 	
-$(bindir)/HS32: @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY $(exdir)/HS32.c
+$(bindir)/HS32: @LAN_TARGS@ APILIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS32.c $(LIBS) -o$(bindir)/HS32
 
 .PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
@@ -183,14 +182,14 @@ $(bindir)/HS32: @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY $(exdir)/HS32.c
 
 check: $(bindir)/HS65 $(bindir)/HS32
 	$(bindir)/HS65 > Examples/HS65.out
-	echo "HS65:  "`grep "Solution is" Examples/HS65.out`\
-	`grep "There were [0-9]* errors" Examples/HS65.out`
-	echo "Solution should be (3.650462,3.650462,4.620418) with       0 errors"
+	echo "HS65:  "
+	grep "Solution from" Examples/HS65.out
+	echo "Solution should be (3.650462,3.650462,4.620418)"
 	echo ""
 	$(bindir)/HS32 > Examples/HS32.out
-	echo "HS32:  "`grep "Solution is" Examples/HS32.out` \
-	`grep "There were [0-9]* errors" Examples/HS32.out`
-	echo "Solution should be (0.000000,0.000000,1.000000) with       0 errors"
+	echo "HS32:  "
+	grep "Solution from" Examples/HS32.out
+	echo "Solution should be (0.000000,0.000000,1.000000)"
 
 install:$(installdir)/lib/libLancelot.a
 install:$(installdir)/lib/libNLPAPI.a
@@ -276,7 +275,7 @@ src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
 	mv include/junk include/CUTE.h
 	rm -f SIFS/${NAME}H.h
 
-bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) @LAN_TARGS@ @IPOPT_TARGS@  APILIBRARY LIBRARYEC
+bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) @LAN_TARGS@ APILIBRARY LIBRARYEC
 	$(CC) ${CFLAGS} ${CUTEINCS} $(DEFINES) src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
 
 CUTE: SIFS

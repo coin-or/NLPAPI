@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="src/Lance.c"
 ac_default_prefix=.
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX OSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA DEFLAN LAN_TARGS LANLIBS DEFIPOPT IPOPT_TARGS IPOPTLIBS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LAN_TARGS LANLIBS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -803,6 +803,13 @@ fi
 if test -n "$ac_init_help"; then
 
   cat <<\_ACEOF
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-LANCELOT="dir"   directory where Lancelot is installed
+  --with-ipopt="opts"     specify IPOPT library
+  --with-hsl="opts"       specify HSL library
 
 Some influential environment variables:
   CC          C compiler command
@@ -2264,7 +2271,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:2267:" \
+echo "$as_me:2274:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -2434,7 +2441,7 @@ _ACEOF
 # flags.
 ac_save_FFLAGS=$FFLAGS
 FFLAGS="$FFLAGS $ac_verb"
-(eval echo $as_me:2437: \"$ac_link\") >&5
+(eval echo $as_me:2444: \"$ac_link\") >&5
 ac_f77_v_output=`eval $ac_link 5>&1 2>&1 | grep -v 'Driving:'`
 echo "$ac_f77_v_output" >&5
 FFLAGS=$ac_save_FFLAGS
@@ -2514,7 +2521,7 @@ _ACEOF
 # flags.
 ac_save_FFLAGS=$FFLAGS
 FFLAGS="$FFLAGS $ac_cv_prog_f77_v"
-(eval echo $as_me:2517: \"$ac_link\") >&5
+(eval echo $as_me:2524: \"$ac_link\") >&5
 ac_f77_v_output=`eval $ac_link 5>&1 2>&1 | grep -v 'Driving:'`
 echo "$ac_f77_v_output" >&5
 FFLAGS=$ac_save_FFLAGS
@@ -3115,7 +3122,6 @@ esac
 
 
 
-
 ac_aux_dir=
 for ac_dir in $srcdir $srcdir/.. $srcdir/../..; do
   if test -f $ac_dir/install-sh; then
@@ -3218,13 +3224,32 @@ test -z "$INSTALL_SCRIPT" && INSTALL_SCRIPT='${INSTALL}'
 
 test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
+
 ac_ext=f
 ac_compile='$F77 -c $FFLAGS conftest.$ac_ext >&5'
 ac_link='$F77 -o conftest$ac_exeext $FFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_f77_compiler_gnu
 
 
-as_ac_File=`echo "ac_cv_file_$LANDIR/lancelot/objects/double/sbmin.o" | $as_tr_sh`
+
+# Check whether --with-LANCELOT or --without-LANCELOT was given.
+if test "${with_LANCELOT+set}" = set; then
+  withval="$with_LANCELOT"
+  LANDIR=$withval
+else
+  LANDIR=
+fi;
+
+if test ! -z "$LANDIR"; then
+   cat >>confdefs.h <<\_ACEOF
+#define HAVE_LANCELOT 1
+_ACEOF
+
+   cat >>confdefs.h <<\_ACEOF
+#define VANILLALANCELOT 1
+_ACEOF
+
+   as_ac_File=`echo "ac_cv_file_$LANDIR/lancelot/objects/double/sbmin.o" | $as_tr_sh`
 echo "$as_me:$LINENO: checking for $LANDIR/lancelot/objects/double/sbmin.o" >&5
 echo $ECHO_N "checking for $LANDIR/lancelot/objects/double/sbmin.o... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
@@ -3243,40 +3268,422 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFLAN=;LAN_TARGS=LANLIBRARY;LANLIBS="-Llib -lNLPAPI -lLancelot -lExpCmp"
+  LAN_TARGS=LANLIBRARY
 else
-  DEFLAN=-DNLPAPI_NO_LANCELOT;LANTARG=;LANLIBS=
-fi
-
-
-as_ac_File=`echo "ac_cv_file_$IPOPTDIR/doc/README" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $IPOPTDIR/doc/README" >&5
-echo $ECHO_N "checking for $IPOPTDIR/doc/README... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+  { { echo "$as_me:$LINENO: error: Lancelot is not in $LANDIR" >&5
+echo "$as_me: error: Lancelot is not in $LANDIR" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$IPOPTDIR/doc/README"; then
-  eval "$as_ac_File=yes"
+fi
+
+fi
+
+
+# Check whether --with-ipopt or --without-ipopt was given.
+if test "${with_ipopt+set}" = set; then
+  withval="$with_ipopt"
+  use_ipopt=$withval;
 else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFIPOPT=;IPOPT_TARGS=;IPOPTTMP=`find $IPOPTDIR -name IPOPTLIBS.lst -print`;IPOPTLIBS="`echo \" \" | cat $IPOPTTMP`"
+  use_ipopt=;
+fi;
+# Check if user supplied option makes sense
+if test ! -z "$use_ipopt"; then
+    echo "$as_me:$LINENO: checking whether ipopt, linked using flags \"$use_ipopt\", works" >&5
+echo $ECHO_N "checking whether ipopt, linked using flags \"$use_ipopt\", works... $ECHO_C" >&6
+    LIBS="$use_ipopt $LIBS"
+    cat >>confdefs.h <<\_ACEOF
+#define HAVE_IPOPT 1
+_ACEOF
+
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call AUG_LAG
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
 else
-  DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPT_TARGS=;IPOPTTMP=;IPOPTLIBS=
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; { { echo "$as_me:$LINENO: error: ipopt does not work" >&5
+echo "$as_me: error: ipopt does not work" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
 
 
+# Check whether --with-hsl or --without-hsl was given.
+if test "${with_hsl+set}" = set; then
+  withval="$with_hsl"
+  use_HSL=$withval
+else
+  use_HSL=
+fi;
+# Check if user supplied option makes sense
+if test ! -z "$use_HSL"; then
+    LIBS="$use_HSL $LIBS"
+    echo "$as_me:$LINENO: checking whether Harwell routine mc29a supplied" >&5
+echo $ECHO_N "checking whether Harwell routine mc29a supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call mc29a
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                       cat >>confdefs.h <<\_ACEOF
+#define HAVE_MC29A 1
+_ACEOF
 
 
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
 
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine mc29ad supplied" >&5
+echo $ECHO_N "checking whether Harwell routine mc29ad supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call mc29ad
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MC29AD 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine mc27a supplied" >&5
+echo $ECHO_N "checking whether Harwell routine mc27a supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27a
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27A 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma27ad supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma27ad supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27ad
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27AD 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma27b supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma27b supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27b
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                       cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27B 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma27bd supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma27bd supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27bd
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27BD 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma27c supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma27c supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27c
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                       cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27C 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma27cd supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma27cd supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma27cd
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA27CD 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma31d supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma31d supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma31d
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                       cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA31D 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+    echo "$as_me:$LINENO: checking whether Harwell routine ma31dd supplied" >&5
+echo $ECHO_N "checking whether Harwell routine ma31dd supplied... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+      program main
+      call ma31dd
+      end
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6;
+                                        cat >>confdefs.h <<\_ACEOF
+#define HAVE_MA31DD 1
+_ACEOF
+
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+
+if test -z "$LANDIR"; then
+   LIBS="-L./lib -lNLPAPI -lExpCmp $LIBS"
+fi
+if test ! -z "$LANDIR"; then
+   LIBS="-L./lib -lNLPAPI -lExpCmp -lLancelot $LIBS"
+fi
 
 
 
@@ -3909,7 +4316,6 @@ s,@LANDIR@,$LANDIR,;t t
 s,@IPOPTDIR@,$IPOPTDIR,;t t
 s,@INSTDIR@,$INSTDIR,;t t
 s,@FSFX@,$FSFX,;t t
-s,@OSFX@,$OSFX,;t t
 s,@AR@,$AR,;t t
 s,@ARPARMS@,$ARPARMS,;t t
 s,@LIBprefix@,$LIBprefix,;t t
@@ -3921,12 +4327,8 @@ s,@RM@,$RM,;t t
 s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
-s,@DEFLAN@,$DEFLAN,;t t
 s,@LAN_TARGS@,$LAN_TARGS,;t t
 s,@LANLIBS@,$LANLIBS,;t t
-s,@DEFIPOPT@,$DEFIPOPT,;t t
-s,@IPOPT_TARGS@,$IPOPT_TARGS,;t t
-s,@IPOPTLIBS@,$IPOPTLIBS,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF
