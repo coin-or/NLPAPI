@@ -1800,7 +1800,7 @@ void handleGROUPS(char *code,char *name1,char *name2,int val1Set,double val1,cha
                                setGroupGType(tmpname1,'L');
                                setGroupConstraint(tmpname1,c);
                                NLPUnSetInequalityConstraintLowerBound(P,c);
-                               NLPSetInequalityConstraintLowerBound(P,c,0.);}
+                               NLPSetInequalityConstraintUpperBound(P,c,0.);}
         ig=findGroupNumber(tmpname1);
         if(!strcmp(name2,"'SCALE'"))
          {
@@ -2611,13 +2611,13 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      if(verbose){printf(" case ' '\n");fflush(stdout);}
      ig=findGroupNumber(name2);c=getGroupConstraint(ig);
      if(verbose){printf(" group[%d], type %c, value=%lf\n",ig,getGroupGType(ig),val1);fflush(stdout);}
-     if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintLowerBound(P,c,val1);printf("SetLowerBound\n");fflush(stdout);}
-      else                     {NLPSetInequalityConstraintUpperBound(P,c,val1);printf("SetUpperBound\n");fflush(stdout);}
+     if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintUpperBound(P,c,val1);printf("SetLowerBound\n");fflush(stdout);}
+      else                     {NLPSetInequalityConstraintLowerBound(P,c,-val1);printf("SetUpperBound\n");fflush(stdout);}
      if(name3[0]!=0x0)
       {
        ig=findGroupNumber(name3);c=getGroupConstraint(ig);
-       if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintLowerBound(P,c,val2);printf("SetLowerBound\n");fflush(stdout);}
-        else                    {NLPSetInequalityConstraintUpperBound(P,c,val2);printf("SetUpperBound\n");fflush(stdout);}
+       if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintUpperBound(P,c,val2);printf("SetLowerBound\n");fflush(stdout);}
+        else                    {NLPSetInequalityConstraintLowerBound(P,c,-val2);printf("SetUpperBound\n");fflush(stdout);}
       }
      break;
     case 'X':
@@ -2626,12 +2626,12 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      ig=findGroupNumber(tmpname2);c=getGroupConstraint(ig);
      if(verbose){printf(" group[%d], type %c\n",ig,getGroupGType(ig));fflush(stdout);}
      if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val1);
-      else                    NLPSetInequalityConstraintLowerBound(P,c,val1);
+      else                    NLPSetInequalityConstraintLowerBound(P,c,-val1);
      if(name3[0]!=0x0)
       {
        ig=findGroupNumber(tmpname3);c=getGroupConstraint(ig);
        if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val2);
-        else                    NLPSetInequalityConstraintLowerBound(P,c,val2);
+        else                    NLPSetInequalityConstraintLowerBound(P,c,-val2);
       }
      break;
     case 'Z':
@@ -2641,7 +2641,7 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      if(verbose){printf(" group[%d], type %c\n",ig,getGroupGType(ig));fflush(stdout);}
      val1=findParmValue(tmpname3);
      if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val1);
-      else                    NLPSetInequalityConstraintLowerBound(P,c,val1);
+      else                    NLPSetInequalityConstraintLowerBound(P,c,-val1);
      NLPSetGroupB(P,ig,val1);
      break;
     default:
