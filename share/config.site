@@ -5,6 +5,10 @@
 LANDIR="/u/mhender/Lancelot/VanillaLancelot"
 INSTDIR="/appmath/local"
 
+#    Directory in which Lancelot was installed.
+
+IPOPTDIR="../Ipopt"
+
 #    Below are things that shouldn't change across UNIX platforms.
 
 RM="rm -f"
