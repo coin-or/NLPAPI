@@ -169,10 +169,10 @@ $(srcdir)/drunlan.f: $(LANSRC)/runlan.f
 	$(AR) $(APILIBRARY) src/drunlan.o
 	$(RM) src/drunlan.o src/temp_drunlan.f
 	$(RANLIB) $(APILIBRARY)
-	
+
 $(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS65.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS65
-	
+
 $(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS32
 
@@ -242,7 +242,7 @@ CUTELIBS=-L./lib -lCUTE -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm
 CUTELIB=lib/libCUTE.a
 
 bin/decodeSIF: src/ParseSIFFile.c
-	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -lExpCmp -lm -o$(bindir)/decodeSIF
+	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lExpCmp -lm -o$(bindir)/decodeSIF
 
 ${CUTELIB}(${NAME}C.o): src/${NAME}C.c
 	$(CC) ${CFLAGS} ${CUTEINCS} -c src/${NAME}C.c -o ${NAME}C.o
