@@ -81,6 +81,8 @@ NLMatrix NLCreateMatrix(int n,int m)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return((NLMatrix)NULL);
    }
+
+#ifndef NL_NOINPUTCHECKS
   if(n<0)
    {
     sprintf(NLMatrixErrorMsg,"Number of rows %d (argument 1) is negative.",n);
@@ -95,6 +97,7 @@ NLMatrix NLCreateMatrix(int n,int m)
     free(this);
     return((NLMatrix)NULL);
    }
+#endif
 
   this->sparse=FULL;
   this->wrapped=0;
@@ -133,6 +136,7 @@ NLMatrix NLCreateMatrixWithData(int n,int m,double *data)
     return((NLMatrix)NULL);
    }
 
+#ifndef NL_NOINPUTCHECKS
   if(n<0)
    {
     sprintf(NLMatrixErrorMsg,"Number of rows %d (argument 1) is negative",n);
@@ -148,6 +152,7 @@ NLMatrix NLCreateMatrixWithData(int n,int m,double *data)
     free(this);
     return((NLMatrix)NULL);
    }
+#endif
 
   this->sparse=FULL;
   this->wrapped=0;
@@ -166,6 +171,7 @@ NLMatrix NLCreateMatrixWithData(int n,int m,double *data)
   this->row=(int*)NULL;
   this->col=(int*)NULL;
 
+#ifndef NL_NOINPUTCHECKS
   if(data==(double*)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Pointer to data (argument 3) is NULL");
@@ -173,6 +179,7 @@ NLMatrix NLCreateMatrixWithData(int n,int m,double *data)
     for(i=0;i<n*m;i++)(this->data)[i]=0.;
     return(this);
    }
+#endif
 
   for(i=0;i<n*m;i++)(this->data)[i]=data[i];
   this->nRefs=1;
@@ -184,12 +191,14 @@ void NLFreeMatrix(NLMatrix this)
  {
   char RoutineName[]="NLFreeMatrix";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(4,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs--;
 
@@ -207,12 +216,14 @@ int NLMGetNumberOfRows(NLMatrix this)
  {
   char RoutineName[]="NLMGetNumberOfRows";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nRows);
  }
@@ -221,12 +232,14 @@ int NLMGetNumberOfCols(NLMatrix this)
  {
   char RoutineName[]="NLMGetNumberOfCols";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nCols);
  }
@@ -236,12 +249,14 @@ double NLMGetElement(NLMatrix this,int i,int j)
   int l;
   char RoutineName[]="NLMGetElement";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   if(i<0)sprintf(NLMatrixErrorMsg,"Row index %d (argument 2) is negative.",i);
    else if(j<0)sprintf(NLMatrixErrorMsg,"Column index %d (argument 3) is negative.",j);
@@ -274,12 +289,14 @@ int NLMSetElement(NLMatrix this,int i,int j,double vl)
   int l;
   char RoutineName[]="NLMSetElement";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(i<0)sprintf(NLMatrixErrorMsg,"Row index %d (argument 2) is negative.",i);
   else if(j<0)sprintf(NLMatrixErrorMsg,"Column index %d (argument 3) is negative.",j);
@@ -323,12 +340,14 @@ void NLRefMatrix(NLMatrix this)
  {
   char RoutineName[]="NLRefMatrix";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(4,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs++;
  }
@@ -343,6 +362,7 @@ void NLPrintMatrix(FILE *fid,NLMatrix this)
   char RoutineName[]="NLPrintMatrix";
   int i,j;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"File pointer (argument 1), is NULL");
@@ -356,6 +376,7 @@ void NLPrintMatrix(FILE *fid,NLMatrix this)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   for(i=0;i<this->nRows;i++)
    {
@@ -403,6 +424,7 @@ void NLMVMult(NLMatrix A, double *x, double *b)
   int i,j;
   char RoutineName[]="NLMVMult";
 
+#ifndef NL_NOINPUTCHECKS
   if(A==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"A (first argument), is NULL");
@@ -423,6 +445,7 @@ void NLMVMult(NLMatrix A, double *x, double *b)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(A->sparse==FULL)
    {
@@ -462,6 +485,7 @@ void NLMVMultT(NLMatrix A, double *x, double *b)
   int i,j;
   char RoutineName[]="NLMVMult";
 
+#ifndef NL_NOINPUTCHECKS
   if(A==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"A (first argument), is NULL");
@@ -482,6 +506,7 @@ void NLMVMultT(NLMatrix A, double *x, double *b)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(A->sparse==FULL)
    {
@@ -527,6 +552,7 @@ NLMatrix NLCreateSparseMatrix(int n,int m)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return((NLMatrix)NULL);
    }
+#ifndef NL_NOINPUTCHECKS
   if(n<0)
    {
     sprintf(NLMatrixErrorMsg,"Number of rows %d (argument 1) is negative.",n);
@@ -541,6 +567,7 @@ NLMatrix NLCreateSparseMatrix(int n,int m)
     free(this);
     return((NLMatrix)NULL);
    }
+#endif
 
   this->sparse=DUMBSPARSE;
   this->wrapped=0;
@@ -589,12 +616,14 @@ int NLMIncrementElement(NLMatrix this,int i,int j,double vl)
   int l;
   char RoutineName[]="NLMIncrementElement";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(i<0)sprintf(NLMatrixErrorMsg,"Row index %d (argument 2) is negative.",i);
   else if(j<0)sprintf(NLMatrixErrorMsg,"Column index %d (argument 3) is negative.",j);
@@ -645,6 +674,7 @@ NLMatrix NLCreateDenseWrappedMatrix(int n,int m, double *data)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return((NLMatrix)NULL);
    }
+#ifndef NL_NOINPUTCHECKS
   if(n<0)
    {
     sprintf(NLMatrixErrorMsg,"Number of rows %d (argument 1) is negative.",n);
@@ -659,6 +689,7 @@ NLMatrix NLCreateDenseWrappedMatrix(int n,int m, double *data)
     free(this);
     return((NLMatrix)NULL);
    }
+#endif
 
   this->sparse=FULL;
   this->wrapped=1;
@@ -681,12 +712,14 @@ int NLMSetToZero(NLMatrix this)
   int i,j;
   char RoutineName[]="NLMSetToZero";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   switch(this->sparse)
    {
@@ -711,12 +744,14 @@ NLMatrix NLMatrixClone(NLMatrix this)
   char RoutineName[]="NLMatrixClone";
   NLMatrix clone;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return (NLMatrix)NULL;
    }
+#endif
 
   if(!this->sparse)
    {
@@ -762,12 +797,14 @@ int NLMSparse(NLMatrix this)
  {
   char RoutineName[]="NLMSparse";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return this->sparse;
  }
@@ -776,12 +813,14 @@ double *NLMData(NLMatrix this)
  {
   char RoutineName[]="NLMData";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return (double*)NULL;
    }
+#endif
 
   return this->data;
  }
@@ -790,12 +829,14 @@ int NLMnE(NLMatrix this)
  {
   char RoutineName[]="NLMnE";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   switch(this->sparse)
    {
@@ -818,12 +859,14 @@ int *NLMRow(NLMatrix this)
  {
   char RoutineName[]="NLMRow";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return (int*)NULL;
    }
+#endif
 
   return this->row;
  }
@@ -832,12 +875,14 @@ int *NLMCol(NLMatrix this)
  {
   char RoutineName[]="NLMCol";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return (int*)NULL;
    }
+#endif
 
   return this->col;
  }
@@ -850,6 +895,7 @@ void NLMMMMProd(NLMatrix R,double *M,double *B)
 
 /* B= R^T M R */
 
+#ifndef NL_NOINPUTCHECKS
   if(R==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
@@ -870,6 +916,7 @@ void NLMMMMProd(NLMatrix R,double *M,double *B)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   n=R->nCols;
   m=R->nRows;
@@ -1068,6 +1115,7 @@ void NLGetGershgorinBounds(NLMatrix this,double *M,double *L,double *U)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
@@ -1088,6 +1136,7 @@ void NLGetGershgorinBounds(NLMatrix this,double *M,double *L,double *U)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(this->sparse==FULL)
    {
@@ -1200,12 +1249,14 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(this->sparse==FULL)
    {
@@ -1279,6 +1330,7 @@ double NLMatrixDoubleProduct(NLVector u,NLMatrix this,NLVector v)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(u==(NLVector)NULL)
    {
     sprintf(NLMatrixErrorMsg,"left vector (first argument), is NULL");
@@ -1299,6 +1351,7 @@ double NLMatrixDoubleProduct(NLVector u,NLMatrix this,NLVector v)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   n=NLVGetNC(u);
   m=NLVGetNC(v);
@@ -1369,6 +1422,7 @@ void NLMSumSubMatrixInto(NLMatrix M, double s, int n, int *r, double *data)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(M==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
@@ -1389,6 +1443,7 @@ void NLMSumSubMatrixInto(NLMatrix M, double s, int n, int *r, double *data)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
 /* Put in code for DUMBSPARSE and WSMPMATRIX */
 
@@ -1471,6 +1526,7 @@ void NLMSumRankOneInto(NLMatrix M, double s, double *data)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(M==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
@@ -1484,6 +1540,7 @@ void NLMSumRankOneInto(NLMatrix M, double s, double *data)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
 /* Put in code for DUMBSPARSE and WSMPMATRIX */
 
@@ -1597,6 +1654,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Problem (first argument), is NULL");
@@ -1617,6 +1675,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
 /* f='O', Objective */
 /* f='I', Inequality i */
@@ -1854,6 +1913,7 @@ NLMatrix NLCreateWSMPSparseMatrix(int n)
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return((NLMatrix)NULL);
    }
+#ifndef NL_NOINPUTCHECKS
   if(n<0)
    {
     sprintf(NLMatrixErrorMsg,"Number of rows %d (argument 1) is negative.",n);
@@ -1861,6 +1921,7 @@ NLMatrix NLCreateWSMPSparseMatrix(int n)
     free(this);
     return((NLMatrix)NULL);
    }
+#endif
 
   this->sparse=WSMPSPARSE;
   this->wrapped=0;
