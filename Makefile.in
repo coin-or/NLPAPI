@@ -275,8 +275,7 @@ src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
 	rm -f SIFS/${NAME}H.h
 
 bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) APILIBRARY LANLIBRARY LIBRARYEC
-	$(CC) ${CFLAGS} ${CUTEINCS} ${CUTELIBS} src/test${NAME}.c -o bin/test${NAME}
-#	rm -f src/test${NAME}.c src/${NAME}C.c src/${NAME}Fort.f
+	$(CC) ${CFLAGS} ${CUTEINCS} src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
 
 CUTE: SIFS
 	./makeCUTE
