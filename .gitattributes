@@ -1,3 +1,5 @@
 * text=auto !eol
+Doc/NLPAPI-Ref.pdf svneol=native#unset
+Doc/NLPAPI-UG.pdf svneol=native#unset
 Doc/NLPAPI.dvi svneol=native#unset
 Doc/NLPAPI.pdf svneol=native#unset
