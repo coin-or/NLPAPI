@@ -35,7 +35,7 @@ void NLSetError(int sev,char *routine,char *msg,int line,char *file)
       abort();
      }
     NLErrorRtn=(char**)realloc((void*)NLErrorRtn,NLMError*sizeof(char*));
-    if(NLErrorRtn==(int*)NULL)
+    if(NLErrorRtn==(char**)NULL)
      {
       printf("Catastrophic error in NLSetError, out of memory trying to alloc %d bytes for NLErrorRtn, line %d in file %s\n",
              NLMError*sizeof(int),__LINE__,__FILE__);
@@ -44,7 +44,7 @@ void NLSetError(int sev,char *routine,char *msg,int line,char *file)
       abort();
      }
     NLErrorMsg=(char**)realloc((void*)NLErrorMsg,NLMError*sizeof(char*));
-    if(NLErrorMsg==(int*)NULL)
+    if(NLErrorMsg==(char**)NULL)
      {
       printf("Catastrophic error in NLSetError, out of memory trying to alloc %d bytes for NLErrorMsg, line %d in file %s\n",
              NLMError*sizeof(int),__LINE__,__FILE__);
@@ -53,7 +53,7 @@ void NLSetError(int sev,char *routine,char *msg,int line,char *file)
       abort();
      }
     NLErrorFile=(char**)realloc((void*)NLErrorFile,NLMError*sizeof(char*));
-    if(NLErrorFile==(int*)NULL)
+    if(NLErrorFile==(char**)NULL)
      {
       printf("Catastrophic error in NLSetError, out of memory trying to alloc %d bytes for NLErrorFile, line %d in file %s\n",
              NLMError*sizeof(int),__LINE__,__FILE__);
