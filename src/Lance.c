@@ -21,6 +21,29 @@
 #include <string.h>
 #include <ctype.h>
 
+void NLSetError(int,char*,char*,int,char*);
+static char LNLanceErrorMsg[256]="";
+
+#ifdef NLPAPI_NO_LANCELOT
+int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
+ {
+  char RoutineName[]="LNMinimize";
+
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+ }
+
+int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
+ {
+  char RoutineName[]="LNMinimize";
+
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+ }
+#else
+
 void F77_FUNC(elfuns,ELFUNS)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*);
 void F77_FUNC(groups,GROUPS)(F77DOUBLEPRECISION*,F77INTEGER*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77LOGICAL*);
 void F77_FUNC(ranges,RANGES)(F77INTEGER*,F77LOGICAL*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*);
@@ -28,8 +51,6 @@ void F77_FUNC(gminma,GMINMA)(F77INTEGER*,F77DOUBLEPRECISION*);
 void F77_FUNC(settyp,SETTYP)(F77INTEGER*,F77INTEGER*);
 
 void LNDumpSpecFile(NLLancelot);
-void NLSetError(int,char*,char*,int,char*);
-static char LNLanceErrorMsg[256]="";
 double NLPGetObjectiveLowerBound(NLProblem);
 double NLPGetObjectiveUpperBound(NLProblem);
 void LNSetMaxMin(NLLancelot,int);
@@ -3736,3 +3757,4 @@ void F77_FUNC(lnpgetinitialhessian,LNPGETINITIALHESSIAN)(F77INTEGER *e, F77DOUBL
  }
 
 /* #include <../src/LanceCUTER.c>*/
+#endif
