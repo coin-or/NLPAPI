@@ -175,9 +175,6 @@ $(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
 $(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS32
 
-$(bindir)/decodeSIF: $(srcdir)/ParseSIFFile.c
-	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -lExpCmp -o$(bindir)/decodeSIF
-
 $(bindir)/Newer: $(srcdir)/Newer.c
 	$(CC) $(CFLAGS) $(srcdir)/Newer.c -lld -o$(bindir)/Newer
 	
@@ -286,6 +283,3 @@ bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort
 
 CUTE: SIFS
 	./makeCUTE
-
-SIFS:
-	mkdir SIFS
