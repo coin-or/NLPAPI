@@ -104,7 +104,7 @@
      O({\bf v}) = \sum_{i=1}^{ng} {1\over s_i}g_i( \sum_{j=1}^{ne_i} w_{ij} f_{ij}(R {\bf ev}_{ij}) 
              + <a_i,{\bf v}> - b_i)
     \end{displaymath}
-    The $g_i:\R\into\R$ are caled groups functions, the $f_{ij}:\R^{nev_{ij}}\into\R$ are called nonlinear
+    The $g_i:\R\into\R$ are caled groups functions, the $f_{ij}:\R^{e_{ij}}\into\R$ are called nonlinear
     elements, $<a_i,{\bf v}>$ is called the linear element of the group and $b_i$ is called 
     the constant element.
 
@@ -154,10 +154,22 @@
       double (*dF)(int,int,double*,void*);
       double (*ddF)(int,int,int,double*,void*);
       void *data;
-      void (*freedata)(void*));
+      void (*freedata)(void*);
 
       nv=3;v[0]=0;v[1]=45;v[2]=9;
       rc=NLPSetObjective(P,name,nv,v,F,dF,ddF,data,freedata);
+     \end{verbatim}
+
+     The subroutines {\tt F}, {\tt dF} and {\tt ddF} are called back when the objective is evaluated. The
+     arguments to {\tt F} are:
+     \begin{verbatim}
+       double F(int nv, double *x, void *data)
+          int nv     The number of entries in x, as provided by
+                        the user in the SetObjective call.
+          double *x  An array with the values of the coordinates
+                        of x.
+          void *data The data pointer provided by the user in the
+                        SetObjective call.
      \end{verbatim}
      The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the 
      functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
@@ -175,7 +187,8 @@
      value of the 46th problem variable, and so on.
 
      Finally, the objective may be defined via LANCELOT's Group Partial Separable form. When the problem is 
-     first created the objective has a single, empty group. Additional groups are added using the
+     first created the objective has a single group with trivial group function, no nonlinearelements, and
+     linear and constant elements both zero. Additional groups ban be added using the
      {\tt NLPAdd\-Group\-To\-Objective} routine. Each group has a group function $g_i$, a group scale $s_i$,
      a linear element, ${\bf a}_i.{\bf v}$, a constant element $b_i$, and a nonlinear element $N_i({\bf v})$.
      (See the sections below on ``Groups''). 
@@ -192,7 +205,7 @@
      \end{verbatim}
      The nonlinear element is itself composed of a sum of element functions:
      \begin{displaymath}
-       N({\bf v}) = \sum w_i ef_i( \sum R_{ij} ev_j )
+       N({\bf v}) = \sum w_i f_i( \sum R_{ij} e_j )
      \end{displaymath}
      for a more complete description see the section below on nonlinear elements.
 
@@ -372,7 +385,7 @@
     identical, and adds a linear equality constraint which requires that the variable take that value, 
     and removes the simple bounds.
     \begin{verbatim}
-     NLEliminateFixedVariables
+     NLEliminateFixedVariables(P);
     \end{verbatim}
     This is useful for interior point techniques, which replace simple bounds by log barriers, and have
     problems dealing with identical bounds.
@@ -442,7 +455,7 @@
      \begin{displaymath}
       \sum {1\over{s_i}}g_i(N_i({\bf v})+ {\bf a}_i.{\bf v}-b_i)
      \end{displaymath}
-     When a is created the group function $g_i$ is the identity, and the group scale is 1. In addition, there are no
+     When a group is created the group function $g_i$ is the identity, and the group scale is 1. In addition, there are no
      nonlinear elements (the $N_i({\bf v})$), and the linear element ${\bf a}_i.{\bf v}$ and the constant element
      $b_i$ are zero. 
 
@@ -509,10 +522,10 @@
       elements whose values are summed, then added to the value of the linear and constant elements to give the argument
       to the group function. Each nonlinear element is of the form:
      \begin{displaymath}
-          N({\bf v}) = \sum_i w_i f_i( \sum_j R_{ij} ev_j )
+          N({\bf v}) = \sum_i w_i f_i( \sum_j R_{ij} e_j )
      \end{displaymath}
      The element weight $w_i$ is a scalar (default is $w_i=1$). The element function $f_i$ is a scalar valued function
-     of a set of {\it internal variables}, which are a linear combination of the element variables $ev_j$ (a subset of
+     of a set of {\it internal variables}, which are a linear combination of the element variables $e_j$ (a subset of
      the problem variables). The range transformation $R_{ij}$ relates element variables to internal variables.
 
      An element function is created with one of the routines:
