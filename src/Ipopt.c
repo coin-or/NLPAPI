@@ -275,7 +275,7 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
 	}
     }
   pBNDS_U=(F77DOUBLEPRECISION*)malloc(NUB*sizeof(F77DOUBLEPRECISION));
-  if(pBNDS_U==(F77DOUBLEPRECISION*)NULL)
+  if(pBNDS_U==(F77DOUBLEPRECISION*)NULL&&NUB!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",NLB*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
@@ -283,7 +283,7 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
     }
   memcpy(pBNDS_U,dbuffer,NUB*sizeof(F77DOUBLEPRECISION));
   pIUB=(int*)malloc(NUB*sizeof(F77INTEGER));
-  if(pIUB==(F77INTEGER*)NULL)
+  if(pIUB==(F77INTEGER*)NULL&&NUB!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",NLB*sizeof(F77INTEGER));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
@@ -296,35 +296,35 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
 
   /* Get memory for the iterates and multipliers */
   pX=(F77DOUBLEPRECISION*)malloc(N*sizeof(F77DOUBLEPRECISION));
-  if(pX==(F77DOUBLEPRECISION*)NULL)
+  if(pX==(F77DOUBLEPRECISION*)NULL&&N!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",N*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
       return -1;
     }
   pV_L=(F77DOUBLEPRECISION*)malloc(NLB*sizeof(F77DOUBLEPRECISION));
-  if(pV_L==(F77DOUBLEPRECISION*)NULL)
+  if(pV_L==(F77DOUBLEPRECISION*)NULL&&NLB!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",NLB*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
       return -1;
     }
   pV_U=(F77DOUBLEPRECISION*)malloc(NUB*sizeof(F77DOUBLEPRECISION));
-  if(pV_U==(F77DOUBLEPRECISION*)NULL)
+  if(pV_U==(F77DOUBLEPRECISION*)NULL&&NUB!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",NUB*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
       return -1;
     }
   pLAM=(F77DOUBLEPRECISION*)malloc(M*sizeof(F77DOUBLEPRECISION));
-  if(pLAM==(F77DOUBLEPRECISION*)NULL)
+  if(pLAM==(F77DOUBLEPRECISION*)NULL&&M!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",M*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
       return -1;
     }
   pC=(F77DOUBLEPRECISION*)malloc(M*sizeof(F77DOUBLEPRECISION));
-  if(pC==(F77DOUBLEPRECISION*)NULL)
+  if(pC==(F77DOUBLEPRECISION*)NULL&&M!=0)
     {
       sprintf(IPErrorMsg,"Out of memory, trying to allocate %d bytes",M*sizeof(F77DOUBLEPRECISION));
       NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
