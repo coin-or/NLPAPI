@@ -38,10 +38,9 @@
       {\rm minimize}~O({\bf x})& \qquad\qquad \rm Objective~Function\\
       {\rm subject~to:}\\
       \qquad l_i \leq x_i \leq u_i& \qquad\qquad  \rm Simple~Bounds\\
-      \qquad c_i({\bf x}) = 0& \qquad\qquad \rm Nonlinear~Equality
+      \qquad c_i({\bf x}) = 0& \qquad\qquad \rm Equality
                                                       ~Constraints\\
-      \qquad L_i \leq c_i({\bf x}) \leq U_i& \qquad\qquad \rm Nonlinear
-                                                      ~Inequality~Constraints\\
+      \qquad L_i \leq c_i({\bf x}) \leq U_i& \qquad\qquad \rm Inequality~Constraints\\
      \end{array}
     \end{displaymath}
 
@@ -84,25 +83,22 @@
 
    The API deals with minimization (or maximization) problems of the form
    \begin{displaymath}
-     \begin{array}{ll}
-      {\rm minimize}~O({\bf x})& \qquad\qquad \rm Objective~Function\\
+     \begin{array}{l}
+      {\rm minimize}~O({\bf x})
       {\rm subject~to:}\\
-      \qquad l_i \leq x_i \leq u_i& \qquad\qquad  \rm Simple~Bounds\\
-      \qquad c_i({\bf x}) = 0& \qquad\qquad \rm Nonlinear~Equality
-                                                      ~Constraints\\
-      \qquad L_i \leq c_i({\bf x}) \leq U_i& \qquad\qquad \rm Nonlinear
-                                                      ~Inequality~Constraints\\
+      \qquad l_i \leq x_i \leq u_i
+      \qquad c_i({\bf x}) = 0
+      \qquad L_i \leq c_i({\bf x}) \leq U_i
      \end{array}
    \end{displaymath}
 
      To define the problem the user creates an {\tt NLProblem} that
     holds all of the information defining the problem. The problem is initially
-    empty, and the user then sets the objective function, and add equality and inequality constraints.
+    empty, and the user provides a function for the objective,
+    and adds equality and inequality constraints. Each of these, the objective and the
+    constraints involve scalar valued functions of the problem variables ${\bf x}$.
 
    \subsection{Functions}
-
-    The problem consists of functions $F({\bf x})$, which are scalar valued functions of the problem variables ${\bf x}$. 
-    In the problem definition there are two functions, the objective function $O({\bf x})$ and constraints $c_i({\bf x})$.
 
     The NLPAPI provides three methods of defining these functions. They may be defined by an expression 
     in a string (easy for small problems, but slow and cumbersome for large problems), by subroutines
@@ -209,6 +205,53 @@
     then to set the group scales and group functions, 
     the linear and constant elements, and finally to add a set of nonloinear elements (though the order 
     isn't important). The groups are referred to by the order in which they were added to the function.
+
+    The code for the example is a little more complicated using this method
+\begin{verbatim}
+  P=NLCreateProblem(...);
+  g=NLCreateGroupFunction(P,"L2",gSq,dgSq,ddgSq,NULL,NULL);
+  f=NLCreateElementFunction(P,"fSq",1,NULL,fSq,dfSq,ddfSq,NULL,NULL);
+
+\end{verbatim}
+
+  The objective function $(x_1-x_2)^2+(x_1+x_2-10)^2+(x_3-5)^2$, consists
+  of three groups, all with the same group function, but different linear
+  parts. $(x_1-x_2)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ1","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,1.);
+  rc=NLVSetC(a,10,-1.);
+  rc=NLVSetC(a,9,0.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  NLFreeVector(a);
+\end{verbatim}
+  $(x_1+x_2-10)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ2","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,1.);
+  rc=NLVSetC(a,10,1.);
+  rc=NLVSetC(a,9,0.);
+  rc=NLPSetObjectiveGroupScale(P,group,9.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  rc=NLPSetObjectiveGroupB(P,group,10.);
+  NLFreeVector(a);
+\end{verbatim}
+  $(x_3-5)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ3","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,0.);
+  rc=NLVSetC(a,10,0.);
+  rc=NLVSetC(a,9,1.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  rc=NLPSetObjectiveGroupB(P,group,5.);
+  NLFreeVector(a);
+\end{verbatim}
 
    \subsection{Solving a Problem}
 
