@@ -1,0 +1,291 @@
+# @(#)Makefile.in	1.2
+# 99/09/09 16:07:43
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+VPATH=@prefix@
+
+AR        = @AR@
+srcdir    = src
+exdir    = Examples
+bindir    = bin
+CC        = @CC@
+CFLAGS    = @CFLAGS@
+DEFINES=@DEFS@ -DVANILLALANCELOT
+F77       = @F77@
+FSFX      = @FSFX@
+FFLAGS    = @FFLAGS@
+FLIBS    = @FLIBS@
+INSTALL = @INSTALL@
+installdir = @INSTDIR@
+LD        = @CC@
+LIBS = @LIBS@
+LDFLAGS = @LDFLAGS@
+RM        = @RM@
+RANLIB    = @RANLIB@
+INCLUDES = -I./include
+
+APILIBRARY = lib/libNLPAPI.a
+LANLIBRARY = lib/libLancelot.a
+LIBRARYEC = lib/libExpCmp.a
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+
+LANOBJ=@LANDIR@/lancelot/objects/double
+LANSRC=@LANDIR@/lancelot/sources/optimizers
+
+all: lib SIFS APILIBRARY LANLIBRARY LIBRARYEC $(bindir)/decodeSIF $(bindir)/Newer
+
+lib:
+	mkdir lib
+
+SIFS:
+	mkdir SIFS
+
+.c.a:
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o$*.o
+	$(AR)  $@ $*.o
+	$(RANLIB) $@
+	$(RM)  $*.o
+
+$(FSFX).a:
+	$(F77) $(FFLAGS) -c $< -o$*.o
+	$(AR)  $@ $*.o
+	$(RANLIB) $@
+	$(RM)  $*.o
+
+.o.a:
+	$(AR)  $@ $*.o
+	$(RANLIB) $@
+
+APILIBRARY: $(APILIBRARY)($(srcdir)/Lance.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Error.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/ElementFunction.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/NonlinearElement.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Matrix.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Problem.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/GroupFunction.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Vector.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/drunlan.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/ReportTimes.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/AugLg.o)
+
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/lance.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/sbmin.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/auglg.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/dumbr.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/datal.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/cauch.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/cg.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/drche.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/drchg.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/asmbl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/frntl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/gtpgr.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/hsprd.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/inxac.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/sort.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/assl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/misc.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/mdchl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/elgrd.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/others.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/precn.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/bndsl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/scaln.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/initw.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/local.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/dumhsl.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/speci.o)
+LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/linpac.o)
+
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CmpExpr.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CpExeCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CpObjCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CrExpD.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CrObjCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/CrTokCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/ECFunction.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/ECcos.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/ECfabs.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/ECsin.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/ECsqrt.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDacos.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDasin.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDatan.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDcos.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDfabs.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDlog.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDlog10.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDsqrt.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDtan.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EDtanh.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/EvalExp.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/FrObjCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/FrTokCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtErMsg.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtFnIdNm.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtFnIdVa.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtIdNm.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtIdTy.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtInIdNm.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtInIdVl.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtMsgPrt.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtRlIdNm.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtRlIdVl.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/GtUnIdNm.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/IdSet.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/NFnId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/NId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/NInId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/NRlId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/NUnId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrsTokCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrtObjCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrtSt.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrtSymTb.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrtTokCd.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/PrtTokTy.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StId.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StIdFn.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StIdIn.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StIdRl.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StIdUn.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StMsgPrt.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StMthCn.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/StMthFn.o)
+LIBRARYEC: $(LIBRARYEC)($(srcdir)/TokExpr.o)
+
+$(APILIBRARY)($(srcdir)/drunlan.o): $(srcdir)/drunlan.f
+
+$(srcdir)/drunlan.f: $(LANSRC)/runlan.f
+	cat $(LANSRC)/runlan.f | $(LANSRC)/../todble > src/temp_drunlan.f
+	sed -f bin/ChangeMainProgram.sed src/temp_drunlan.f > src/drunlan.f
+	$(F77) $(F77FLAGS) -c src/drunlan$(FSFX) -osrc/drunlan.o
+	$(AR) $(APILIBRARY) src/drunlan.o
+	$(RM) src/drunlan.o src/temp_drunlan.f
+	$(RANLIB) $(APILIBRARY)
+	
+$(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS65.c -Llib -lNLPAPI -lLancelot $(FLIBS) -lm -o$(bindir)/HS65
+	
+$(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot $(FLIBS) -lm -o$(bindir)/HS32
+
+$(bindir)/decodeSIF: $(srcdir)/ParseSIFFile.c
+	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -o$(bindir)/decodeSIF
+
+$(bindir)/Newer: $(srcdir)/Newer.c
+	$(CC) $(CFLAGS) $(srcdir)/Newer.c -lld -o$(bindir)/Newer
+	
+.PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
+
+.SILENT: check
+
+check: $(bindir)/HS65 $(bindir)/HS32
+	$(bindir)/HS65 > Examples/HS65.out
+	echo "HS65:  "`grep "Solution is" Examples/HS65.out`\
+	`grep "There were [0-9]* errors" Examples/HS65.out`
+	echo "Solution should be (3.650460,3.650460,4.620420) with       0 errors"
+	echo ""
+	$(bindir)/HS32 > Examples/HS32.out
+	echo "HS32:  "`grep "Solution is" Examples/HS32.out` \
+	`grep "There were [0-9]* errors" Examples/HS32.out`
+	echo "Solution should be (-0.000000,2.225070,0.999992) with       0 errors"
+
+install:$(installdir)/lib/libLancelot.a
+install:$(installdir)/lib/libNLPAPI.a
+install:$(installdir)/include/NLPAPI.h
+install:$(installdir)/include/NLPAPIConfig.h
+
+$(installdir)/lib/libLancelot.a: lib/libLancelot.a
+	$(INSTALL) lib/libLancelot.a $(installdir)/lib
+
+$(installdir)/lib/libNLPAPI.a: lib/libNLPAPI.a
+	$(INSTALL) lib/libNLPAPI.a $(installdir)/lib
+
+$(installdir)/include/NLPAPI.h: include/NLPAPI.h
+	$(INSTALL) include/NLPAPI.h $(installdir)/include
+
+$(installdir)/include/NLPAPIConfig.h: include/NLPAPIConfig.h
+	$(INSTALL) include/NLPAPIConfig.h $(installdir)/include
+
+distclean: clean
+	$(RM) config.log
+	$(RM) config.cache
+	$(RM) config.status
+	$(RM) conftest
+	$(RM) conftest.f
+	$(RM) conftest.fpp
+	$(RM) src/drunlan.f
+	$(RM) include/NLPAPIConfig.h
+	$(RM) SOLUTION.d
+	$(RM) OUTSDIF.d
+	$(RM) SUMMARY.d
+	$(RM) SAVEDATA.d
+	$(RM) SPEC.SPC
+
+clean:
+	$(RM) lib/libLancelot.a
+	$(RM) lib/libNLPAPI.a
+	$(RM) bin/HS32
+	$(RM) bin/HS65
+
+uninstall:
+	$(RM) $(installdir)/lib/libLancelot.a
+	$(RM) $(installdir)/lib/libNLPAPI.a
+	$(RM) $(installdir)/include/NLPAPI.h
+	$(RM) $(installdir)/include/NLPAPIConfig.h
+
+.SUFFIXES: .SIF
+
+CUTEINCS = -I./include
+CUTELIBS=-L./lib -lCUTE -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm
+CUTELIB=lib/libCUTE.a
+
+bin/decodeSIF: src/ParseSIFFile.c
+	$(CC) ${CFLAGS} ${CUTEINCS} ${CUTELIBS} src/ParseSIFFile.c -obin/decodeSIF
+
+${CUTELIB}(${NAME}C.o): src/${NAME}C.c
+	$(CC) ${CFLAGS} ${CUTEINCS} -c src/${NAME}C.c -o ${NAME}C.o
+	ar ru ${CUTELIB} ${NAME}C.o
+	rm ${NAME}C.o
+
+${CUTELIB}(${NAME}Fort.o): src/${NAME}Fort.f
+	$(F77) ${FFLAGS} -c src/${NAME}Fort.f -o ${NAME}Fort.o
+	ar ru ${CUTELIB} ${NAME}Fort.o
+	rm ${NAME}Fort.o
+
+src/test${NAME}.c: bin/decodeSIF SIFS/${NAME}.SIF
+	cd src;../bin/decodeSIF ../SIFS/${NAME}.SIF
+	mv SIFS/${NAME}C.c SIFS/${NAME}Fort.f src
+	cat include/CUTE.h SIFS/${NAME}H.h | sort | uniq > include/junk
+	mv include/junk include/CUTE.h
+	rm -f SIFS/${NAME}H.h
+
+src/${NAME}C.c: bin/decodeSIF SIFS/${NAME}.SIF
+	cd src;../bin/decodeSIF ../SIFS/${NAME}.SIF
+	mv SIFS/${NAME}C.c SIFS/${NAME}Fort.f src
+	cat include/CUTE.h SIFS/${NAME}H.h | sort | uniq > include/junk
+	mv include/junk include/CUTE.h
+	rm -f SIFS/${NAME}H.h
+
+src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
+	cd src;../bin/decodeSIF ../SIFS/${NAME}.SIF
+	mv SIFS/${NAME}C.c SIFS/${NAME}Fort.f src
+	cat include/CUTE.h SIFS/${NAME}H.h | sort | uniq > include/junk
+	mv include/junk include/CUTE.h
+	rm -f SIFS/${NAME}H.h
+
+bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) APILIBRARY LANLIBRARY LIBRARYEC
+	$(CC) ${CFLAGS} ${CUTEINCS} ${CUTELIBS} src/test${NAME}.c -o bin/test${NAME}
+#	rm -f src/test${NAME}.c src/${NAME}C.c src/${NAME}Fort.f
+
+CUTE: SIFS
+	./makeCUTE
+
+SIFS:
+	mkdir SIFS

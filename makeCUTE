@@ -1,0 +1,6 @@
+#!/bin/csh
+unalias ls
+
+foreach file ( SIFS/*.SIF )
+  make NAME=`basename $file:r` bin/test`basename $file:r`
+end
