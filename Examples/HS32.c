@@ -33,6 +33,9 @@ int main(int argc,char *argv[])
 /* HS32 */
 
   P=NLCreateProblem("HS32",3);
+  NLPSetLowerSimpleBound(P,0,0.);
+  NLPSetLowerSimpleBound(P,1,0.);
+  NLPSetLowerSimpleBound(P,2,0.);
 
   rc=NLPSetLowerSimpleBound(P,0,0.);
   rc=NLPSetLowerSimpleBound(P,1,0.);
