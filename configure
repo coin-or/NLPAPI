@@ -3248,6 +3248,7 @@ else
   DEFLAN=-DNLPAPI_NO_LANCELOT;LANTARG=;LANLIBS=
 fi
 
+
 as_ac_File=`echo "ac_cv_file_$IPOPTDIR/doc/README" | $as_tr_sh`
 echo "$as_me:$LINENO: checking for $IPOPTDIR/doc/README" >&5
 echo $ECHO_N "checking for $IPOPTDIR/doc/README... $ECHO_C" >&6
@@ -3267,10 +3268,11 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFIPOPT=;IPOPT_TARGS=;IPOPTLIBS=
+  DEFIPOPT=;IPOPT_TARGS=;IPOPTTMP=`find $IPOPTDIR -name IPOPTLIBS.lst -print`;IPOPTLIBS="`cat $IPOPTTMP`"
 else
   DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPT_TARGS=;IPOPTLIBS=
 fi
+
 
 
 
