@@ -184,12 +184,12 @@ check: $(bindir)/HS65 $(bindir)/HS32
 	$(bindir)/HS65 > Examples/HS65.out
 	echo "HS65:  "`grep "Solution is" Examples/HS65.out`\
 	`grep "There were [0-9]* errors" Examples/HS65.out`
-	echo "Solution should be (3.650460,3.650460,4.620420) with       0 errors"
+	echo "Solution should be (3.650462,3.650462,4.620418) with       0 errors"
 	echo ""
 	$(bindir)/HS32 > Examples/HS32.out
 	echo "HS32:  "`grep "Solution is" Examples/HS32.out` \
 	`grep "There were [0-9]* errors" Examples/HS32.out`
-	echo "Solution should be (-0.000000,2.225070,0.999992) with       0 errors"
+	echo "Solution should be (0.000000,0.000000,1.000000) with       0 errors"
 
 install:$(installdir)/lib/libLancelot.a
 install:$(installdir)/lib/libNLPAPI.a
