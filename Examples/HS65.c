@@ -19,6 +19,7 @@ int main(int argc,char *argv[])
   NLVector a;
   double x0[3];
   NLLancelot Lan;
+  NLIpopt Ip;
   double x[3];
   int constraint;
   int element;
@@ -122,12 +123,20 @@ int main(int argc,char *argv[])
   x0[1]=3.65046;
   x0[2]=4.62042;*/
 
+#ifndef NLPAPI_NO_IPOPT
+  Ip=NLCreateIpopt();
+  IPAddOption(Ip,"ioutput",1.);
+/*IPAddOption(Ip,"dtol",1e-12);*/
+
+  rc=IPMinimize(Ip,P,x0,(double*)NULL,(double*)NULL,x);
+#else
   Lan=NLCreateLancelot();
   rc=LNSetPrintLevel(Lan,1);
 /*rc=LNSetInitialPenalty(Lan,1.e-4);
   rc=LNSetPenaltyBound(Lan,1.e-4);*/
 
   rc=LNMinimize(Lan,P,x0,(double*)NULL,(double*)NULL,x);
+#endif
 
   printf("Solution is (");
   for(i=0;i<3;i++)
@@ -152,7 +161,11 @@ int main(int argc,char *argv[])
   NLClearErrors();
   NLFreeGroupFunction(g);
   NLFreeElementFunction(f);
+#ifndef NLPAPI_NO_IPOPT
+  NLFreeIpopt(Ip);
+#else
   NLFreeLancelot(Lan);
+#endif
   NLFreeProblem(P);
   return(0);
  }
