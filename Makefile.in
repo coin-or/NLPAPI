@@ -171,10 +171,10 @@ $(srcdir)/drunlan.f: $(LANSRC)/runlan.f
 	$(RM) src/drunlan.o src/temp_drunlan.f
 	$(RANLIB) $(APILIBRARY)
 
-$(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
+$(bindir)/HS65: @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY LIBRARYEC $(exdir)/HS65.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS65.c $(LIBS) -o$(bindir)/HS65
 	
-$(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
+$(bindir)/HS32: @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS32.c $(LIBS) -o$(bindir)/HS32
 
 .PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
@@ -276,7 +276,7 @@ src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
 	mv include/junk include/CUTE.h
 	rm -f SIFS/${NAME}H.h
 
-bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) APILIBRARY LANLIBRARY LIBRARYEC
+bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) @LAN_TARGS@ @IPOPT_TARGS@  APILIBRARY LIBRARYEC
 	$(CC) ${CFLAGS} ${CUTEINCS} $(DEFINES) src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
 
 CUTE: SIFS
