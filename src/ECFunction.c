@@ -143,10 +143,10 @@ void ECEvaluateFunction(ECFn F,double *x,double *y)
       if(verbose){printf("ECEvaluateFunction: Set variable %d(%s) to %lf\n",j,F->var[j],x[j]);fflush(stdout);}
       rc=ECSetIdentifierToReal(F->var[j],x[j],F->code[i]);
      }
-    if(errno>0){printf("%s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
+    if(0&&errno>0){printf("%s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
     y[i]=ECEvaluateExpression(F->code[i],&rc);
     if(verbose){printf("    value = (%le)\n",y[i]);fflush(stdout);}
-    if(errno>0){printf("%s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
+    if(0&&errno>0){printf("%s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
 
    }
 
