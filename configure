@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="src/Lance.c"
 ac_default_prefix=.
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX OSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA DEFLAN LANLIBS DEFIPOPT IPOPTLIBS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX OSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA DEFLAN LAN_TARGS LANLIBS DEFIPOPT IPOPT_TARGS IPOPTLIBS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3243,9 +3243,9 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFLAN=;LANLIBS="-Llib -lNLPAPI -lLancelot -lExpCmp"
+  DEFLAN=;LAN_TARGS=LANLIBRARY;LANLIBS="-Llib -lNLPAPI -lLancelot -lExpCmp"
 else
-  DEFLAN=-DNLPAPI_NO_LANCELOT;LANLIBS=
+  DEFLAN=-DNLPAPI_NO_LANCELOT;LANTARG=;LANLIBS=
 fi
 
 as_ac_File=`echo "ac_cv_file_$IPOPTDIR/doc/README" | $as_tr_sh`
@@ -3267,10 +3267,12 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFIPOPT=;IPOPTLIBS=
+  DEFIPOPT=;IPOPT_TARGS=;IPOPTLIBS=
 else
-  DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPTLIBS=
+  DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPT_TARGS=;IPOPTLIBS=
 fi
+
+
 
 
 
@@ -3918,8 +3920,10 @@ s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
 s,@DEFLAN@,$DEFLAN,;t t
+s,@LAN_TARGS@,$LAN_TARGS,;t t
 s,@LANLIBS@,$LANLIBS,;t t
 s,@DEFIPOPT@,$DEFIPOPT,;t t
+s,@IPOPT_TARGS@,$IPOPT_TARGS,;t t
 s,@IPOPTLIBS@,$IPOPTLIBS,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t

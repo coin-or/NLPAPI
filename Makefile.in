@@ -38,7 +38,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 LANOBJ=@LANDIR@/lancelot/objects/double
 LANSRC=@LANDIR@/lancelot/sources/optimizers
 
-all: lib SIFS APILIBRARY LANLIBRARY LIBRARYEC $(bindir)/decodeSIF
+all: lib SIFS @LAN_TARGS@ @IPOPT_TARGS@ APILIBRARY LIBRARYEC $(bindir)/decodeSIF
 
 lib:
 	mkdir lib
@@ -71,10 +71,10 @@ APILIBRARY: $(APILIBRARY)($(srcdir)/Matrix.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Problem.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/GroupFunction.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Vector.o)
-APILIBRARY: $(APILIBRARY)($(srcdir)/drunlan.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/ReportTimes.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/AugLg.o)
 
+LANLIBRARY: $(APILIBRARY)($(srcdir)/drunlan.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/lance.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/sbmin.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/auglg.o)
