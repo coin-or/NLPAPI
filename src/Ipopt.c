@@ -160,7 +160,7 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
 {
   char RoutineName[]="IPMinimize";
 
-#ifdef NLPAPI_NO_IPOPT
+#ifndef HAVE_IPOPT
   sprintf(IPErrorMsg,"IPOPT is not installed on this system (or wasn't when NLPAPI was configured)");
   NLSetError(12,RoutineName,IPErrorMsg,__LINE__,__FILE__);
   return 12;

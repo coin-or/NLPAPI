@@ -3306,7 +3306,7 @@ int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
  {
   char RoutineName[]="LNMinimize";
 
-#ifdef NLPAPI_NO_LANCELOT
+#ifndef HAVE_LANCELOT
   sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
   NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
   return 12;
