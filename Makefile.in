@@ -37,7 +37,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 LANOBJ=@LANDIR@/lancelot/objects/double
 LANSRC=@LANDIR@/lancelot/sources/optimizers
 
-all: lib SIFS APILIBRARY LANLIBRARY LIBRARYEC $(bindir)/decodeSIF $(bindir)/Newer
+all: lib SIFS APILIBRARY LANLIBRARY LIBRARYEC $(bindir)/decodeSIF
 
 lib:
 	mkdir lib
@@ -175,9 +175,6 @@ $(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
 $(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS32
 
-$(bindir)/Newer: $(srcdir)/Newer.c
-	$(CC) $(CFLAGS) $(srcdir)/Newer.c -lld -o$(bindir)/Newer
-	
 .PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
 
 .SILENT: check
