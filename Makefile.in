@@ -176,7 +176,7 @@ $(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot $(FLIBS) -lm -o$(bindir)/HS32
 
 $(bindir)/decodeSIF: $(srcdir)/ParseSIFFile.c
-	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -o$(bindir)/decodeSIF
+	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -lExpCmp -o$(bindir)/decodeSIF
 
 $(bindir)/Newer: $(srcdir)/Newer.c
 	$(CC) $(CFLAGS) $(srcdir)/Newer.c -lld -o$(bindir)/Newer
