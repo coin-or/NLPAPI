@@ -26,7 +26,15 @@ int main(int argc,char *argv[])
   int nc;
 
   lancelot=0;
+  ipopt=0;
+#ifndef NLPAPI_NO_LANCELOT
+  lancelot=1;
+  ipopt=0;
+#endif
+#ifndef NLPAPI_NO_IPOPT
+  lancelot=0;
   ipopt=1;
+#endif
   printproblem=0;
 
   while((option=getopt(argc,argv,"pLI"))!=EOF)
