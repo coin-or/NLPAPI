@@ -30,6 +30,7 @@ int *NLNEGetElementVariables(NLProblem P, NLNonlinearElement t)
   char RoutineName[]="NLNEGetElementVariables";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -43,6 +44,8 @@ int *NLNEGetElementVariables(NLProblem P, NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return (int*)NULL;
    }
+#endif
+
   this=NLPGetNonlinearElement(P,t);
 
   return(this->ElVars);
@@ -53,12 +56,14 @@ NLElementFunction NLNEGetElementFunction(NLProblem P, NLNonlinearElement t)
   char RoutineName[]="NLNEGetElementFunction";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is invalid 0<%d<%d",t,NLPGetNumberOfNonlinearElements(P));
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return (NLElementFunction)NULL;
    }
+#endif
 
   this=NLPGetNonlinearElement(P,t);
 
@@ -69,12 +74,14 @@ void NLRefNonlinearElement(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLRefNonlinearElement";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs++;
 
@@ -86,6 +93,7 @@ int NLFreeNonlinearElement(NLProblem P, NLNonlinearElement t)
   char RoutineName[]="NLFreeNonlinearElement";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -99,6 +107,8 @@ int NLFreeNonlinearElement(NLProblem P, NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
+
   this=NLPGetNonlinearElement(P,t);
 
   this->nRefs--;
@@ -138,6 +148,7 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
   verbose=0;
   if(verbose){printf("%s, F=0x%8.8x\n",RoutineName,F);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -151,6 +162,7 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   result=(NLNonlinearElementPtr)malloc(sizeof(struct NLGrpPartNEl));
   if(result==(NLNonlinearElementPtr)NULL)
@@ -168,12 +180,14 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
    {
     result->nInternalVariables=NLEGetDimension(F);
     result->nElementVariables=NLMGetNumberOfCols(R);
+#ifndef NL_NOINPUTCHECKS
     if(result->nInternalVariables!=NLMGetNumberOfRows(R))
      {
       sprintf(NLNEErrorMsg,"Shape of range transform does not match the element function. Xform is %dx%d, domain of EF is %d",NLMGetNumberOfRows(R),NLMGetNumberOfCols(R),NLEGetDimension(F));
       NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
       return (NLNonlinearElement)NULL;
      }
+#endif
    }else{
     result->nInternalVariables=NLEGetDimension(F);
     result->nElementVariables=result->nInternalVariables;
@@ -199,6 +213,7 @@ int NLNEGetIndex(NLProblem P,NLNonlinearElement t,int var)
   char RoutineName[]="NLNEGetIndex";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -211,13 +226,16 @@ int NLNEGetIndex(NLProblem P,NLNonlinearElement t,int var)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   this=NLPGetNonlinearElement(P,t);
+#ifndef NL_NOINPUTCHECKS
   if(var<0||var>=this->nElementVariables)
    {
     sprintf(NLNEErrorMsg,"Variable (argument 3) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   return this->ElVars[var];
  }
@@ -227,6 +245,7 @@ int NLNEGetInternalDimension(NLProblem P,NLNonlinearElement t)
   char RoutineName[]="NLNEGetInteralDimension";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -239,6 +258,7 @@ int NLNEGetInternalDimension(NLProblem P,NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   this=NLPGetNonlinearElement(P,t);
 
   return this->nInternalVariables;
@@ -249,6 +269,7 @@ int NLNEGetElementDimension(NLProblem P,NLNonlinearElement t)
   char RoutineName[]="NLNEGetElementDimension";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -261,6 +282,7 @@ int NLNEGetElementDimension(NLProblem P,NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   this=NLPGetNonlinearElement(P,t);
 
   return this->nElementVariables;
@@ -271,6 +293,7 @@ char *NLNEGetName(NLProblem P,NLNonlinearElement t)
   char RoutineName[]="NLNEGetName";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -283,6 +306,7 @@ char *NLNEGetName(NLProblem P,NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   this=NLPGetNonlinearElement(P,t);
 
   return this->name;
@@ -293,6 +317,7 @@ NLMatrix NNLEGetRangeXForm(NLProblem P,NLNonlinearElement t)
   char RoutineName[]="NNLEGetRangeXForm";
   NLNonlinearElementPtr this;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
@@ -305,6 +330,7 @@ NLMatrix NNLEGetRangeXForm(NLProblem P,NLNonlinearElement t)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   this=NLPGetNonlinearElement(P,t);
 
   return NLEGetRangeXForm(this->F);
@@ -314,12 +340,14 @@ NLElementFunction NLNEPGetElementFunction(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLNEPGetElementFunction";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   return this->F;
  }
 
@@ -327,12 +355,14 @@ NLMatrix NLNEPGetRangeXForm(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLNEPGetRangeXForm";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   return NLEGetRangeXForm(this->F);
  }
 
@@ -340,6 +370,7 @@ int NLNEPGetIndex(NLNonlinearElementPtr this,int i)
  {
   char RoutineName[]="NLNEPGetIndex";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
@@ -352,6 +383,7 @@ int NLNEPGetIndex(NLNonlinearElementPtr this,int i)
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   return this->ElVars[i];
  }
@@ -360,12 +392,14 @@ int NLNEPGetInternalDimension(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLNEPGetInternalDimension";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   return this->nInternalVariables;
  }
 
@@ -373,12 +407,14 @@ int NLNEPGetElementDimension(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLNEPGetElementDimension";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   return this->nElementVariables;
  }
 
@@ -386,11 +422,13 @@ char *NLNEPGetName(NLNonlinearElementPtr this)
  {
   char RoutineName[]="NLNEPGetRangeXForm";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLNonlinearElementPtr)NULL)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
   return this->name;
  }
