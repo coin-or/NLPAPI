@@ -19,7 +19,7 @@ FLIBS    = @FLIBS@
 INSTALL = @INSTALL@
 installdir = @INSTDIR@
 LD        = @CC@
-LIBS = @LIBS@
+LIBS = @LIBS@ @LANLIBS@ @IPOPTLIBS@ $(FLIBS) -lm
 LDFLAGS = @LDFLAGS@
 RM        = @RM@
 RANLIB    = @RANLIB@
@@ -63,6 +63,7 @@ $(FSFX).a:
 	$(RANLIB) $@
 
 APILIBRARY: $(APILIBRARY)($(srcdir)/Lance.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Ipopt.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Error.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/ElementFunction.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/NonlinearElement.o)
@@ -171,10 +172,10 @@ $(srcdir)/drunlan.f: $(LANSRC)/runlan.f
 	$(RANLIB) $(APILIBRARY)
 
 $(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS65.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS65
-
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS65.c $(LIBS) -o$(bindir)/HS65
+	
 $(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm -o$(bindir)/HS32
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS32.c $(LIBS) -o$(bindir)/HS32
 
 .PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
 
@@ -238,11 +239,11 @@ uninstall:
 .SUFFIXES: .SIF
 
 CUTEINCS = -I./include
-CUTELIBS=-L./lib -lCUTE -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm
+CUTELIBS=$(LIBS)
 CUTELIB=lib/libCUTE.a
 
 bin/decodeSIF: src/ParseSIFFile.c
-	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lExpCmp -lm -o$(bindir)/decodeSIF
+	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) -o$(bindir)/decodeSIF
 
 ${CUTELIB}(${NAME}C.o): src/${NAME}C.c
 	$(CC) ${CFLAGS} ${CUTEINCS} -c src/${NAME}C.c -o ${NAME}C.o
@@ -276,7 +277,7 @@ src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
 	rm -f SIFS/${NAME}H.h
 
 bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) APILIBRARY LANLIBRARY LIBRARYEC
-	$(CC) ${CFLAGS} ${CUTEINCS} src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
+	$(CC) ${CFLAGS} ${CUTEINCS} $(DEFINES) src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
 
 CUTE: SIFS
 	./makeCUTE
