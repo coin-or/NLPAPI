@@ -163,18 +163,25 @@
      The subroutines {\tt F}, {\tt dF} and {\tt ddF} are called back when the objective is evaluated. The
      arguments to {\tt F} are:
      \begin{verbatim}
-       double F(int nv, double *x, void *data)
-          int nv     The number of entries in x, as provided by
+   double F(int nv, double *x, void *data)
+      int nv     The number of entries in x, as provided by
                         the user in the SetObjective call.
-          double *x  An array with the values of the coordinates
+      double *x  An array with the values of the coordinates
                         of x.
-          void *data The data pointer provided by the user in the
+      void *data The data pointer provided by the user in the
                         SetObjective call.
      \end{verbatim}
      The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the 
      functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
      the data block can be released. The array {\tt v} lists the {\tt nv} problem variables on which the objective
-     depends (a simple form of sparsity).
+     (or constraint, since the same form is used for those) depends.This allows
+     a simple form of sparsity).
+      
+     {\tt dF} evaluates the partial derivatives of {\tt f}, and has an
+     additional integer argument (the first argument), which
+     indicate which partial derivative to return. {\tt ddF} evaluates the
+     second partial derivatives, and has two additional integer arguments
+     (the first two).
 
      Alternatively, the user can define the objective by means of a string containing an expression:
      \begin{verbatim}

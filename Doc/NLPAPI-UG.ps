@@ -8,7 +8,7 @@
 %DVIPSWebPage: (www.radicaleye.com)
 %DVIPSCommandLine: dvips NLPAPI-UG
 %DVIPSParameters: dpi=600, compressed
-%DVIPSSource:  TeX output 2003.06.25:0925
+%DVIPSSource:  TeX output 2003.06.25:0931
 %%BeginProcSet: texc.pro
 %!
 /TeXDict 300 dict def TeXDict begin/N{def}def/B{bind def}N/S{exch}N/X{S
@@ -1957,658 +1957,664 @@ b(function.)50 b(This)36 b(can)f(b)s(e)h(set)f(with)g(the)h
 Fe(NLPSet-)324 853 y(Objective)27 b Fk(or)d Fe(NLPSetObjectiveByString)
 31 b Fk(routine,)26 b(or)f(can)g(b)s(e)g(built)e(as)i(the)h(sum)324
 973 y(of)32 b(a)g(n)m(um)m(b)s(er)h(of)f(groups.)631
-1177 y Fe(NLProblem)54 b(P;)631 1297 y(char)f(name[]="Obj";)631
-1418 y(int)f(nv;)631 1538 y(int)g(*v;)631 1658 y(double)h
-(\(*F\)\(int,double*,void*\);)631 1779 y(double)g
-(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)631 1899 y(double)g
+1168 y Fe(NLProblem)54 b(P;)631 1288 y(char)f(name[]="Obj";)631
+1409 y(int)f(nv;)631 1529 y(int)g(*v;)631 1650 y(double)h
+(\(*F\)\(int,double*,void*\);)631 1770 y(double)g
+(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)631 1890 y(double)g
 (\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
-2020 y(void)g(*data;)631 2140 y(void)g(\(*freedata\)\(void*\);)631
-2381 y(nv=3;v[0]=0;v[1]=45;v[2)q(]=9;)631 2501 y
+2011 y(void)g(*data;)631 2131 y(void)g(\(*freedata\)\(void*\);)631
+2372 y(nv=3;v[0]=0;v[1]=45;v[2)q(]=9;)631 2492 y
 (rc=NLPSetObjective\(P,na)q(me,n)q(v,v,)q(F,dF)q(,ddF)q(,da)q(ta,f)q
-(reed)q(ata\))q(;)470 2825 y Fk(The)48 b(subroutines)h
+(reed)q(ata\))q(;)470 2807 y Fk(The)48 b(subroutines)h
 Fe(F)p Fk(,)e Fe(dF)h Fk(and)g Fe(ddF)g Fk(are)f(called)g(bac)m(k)h
-(when)h(the)f(ob)5 b(jectiv)m(e)48 b(is)324 2945 y(ev)-5
-b(aluated.)43 b(The)34 b(argumen)m(ts)e(to)g Fe(F)h Fk(are:)683
-3149 y Fe(double)53 b(F\(int)f(nv,)g(double)h(*x,)f(void)g(*data\))836
-3269 y(int)h(nv)256 b(The)52 b(number)h(of)f(entries)h(in)f(x,)g(as)g
-(provided)h(by)1554 3389 y(the)f(user)h(in)e(the)h(SetObjective)j
-(call.)836 3510 y(double)e(*x)103 b(An)52 b(array)h(with)f(the)g
-(values)h(of)f(the)g(coordinates)1554 3630 y(of)g(x.)836
-3751 y(void)h(*data)f(The)g(data)h(pointer)g(provided)g(by)f(the)g
-(user)g(in)g(the)1554 3871 y(SetObjective)j(call.)324
-4195 y Fk(The)24 b Fe(data)g Fk(v)-5 b(ariable)22 b(allo)m(ws)g(the)i
+(when)h(the)f(ob)5 b(jectiv)m(e)48 b(is)324 2928 y(ev)-5
+b(aluated.)43 b(The)34 b(argumen)m(ts)e(to)g Fe(F)h Fk(are:)478
+3122 y Fe(double)52 b(F\(int)h(nv,)f(double)h(*x,)f(void)g(*data\))631
+3243 y(int)g(nv)257 b(The)52 b(number)h(of)f(entries)h(in)f(x,)g(as)g
+(provided)h(by)1554 3363 y(the)f(user)h(in)e(the)h(SetObjective)j
+(call.)631 3483 y(double)e(*x)103 b(An)52 b(array)h(with)f(the)g
+(values)h(of)f(the)g(coordinates)1554 3604 y(of)g(x.)631
+3724 y(void)h(*data)f(The)g(data)h(pointer)g(provided)g(by)f(the)g
+(user)g(in)g(the)1554 3844 y(SetObjective)j(call.)324
+4159 y Fk(The)24 b Fe(data)g Fk(v)-5 b(ariable)22 b(allo)m(ws)g(the)i
 (user)g(to)f(asso)s(ciate)g(a)g(data)g(blo)s(c)m(k)g(with)g(the)g(ob)5
-b(jectiv)m(e,)324 4315 y(that)47 b(is)f(passed)j(to)e(the)g(functions)g
+b(jectiv)m(e,)324 4280 y(that)47 b(is)f(passed)j(to)e(the)g(functions)g
 (when)h(they)h(are)e(ev)-5 b(aluated.)86 b(The)49 b Fe(freedata)324
-4435 y Fk(routine)37 b(is)g(called)g(when)i(the)f(problem)f(is)g
+4400 y Fk(routine)37 b(is)g(called)g(when)i(the)f(problem)f(is)g
 (free'd,)j(so)e(that)f(the)h(data)g(blo)s(c)m(k)f(can)h(b)s(e)324
-4556 y(released.)52 b(The)36 b(arra)m(y)g Fe(v)f Fk(lists)g(the)h
+4521 y(released.)52 b(The)36 b(arra)m(y)g Fe(v)f Fk(lists)g(the)h
 Fe(nv)f Fk(problem)g(v)-5 b(ariables)34 b(on)h(whic)m(h)h(the)g(ob)5
-b(jectiv)m(e)324 4676 y(dep)s(ends)34 b(\(a)e(simple)f(form)h(of)g
-(sparsit)m(y\).)470 4797 y(Alternativ)m(ely)-8 b(,)31
-b(the)g(user)h(can)f(de\014ne)i(the)e(ob)5 b(jectiv)m(e)32
-b(b)m(y)g(means)f(of)g(a)f(string)h(con-)324 4917 y(taining)f(an)j
-(expression:)1918 5251 y(4)p eop
+b(jectiv)m(e)324 4641 y(\(or)33 b(constrain)m(t,)i(since)f(the)g(same)g
+(form)f(is)g(used)i(for)f(those\))g(dep)s(ends.This)i(allo)m(ws)d(a)324
+4761 y(simple)e(form)g(of)h(sparsit)m(y\).)470 4882 y
+Fe(dF)42 b Fk(ev)-5 b(aluates)41 b(the)g(partial)e(deriv)-5
+b(ativ)m(es)41 b(of)g Fe(f)p Fk(,)j(and)d(has)g(an)g(additional)e(in)m
+(teger)324 5002 y(argumen)m(t)45 b(\(the)h(\014rst)f(argumen)m(t\),)k
+(whic)m(h)d(indicate)e(whic)m(h)i(partial)d(deriv)-5
+b(ativ)m(e)45 b(to)1918 5251 y(4)p eop
 %%Page: 5 5
-5 4 bop 734 548 a Fe(NLPSetObjectiveByString\(P)q(,nam)q(e,nv)q(,v,)939
-668 y("[x1,x2,x3]",)939 789 y("\(x1-x2\)**2+\(x1+x2-10\)**2)q(/9+\()q
-(x3-5)q(\)**)q(2"\);)324 1112 y Fk(In)28 b(this)g(case)h(the)f(arra)m
-(y)g Fe(v)g Fk(lists)f(the)i Fe(nv)f Fk(v)-5 b(ariables)27
+5 4 bop 324 548 a Fk(return.)46 b Fe(ddF)34 b Fk(ev)-5
+b(aluates)33 b(the)h(second)h(partial)c(deriv)-5 b(ativ)m(es,)33
+b(and)h(has)g(t)m(w)m(o)g(additional)324 668 y(in)m(teger)e(argumen)m
+(ts)h(\(the)g(\014rst)g(t)m(w)m(o\).)470 789 y(Alternativ)m(ely)-8
+b(,)31 b(the)g(user)h(can)f(de\014ne)i(the)e(ob)5 b(jectiv)m(e)32
+b(b)m(y)g(means)f(of)g(a)f(string)h(con-)324 909 y(taining)f(an)j
+(expression:)734 1112 y Fe(NLPSetObjectiveByString\(P)q(,nam)q(e,nv)q
+(,v,)939 1233 y("[x1,x2,x3]",)939 1353 y("\(x1-x2\)**2+\(x1+x2-10\)**2)
+q(/9+\()q(x3-5)q(\)**)q(2"\);)324 1677 y Fk(In)28 b(this)g(case)h(the)f
+(arra)m(y)g Fe(v)g Fk(lists)f(the)i Fe(nv)f Fk(v)-5 b(ariables)27
 b(whose)i(v)-5 b(alues)28 b(are)g(substituted)h(for)324
-1233 y(the)k(v)-5 b(ariables)31 b Fe("[x1,x2,x3]")p Fk(.)47
+1797 y(the)k(v)-5 b(ariables)31 b Fe("[x1,x2,x3]")p Fk(.)47
 b(So)32 b(in)g(the)h(last)f(string)g Fe(x1)h Fk(is)f(the)h(v)-5
-b(alue)32 b(of)g(the)h(\014rst)324 1353 y(problem)e(v)-5
+b(alue)32 b(of)g(the)h(\014rst)324 1918 y(problem)e(v)-5
 b(ariable.)42 b Fe(x1)33 b Fk(is)f(the)h(v)-5 b(alue)32
 b(of)g(the)h(46th)f(problem)g(v)-5 b(ariable,)31 b(and)h(so)h(on.)470
-1474 y(Finally)-8 b(,)40 b(the)h(ob)5 b(jectiv)m(e)41
+2038 y(Finally)-8 b(,)40 b(the)h(ob)5 b(jectiv)m(e)41
 b(ma)m(y)g(b)s(e)f(de\014ned)i(via)e(LANCELOT's)i(Group)e(P)m(artial)
-324 1594 y(Separable)d(form.)55 b(When)38 b(the)g(problem)e(is)g
+324 2159 y(Separable)d(form.)55 b(When)38 b(the)g(problem)e(is)g
 (\014rst)i(created)g(the)f(ob)5 b(jectiv)m(e)38 b(has)g(a)e(sin-)324
-1714 y(gle)f(group)h(with)g(trivial)d(group)j(function,)h(no)f
-(nonlinearelemen)m(ts,)g(and)g(linear)e(and)324 1835
+2279 y(gle)f(group)h(with)g(trivial)d(group)j(function,)h(no)f
+(nonlinearelemen)m(ts,)g(and)g(linear)e(and)324 2399
 y(constan)m(t)47 b(elemen)m(ts)h(b)s(oth)e(zero.)87 b(Additional)44
-b(groups)j(ban)g(b)s(e)g(added)h(using)e(the)324 1955
+b(groups)j(ban)g(b)s(e)g(added)h(using)e(the)324 2520
 y Fe(NLPAddGroupToObjective)g Fk(routine.)66 b(Eac)m(h)42
-b(group)e(has)g(a)h(group)f(function)g Fj(g)3416 1970
-y Fh(i)3444 1955 y Fk(,)i(a)324 2076 y(group)32 b(scale)g
-Fj(s)879 2091 y Fh(i)907 2076 y Fk(,)g(a)g(linear)e(elemen)m(t,)i
-Fi(a)1758 2091 y Fh(i)1787 2076 y Fj(:)p Fi(v)r Fk(,)g(a)g(constan)m(t)
-g(elemen)m(t)g Fj(b)2808 2091 y Fh(i)2837 2076 y Fk(,)g(and)g(a)g
-(nonlinear)324 2196 y(elemen)m(t)g Fj(N)762 2211 y Fh(i)790
-2196 y Fk(\()p Fi(v)r Fk(\).)44 b(\(See)33 b(the)g(sections)g(b)s(elo)m
-(w)f(on)h(\\Groups"\).)1217 2460 y Fj(O)s Fk(\()p Fi(v)r
-Fk(\))27 b(=)1562 2377 y Fd(X)1721 2393 y Fk(1)p 1709
-2437 75 4 v 1709 2529 a Fj(s)1755 2544 y Fh(i)1793 2460
-y Fj(g)1840 2475 y Fh(i)1868 2460 y Fk(\()p Fj(N)1984
-2475 y Fh(i)2012 2460 y Fk(\()p Fi(v)r Fk(\))22 b(+)g
-Fi(a)2323 2475 y Fh(i)2351 2460 y Fj(:)p Fi(v)i Fg(\000)f
-Fj(b)2602 2475 y Fh(i)2630 2460 y Fk(\))324 2721 y(The)33
+b(group)e(has)g(a)h(group)f(function)g Fj(g)3416 2535
+y Fh(i)3444 2520 y Fk(,)i(a)324 2640 y(group)32 b(scale)g
+Fj(s)879 2655 y Fh(i)907 2640 y Fk(,)g(a)g(linear)e(elemen)m(t,)i
+Fi(a)1758 2655 y Fh(i)1787 2640 y Fj(:)p Fi(v)r Fk(,)g(a)g(constan)m(t)
+g(elemen)m(t)g Fj(b)2808 2655 y Fh(i)2837 2640 y Fk(,)g(and)g(a)g
+(nonlinear)324 2760 y(elemen)m(t)g Fj(N)762 2775 y Fh(i)790
+2760 y Fk(\()p Fi(v)r Fk(\).)44 b(\(See)33 b(the)g(sections)g(b)s(elo)m
+(w)f(on)h(\\Groups"\).)1217 3025 y Fj(O)s Fk(\()p Fi(v)r
+Fk(\))27 b(=)1562 2942 y Fd(X)1721 2958 y Fk(1)p 1709
+3002 75 4 v 1709 3093 a Fj(s)1755 3108 y Fh(i)1793 3025
+y Fj(g)1840 3040 y Fh(i)1868 3025 y Fk(\()p Fj(N)1984
+3040 y Fh(i)2012 3025 y Fk(\()p Fi(v)r Fk(\))22 b(+)g
+Fi(a)2323 3040 y Fh(i)2351 3025 y Fj(:)p Fi(v)i Fg(\000)f
+Fj(b)2602 3040 y Fh(i)2630 3025 y Fk(\))324 3285 y(The)33
 b(v)-5 b(arious)32 b(pieces)h(are)g(added)g(or)g(set)g(with)f(the)h
-(routines)683 2924 y Fe(NLPSetObjectiveGroupFuncti)q(on)683
-3045 y(NLPSetObjectiveGroupScale)683 3165 y(NLPSetObjectiveGroupA)683
-3285 y(NLPSetObjectiveGroupB)683 3406 y(NLPAddNonlinearElementToOb)q
-(ject)q(iveG)q(roup)324 3729 y Fk(The)g(nonlinear)e(elemen)m(t)i(is)f
+(routines)683 3489 y Fe(NLPSetObjectiveGroupFuncti)q(on)683
+3609 y(NLPSetObjectiveGroupScale)683 3729 y(NLPSetObjectiveGroupA)683
+3850 y(NLPSetObjectiveGroupB)683 3970 y(NLPAddNonlinearElementToOb)q
+(ject)q(iveG)q(roup)324 4294 y Fk(The)g(nonlinear)e(elemen)m(t)i(is)f
 (itself)f(comp)s(osed)i(of)f(a)g(sum)h(of)f(elemen)m(t)g(functions:)
-1395 3949 y Fj(N)10 b Fk(\()p Fi(v)r Fk(\))28 b(=)1751
-3866 y Fd(X)1888 3949 y Fj(w)1958 3964 y Fh(i)1986 3949
-y Fj(f)2034 3964 y Fh(i)2062 3949 y Fk(\()2100 3866 y
-Fd(X)2236 3949 y Fj(R)2310 3964 y Fh(ij)2371 3949 y Fj(e)2416
-3964 y Fh(j)2453 3949 y Fk(\))324 4169 y(for)h(a)g(more)g(complete)g
+1395 4514 y Fj(N)10 b Fk(\()p Fi(v)r Fk(\))28 b(=)1751
+4431 y Fd(X)1888 4514 y Fj(w)1958 4529 y Fh(i)1986 4514
+y Fj(f)2034 4529 y Fh(i)2062 4514 y Fk(\()2100 4431 y
+Fd(X)2236 4514 y Fj(R)2310 4529 y Fh(ij)2371 4514 y Fj(e)2416
+4529 y Fh(j)2453 4514 y Fk(\))324 4734 y(for)h(a)g(more)g(complete)g
 (description)g(see)i(the)f(section)g(b)s(elo)m(w)f(on)h(nonlinear)e
-(elemen)m(ts.)470 4290 y(The)36 b(main)e(adv)-5 b(an)m(tage)35
+(elemen)m(ts.)470 4854 y(The)36 b(main)e(adv)-5 b(an)m(tage)35
 b(of)f(this)h(form)f(is)h(that)g(the)g(deriv)-5 b(ativ)m(es)35
-b(of)g(the)h(ob)5 b(jectiv)m(e)324 4410 y(\(and)31 b(other)f
+b(of)g(the)h(ob)5 b(jectiv)m(e)324 4975 y(\(and)31 b(other)f
 (functions\))h(can)g(b)s(e)g(expressed)i(in)d(terms)h(of)f(the)h(deriv)
--5 b(ativ)m(es)31 b(of)f(simpler)324 4531 y(functions.)46
-b(This)33 b(is)g(a)g(con)m(v)m(enience,)j(but)e(if)e(the)i(deriv)-5
-b(ativ)m(es)34 b(are)f(appro)m(ximated)g(b)m(y)324 4651
-y(di\013erencing)27 b(it)h(can)g(also)g(substan)m(tially)f(reduce)i
-(the)g(n)m(um)m(b)s(er)g(of)f(op)s(erations)f(needed)324
-4771 y(to)32 b(appro)m(ximate)g(the)h(deriv)-5 b(ativ)m(es)32
-b(of)g(the)h(ob)5 b(jectiv)m(e.)470 4892 y(The)34 b(ob)5
-b(jectiv)m(e)33 b(can)g(b)s(e)g(ev)-5 b(aluated)32 b(using)g(the)h
-(routines:)1918 5251 y(5)p eop
+-5 b(ativ)m(es)31 b(of)f(simpler)1918 5251 y(5)p eop
 %%Page: 6 6
-6 5 bop 631 548 a Fe(double)53 b(o;)631 668 y(NLVector)h(v,g;)631
-789 y(NLMatrix)g(H;)631 1029 y(o=NLPEvaluateObjective\()q(P,v\))q(;)631
-1270 y(g=NLCreate...Vector\(...)q(\);)631 1391 y
-(NLPEvaluateGradientOfOb)q(ject)q(ive\()q(P,v,)q(g\);)631
-1631 y(H=NLCreate...Matrix\(...)q(\);)631 1752 y
-(NLPEvaluateHessianOfObj)q(ecti)q(ve\(P)q(,v,H)q(\);)324
-2072 y Fk(The)40 b(idea)f(here)h(is)f(that)g(the)h(user)g(creates)h
+6 5 bop 324 548 a Fk(functions.)46 b(This)33 b(is)g(a)g(con)m(v)m
+(enience,)j(but)e(if)e(the)i(deriv)-5 b(ativ)m(es)34
+b(are)f(appro)m(ximated)g(b)m(y)324 668 y(di\013erencing)27
+b(it)h(can)g(also)g(substan)m(tially)f(reduce)i(the)g(n)m(um)m(b)s(er)g
+(of)f(op)s(erations)f(needed)324 789 y(to)32 b(appro)m(ximate)g(the)h
+(deriv)-5 b(ativ)m(es)32 b(of)g(the)h(ob)5 b(jectiv)m(e.)470
+909 y(The)34 b(ob)5 b(jectiv)m(e)33 b(can)g(b)s(e)g(ev)-5
+b(aluated)32 b(using)g(the)h(routines:)631 1112 y Fe(double)53
+b(o;)631 1233 y(NLVector)h(v,g;)631 1353 y(NLMatrix)g(H;)631
+1594 y(o=NLPEvaluateObjective\()q(P,v\))q(;)631 1835
+y(g=NLCreate...Vector\(...)q(\);)631 1955 y(NLPEvaluateGradientOfOb)q
+(ject)q(ive\()q(P,v,)q(g\);)631 2196 y(H=NLCreate...Matrix\(...)q(\);)
+631 2316 y(NLPEvaluateHessianOfObj)q(ecti)q(ve\(P)q(,v,H)q(\);)324
+2640 y Fk(The)40 b(idea)f(here)h(is)f(that)g(the)h(user)g(creates)h
 (either)e(a)g(sparse)h(or)f(dense)i(v)m(ector,)h(and)324
-2192 y(passes)c(it)e(to)h(the)g(routine)f(whic)m(h)i(computes)f(the)g
+2760 y(passes)c(it)e(to)h(the)g(routine)f(whic)m(h)i(computes)f(the)g
 (gradien)m(t,)h(whic)m(h)f(\014lls)f(in)g(the)h(ap-)324
-2312 y(propriate)d(v)-5 b(alues,)36 b(or)f(a)f(matrix)g(in)g(one)i(of)f
+2881 y(propriate)d(v)-5 b(alues,)36 b(or)f(a)f(matrix)g(in)g(one)i(of)f
 (sev)m(eral)g(formats,)g(and)g(passes)i(it)d(to)h(the)324
-2433 y(routine)c(whic)m(h)i(ev)-5 b(aluates)32 b(the)h(Hessian.)44
+3001 y(routine)c(whic)m(h)i(ev)-5 b(aluates)32 b(the)h(Hessian.)44
 b(\(See)33 b(the)g(sections)f(b)s(elo)m(w)h(on)f(v)m(ectors)h(and)324
-2553 y(matrices.\))324 2812 y Fi(2.1.2)112 b(Inequalit)m(y)37
-b(Constrain)m(ts)324 2997 y Fk(A)e(problem)f(ma)m(y)g(ha)m(v)m(e)j(a)d
+3122 y(matrices.\))324 3381 y Fi(2.1.2)112 b(Inequalit)m(y)37
+b(Constrain)m(ts)324 3566 y Fk(A)e(problem)f(ma)m(y)g(ha)m(v)m(e)j(a)d
 (n)m(um)m(b)s(er)i(of)e(inequalit)m(y)g(constrain)m(ts.)51
-b(They)37 b(are)e(handled)324 3117 y(almost)28 b(exactly)h(as)h(the)g
+b(They)37 b(are)e(handled)324 3687 y(almost)28 b(exactly)h(as)h(the)g
 (ob)5 b(jectiv)m(e)30 b(w)m(as)h(handled,)f(but)f(ha)m(v)m(e)i(in)e
-(addition)f(upp)s(er)h(and)324 3238 y(lo)m(w)m(er)24
+(addition)f(upp)s(er)h(and)324 3807 y(lo)m(w)m(er)24
 b(b)s(ounds.)41 b(Inequalit)m(y)24 b(constrain)m(ts)h(are)f(added)g
-(with)g(the)g Fe(NLPAddInequality-)324 3358 y(Constraint)41
+(with)g(the)g Fe(NLPAddInequality-)324 3927 y(Constraint)41
 b Fk(or)d Fe(NLPAddInequalityConstrain)q(tByS)q(trin)q(g)44
-b Fk(routine,)c(or)e(can)g(b)s(e)324 3478 y(built)31
+b Fk(routine,)c(or)e(can)g(b)s(e)324 4048 y(built)31
 b(as)i(the)g(sum)f(of)g(a)g(n)m(um)m(b)s(er)h(of)g(groups.)631
-3678 y Fe(NLProblem)54 b(P;)631 3798 y(char)f(name[]="InEq0";)631
-3919 y(double)g(l,u;)631 4039 y(int)f(nv;)631 4159 y(int)g(*v;)631
-4280 y(double)h(\(*F\)\(int,double*,void*\);)631 4400
-y(double)g(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)631
-4521 y(double)g(\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
-4641 y(void)g(*data;)631 4761 y(void)g(\(*freedata\)\(void*\)\);)631
-5002 y(nv=3;v[0]=3;v[1]=10;v[2)q(]=9;)1918 5251 y Fk(6)p
-eop
+4251 y Fe(NLProblem)54 b(P;)631 4371 y(char)f(name[]="InEq0";)631
+4492 y(double)g(l,u;)631 4612 y(int)f(nv;)631 4733 y(int)g(*v;)631
+4853 y(double)h(\(*F\)\(int,double*,void*\);)631 4973
+y(double)g(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)1918
+5251 y Fk(6)p eop
 %%Page: 7 7
-7 6 bop 631 548 a Fe(l=1.;u=10.;)631 668 y(rc=NLPAddInequalityCons)q
-(trai)q(nt\(P)q(,nam)q(e,l,)q(u,n)q(v,v,)q(F,dF)q(,ddF)q(,)2682
-789 y(data,freedata\);)324 1102 y Fk(The)24 b Fe(data)g
+7 6 bop 631 548 a Fe(double)53 b(\(*ddF\)\(int,int,int,doubl)q(e*,v)q
+(oid*)q(\);)631 668 y(void)g(*data;)631 789 y(void)g
+(\(*freedata\)\(void*\)\);)631 1029 y(nv=3;v[0]=3;v[1]=10;v[2)q(]=9;)
+631 1150 y(l=1.;u=10.;)631 1270 y(rc=NLPAddInequalityCons)q(trai)q
+(nt\(P)q(,nam)q(e,l,)q(u,n)q(v,v,)q(F,dF)q(,ddF)q(,)2682
+1391 y(data,freedata\);)324 1714 y Fk(The)24 b Fe(data)g
 Fk(v)-5 b(ariable)22 b(allo)m(ws)g(the)i(user)g(to)f(asso)s(ciate)g(a)g
 (data)g(blo)s(c)m(k)g(with)g(the)g(ob)5 b(jectiv)m(e,)324
-1222 y(that)47 b(is)f(passed)j(to)e(the)g(functions)g(when)h(they)h
+1835 y(that)47 b(is)f(passed)j(to)e(the)g(functions)g(when)h(they)h
 (are)e(ev)-5 b(aluated.)86 b(The)49 b Fe(freedata)324
-1342 y Fk(routine)37 b(is)g(called)g(when)i(the)f(problem)f(is)g
+1955 y Fk(routine)37 b(is)g(called)g(when)i(the)f(problem)f(is)g
 (free'd,)j(so)e(that)f(the)h(data)g(blo)s(c)m(k)f(can)h(b)s(e)324
-1463 y(released.)44 b(The)33 b(arra)m(y)g Fe(v)g Fk(lists)e(the)i
+2076 y(released.)44 b(The)33 b(arra)m(y)g Fe(v)g Fk(lists)e(the)i
 Fe(nv)g Fk(v)-5 b(ariables)32 b(on)g(whic)m(h)h(the)g(function)f(dep)s
-(ends.)470 1583 y(Alternativ)m(ely)-8 b(,)31 b(the)g(user)h(can)f
+(ends.)470 2196 y(Alternativ)m(ely)-8 b(,)31 b(the)g(user)h(can)f
 (de\014ne)i(the)e(ob)5 b(jectiv)m(e)32 b(b)m(y)g(means)f(of)g(a)f
-(string)h(con-)324 1704 y(taining)f(an)j(expression:)734
-1896 y Fe(rc=NLPAddInequalityConstr)q(aint)q(BySt)q(ring)q(\(P,)q(name)
-q(,nv,)q(v,l,)q(u,)939 2017 y("[x1,x2,x3]","48-x1**2-x2)q(**2-)q(x3**)q
-(2"\))q(;)324 2330 y Fk(The)j(arra)m(y)e Fe(v)i Fk(lists)d(the)j
+(string)h(con-)324 2316 y(taining)f(an)j(expression:)734
+2520 y Fe(rc=NLPAddInequalityConstr)q(aint)q(BySt)q(ring)q(\(P,)q(name)
+q(,nv,)q(v,l,)q(u,)939 2640 y("[x1,x2,x3]","48-x1**2-x2)q(**2-)q(x3**)q
+(2"\))q(;)324 2964 y Fk(The)j(arra)m(y)e Fe(v)i Fk(lists)d(the)j
 Fe(nv)f Fk(v)-5 b(ariables)33 b(whose)j(v)-5 b(alues)35
-b(are)g(substituted)h(for)e(the)h(v)-5 b(ari-)324 2450
-y(ables)32 b Fe("[x1,x2,x3]")p Fk(.)470 2570 y(When)k(the)g(constrain)m
+b(are)g(substituted)h(for)e(the)h(v)-5 b(ari-)324 3084
+y(ables)32 b Fe("[x1,x2,x3]")p Fk(.)470 3205 y(When)k(the)g(constrain)m
 (t)e(is)h(\014rst)h(created)f(it)f(has)i(a)f(single,)f(empt)m(y)i
-(group.)51 b(Addi-)324 2691 y(tional)21 b(groups)i(can)g(b)s(e)g(added)
+(group.)51 b(Addi-)324 3325 y(tional)21 b(groups)i(can)g(b)s(e)g(added)
 h(using)e(the)i Fe(NLPAddGroupToInequalityCo)q(nstr)q(aint)324
-2811 y Fk(routine.)55 b(Eac)m(h)37 b(group)f(has)h(a)g(group)f
+3445 y Fk(routine.)55 b(Eac)m(h)37 b(group)f(has)h(a)g(group)f
 (function,)h(a)f(scale,)i(a)e(linear)f(elemen)m(t,)j(a)e(con-)324
-2932 y(stan)m(t)41 b(elemen)m(t,)i(and)e(a)g(set)h(of)e(nonlinear)g
+3566 y(stan)m(t)41 b(elemen)m(t,)i(and)e(a)g(set)h(of)e(nonlinear)g
 (elemen)m(ts.)69 b(\(See)41 b(the)h(section)f(b)s(elo)m(w)g(on)324
-3052 y(\\Groups"\).)683 3244 y Fe(NLPAddNonlinearInequalityC)q(onst)q
-(rain)q(t\(P,)q(nam)q(e\);)683 3485 y(NLPAddLinearInequalityCons)q
-(trai)q(nt\(P)q(,nam)q(e,a)q(,b\);)683 3726 y
-(NLPSetInequalityConstraint)q(Boun)q(ds)683 3846 y
-(NLPSetInequalityConstraint)q(Uppe)q(rBou)q(nd)683 3967
-y(NLPSetInequalityConstraint)q(Lowe)q(rBou)q(nd)683 4208
+3686 y(\\Groups"\).)683 3890 y Fe(NLPAddNonlinearInequalityC)q(onst)q
+(rain)q(t\(P,)q(nam)q(e\);)683 4130 y(NLPAddLinearInequalityCons)q
+(trai)q(nt\(P)q(,nam)q(e,a)q(,b\);)683 4371 y
+(NLPSetInequalityConstraint)q(Boun)q(ds)683 4491 y
+(NLPSetInequalityConstraint)q(Uppe)q(rBou)q(nd)683 4612
+y(NLPSetInequalityConstraint)q(Lowe)q(rBou)q(nd)683 4853
 y(NLPSetInequalityConstraint)q(Grou)q(pFun)q(ctio)q(n)683
-4328 y(NLPSetInequalityConstraint)q(Grou)q(pSca)q(le)683
-4448 y(NLPSetInequalityConstraint)q(Grou)q(pA)683 4569
-y(NLPSetInequalityConstraint)q(Grou)q(pB)683 4689 y
-(NLPAddNonlinearElementToIn)q(equa)q(lity)q(Cons)q(tra)q(intG)q(roup)
-470 5002 y Fk(Inequalit)m(y)33 b(constrain)m(ts)g(can)g(b)s(e)f(ev)-5
-b(aluated)33 b(using)f(the)h(routines:)1918 5251 y(7)p
-eop
+4973 y(NLPSetInequalityConstraint)q(Grou)q(pSca)q(le)1918
+5251 y Fk(7)p eop
 %%Page: 8 8
-8 7 bop 631 548 a Fe(int)52 b(c;)631 668 y(double)h(o;)631
-789 y(NLVector)h(v,g;)631 909 y(NLMatrix)g(H;)631 1150
-y(o=NLPEvaluateInequality)q(Cons)q(trai)q(nt\(P)q(,c,v)q(\);)631
-1391 y(g=NLCreate...Vector\(...)q(\);)631 1511 y
-(NLPEvaluateGradientOfIn)q(equa)q(lity)q(Cons)q(trai)q(nt\()q(P,c,)q
-(v,g\))q(;)631 1752 y(H=NLCreate...Matrix\(...)q(\);)631
-1872 y(NLPEvaluateHessianOfIne)q(qual)q(ityC)q(onst)q(rain)q(t\(P)q
-(,c,v)q(,H\);)324 2252 y Fi(2.1.3)112 b(Equalit)m(y)36
-b(Constrain)m(ts)324 2437 y Fk(Equalit)m(y)45 b(constrain)m(ts)g(are)g
+8 7 bop 683 548 a Fe(NLPSetInequalityConstraint)q(Grou)q(pA)683
+668 y(NLPSetInequalityConstraint)q(Grou)q(pB)683 789
+y(NLPAddNonlinearElementToIn)q(equa)q(lity)q(Cons)q(tra)q(intG)q(roup)
+470 1112 y Fk(Inequalit)m(y)33 b(constrain)m(ts)g(can)g(b)s(e)f(ev)-5
+b(aluated)33 b(using)f(the)h(routines:)631 1316 y Fe(int)52
+b(c;)631 1436 y(double)h(o;)631 1557 y(NLVector)h(v,g;)631
+1677 y(NLMatrix)g(H;)631 1918 y(o=NLPEvaluateInequality)q(Cons)q(trai)q
+(nt\(P)q(,c,v)q(\);)631 2159 y(g=NLCreate...Vector\(...)q(\);)631
+2279 y(NLPEvaluateGradientOfIn)q(equa)q(lity)q(Cons)q(trai)q(nt\()q
+(P,c,)q(v,g\))q(;)631 2520 y(H=NLCreate...Matrix\(...)q(\);)631
+2640 y(NLPEvaluateHessianOfIne)q(qual)q(ityC)q(onst)q(rain)q(t\(P)q
+(,c,v)q(,H\);)324 3020 y Fi(2.1.3)112 b(Equalit)m(y)36
+b(Constrain)m(ts)324 3205 y Fk(Equalit)m(y)45 b(constrain)m(ts)g(are)g
 (handled)g(exactly)g(as)h(the)f(inequalit)m(y)f(constrain)m(ts)i(are)
-324 2557 y(handled,)33 b(but)h(without)f(the)h(upp)s(er)g(and)f(lo)m(w)
+324 3325 y(handled,)33 b(but)h(without)f(the)h(upp)s(er)g(and)f(lo)m(w)
 m(er)h(b)s(ounds.)47 b(Equalit)m(y)33 b(constrain)m(ts)h(are)324
-2678 y(added)22 b(with)g(the)g Fe(NLPAddEqualityConstraint)28
-b Fk(or)21 b Fe(NLPAddEqualityConstraint)q(-)324 2798
+3446 y(added)22 b(with)g(the)g Fe(NLPAddEqualityConstraint)28
+b Fk(or)21 b Fe(NLPAddEqualityConstraint)q(-)324 3566
 y(ByString)34 b Fk(routine,)f(or)f(can)h(b)s(e)f(built)f(as)i(the)g
-(sum)g(of)f(a)g(n)m(um)m(b)s(er)h(of)f(groups.)631 3002
-y Fe(NLProblem)54 b(P;)631 3122 y(char)f(name[]="Eq0";)631
-3242 y(double)g(l,u;)631 3363 y(int)f(nv;)631 3483 y(int)g(*v;)631
-3604 y(double)h(\(*F\)\(int,double*,void*\);)631 3724
+(sum)g(of)f(a)g(n)m(um)m(b)s(er)h(of)f(groups.)631 3770
+y Fe(NLProblem)54 b(P;)631 3890 y(char)f(name[]="Eq0";)631
+4010 y(double)g(l,u;)631 4131 y(int)f(nv;)631 4251 y(int)g(*v;)631
+4371 y(double)h(\(*F\)\(int,double*,void*\);)631 4492
 y(double)g(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)631
-3844 y(double)g(\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
-3965 y(void)g(*data;)631 4085 y(void)g(\(*freedata\)\(void*\)\);)631
-4326 y(nv=3;v[0]=3;v[1]=10;v[2)q(]=9;)631 4446 y(l=1.;u=10.;)631
-4567 y(rc=NLPAddEqualityConstr)q(aint)q(\(P,n)q(ame,)q(l,u,)q(nv,)q
-(v,F,)q(dF,d)q(dF,)2682 4687 y(data,freedata\);)1918
+4612 y(double)g(\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
+4733 y(void)g(*data;)631 4853 y(void)g(\(*freedata\)\(void*\)\);)1918
 5251 y Fk(8)p eop
 %%Page: 9 9
-9 8 bop 324 548 a Fk(The)24 b Fe(data)g Fk(v)-5 b(ariable)22
-b(allo)m(ws)g(the)i(user)g(to)f(asso)s(ciate)g(a)g(data)g(blo)s(c)m(k)g
-(with)g(the)g(ob)5 b(jectiv)m(e,)324 668 y(that)47 b(is)f(passed)j(to)e
-(the)g(functions)g(when)h(they)h(are)e(ev)-5 b(aluated.)86
-b(The)49 b Fe(freedata)324 789 y Fk(routine)37 b(is)g(called)g(when)i
-(the)f(problem)f(is)g(free'd,)j(so)e(that)f(the)h(data)g(blo)s(c)m(k)f
-(can)h(b)s(e)324 909 y(released.)44 b(The)33 b(arra)m(y)g
-Fe(v)g Fk(lists)e(the)i Fe(nv)g Fk(v)-5 b(ariables)32
-b(on)g(whic)m(h)h(the)g(function)f(dep)s(ends.)470 1029
-y(Alternativ)m(ely)-8 b(,)31 b(the)g(user)h(can)f(de\014ne)i(the)e(ob)5
-b(jectiv)m(e)32 b(b)m(y)g(means)f(of)g(a)f(string)h(con-)324
-1150 y(taining)f(an)j(expression:)734 1342 y Fe
-(rc=NLPAddEqualityConstrai)q(ntBy)q(Stri)q(ng\(P)q(,na)q(me,n)q(v,v,)q
-(l,u,)939 1463 y("[x1,x2,x3]",)939 1583 y("48-x1**2-x2**2-x3**2"\);)324
-1896 y Fk(Again,)d(the)h(arra)m(y)g Fe(v)f Fk(lists)g(the)h
-Fe(nv)g Fk(v)-5 b(ariables)30 b(whose)h(v)-5 b(alues)31
-b(are)g(substituted)g(for)f(the)324 2017 y(v)-5 b(ariables)31
-b Fe("[x1,x2,x3]")p Fk(.)470 2137 y(When)36 b(the)g(constrain)m(t)e(is)
-h(\014rst)h(created)f(it)f(has)i(a)f(single,)f(empt)m(y)i(group.)51
-b(Addi-)324 2257 y(tional)27 b(groups)j(are)f(added)h(using)g(the)g
+9 8 bop 631 548 a Fe(nv=3;v[0]=3;v[1]=10;v[2)q(]=9;)631
+668 y(l=1.;u=10.;)631 789 y(rc=NLPAddEqualityConstr)q(aint)q(\(P,n)q
+(ame,)q(l,u,)q(nv,)q(v,F,)q(dF,d)q(dF,)2682 909 y(data,freedata\);)324
+1353 y Fk(The)24 b Fe(data)g Fk(v)-5 b(ariable)22 b(allo)m(ws)g(the)i
+(user)g(to)f(asso)s(ciate)g(a)g(data)g(blo)s(c)m(k)g(with)g(the)g(ob)5
+b(jectiv)m(e,)324 1474 y(that)47 b(is)f(passed)j(to)e(the)g(functions)g
+(when)h(they)h(are)e(ev)-5 b(aluated.)86 b(The)49 b Fe(freedata)324
+1594 y Fk(routine)37 b(is)g(called)g(when)i(the)f(problem)f(is)g
+(free'd,)j(so)e(that)f(the)h(data)g(blo)s(c)m(k)f(can)h(b)s(e)324
+1714 y(released.)44 b(The)33 b(arra)m(y)g Fe(v)g Fk(lists)e(the)i
+Fe(nv)g Fk(v)-5 b(ariables)32 b(on)g(whic)m(h)h(the)g(function)f(dep)s
+(ends.)470 1835 y(Alternativ)m(ely)-8 b(,)31 b(the)g(user)h(can)f
+(de\014ne)i(the)e(ob)5 b(jectiv)m(e)32 b(b)m(y)g(means)f(of)g(a)f
+(string)h(con-)324 1955 y(taining)f(an)j(expression:)734
+2159 y Fe(rc=NLPAddEqualityConstrai)q(ntBy)q(Stri)q(ng\(P)q(,na)q(me,n)
+q(v,v,)q(l,u,)939 2279 y("[x1,x2,x3]",)939 2399 y
+("48-x1**2-x2**2-x3**2"\);)324 2723 y Fk(Again,)d(the)h(arra)m(y)g
+Fe(v)f Fk(lists)g(the)h Fe(nv)g Fk(v)-5 b(ariables)30
+b(whose)h(v)-5 b(alues)31 b(are)g(substituted)g(for)f(the)324
+2844 y(v)-5 b(ariables)31 b Fe("[x1,x2,x3]")p Fk(.)470
+2964 y(When)36 b(the)g(constrain)m(t)e(is)h(\014rst)h(created)f(it)f
+(has)i(a)f(single,)f(empt)m(y)i(group.)51 b(Addi-)324
+3084 y(tional)27 b(groups)j(are)f(added)h(using)g(the)g
 Fe(NLPAddGroupToEqualityConstr)q(ain)q(t)35 b Fk(rou-)324
-2378 y(tine.)82 b(Eac)m(h)46 b(group)f(has)h(a)f(group)h(function,)i(a)
+3205 y(tine.)82 b(Eac)m(h)46 b(group)f(has)h(a)f(group)h(function,)i(a)
 d(scale,)k(a)c(linear)f(elemen)m(t,)49 b(a)c(con-)324
-2498 y(stan)m(t)c(elemen)m(t,)i(and)e(a)g(set)h(of)e(nonlinear)g
+3325 y(stan)m(t)c(elemen)m(t,)i(and)e(a)g(set)h(of)e(nonlinear)g
 (elemen)m(ts.)69 b(\(See)41 b(the)h(section)f(b)s(elo)m(w)g(on)324
-2619 y(\\Groups"\).)683 2811 y Fe(NLPAddNonlinearEqualityCon)q(stra)q
-(int\()q(P,na)q(me\))q(;)683 3052 y(NLPAddLinearEqualityConstr)q(aint)q
-(\(P,n)q(ame,)q(a,b)q(\);)683 3293 y(NLPSetEqualityConstraintGr)q(oupF)
-q(unct)q(ion)683 3413 y(NLPSetEqualityConstraintGr)q(oupS)q(cale)683
-3533 y(NLPSetEqualityConstraintGr)q(oupA)683 3654 y
-(NLPSetEqualityConstraintGr)q(oupB)683 3774 y
+3445 y(\\Groups"\).)683 3649 y Fe(NLPAddNonlinearEqualityCon)q(stra)q
+(int\()q(P,na)q(me\))q(;)683 3890 y(NLPAddLinearEqualityConstr)q(aint)q
+(\(P,n)q(ame,)q(a,b)q(\);)683 4130 y(NLPSetEqualityConstraintGr)q(oupF)
+q(unct)q(ion)683 4251 y(NLPSetEqualityConstraintGr)q(oupS)q(cale)683
+4371 y(NLPSetEqualityConstraintGr)q(oupA)683 4491 y
+(NLPSetEqualityConstraintGr)q(oupB)683 4612 y
 (NLPAddNonlinearElementToEq)q(uali)q(tyCo)q(nstr)q(ain)q(tGro)q(up)470
-4087 y Fk(Equalit)m(y)32 b(constrain)m(ts)h(can)g(b)s(e)g(ev)-5
-b(aluated)32 b(using)g(the)h(routines:)631 4280 y Fe(int)52
-b(c;)631 4400 y(double)h(o;)631 4521 y(NLVector)h(v,g;)631
-4641 y(NLMatrix)g(H;)631 4882 y(o=NLPEvaluateEqualityCo)q(nstr)q(aint)q
-(\(P,c)q(,v\);)1918 5251 y Fk(9)p eop
+4936 y Fk(Equalit)m(y)32 b(constrain)m(ts)h(can)g(b)s(e)g(ev)-5
+b(aluated)32 b(using)g(the)h(routines:)1918 5251 y(9)p
+eop
 %%Page: 10 10
-10 9 bop 631 548 a Fe(g=NLCreate...Vector\(...)q(\);)631
-668 y(NLPEvaluateGradientOfEq)q(uali)q(tyCo)q(nstr)q(aint)q(\(P,)q
-(c,v,)q(g\);)631 909 y(H=NLCreate...Matrix\(...)q(\);)631
-1029 y(NLPEvaluateHessianOfEqu)q(alit)q(yCon)q(stra)q(int\()q(P,c)q
-(,v,H)q(\);)324 1405 y Fi(2.1.4)112 b(T)-9 b(ransformations)37
-b(of)h(the)f(Problem)324 1590 y Fk(Sev)m(eral)43 b(common)e(op)s
+10 9 bop 631 548 a Fe(int)52 b(c;)631 668 y(double)h(o;)631
+789 y(NLVector)h(v,g;)631 909 y(NLMatrix)g(H;)631 1150
+y(o=NLPEvaluateEqualityCo)q(nstr)q(aint)q(\(P,c)q(,v\);)631
+1391 y(g=NLCreate...Vector\(...)q(\);)631 1511 y
+(NLPEvaluateGradientOfEq)q(uali)q(tyCo)q(nstr)q(aint)q(\(P,)q(c,v,)q
+(g\);)631 1752 y(H=NLCreate...Matrix\(...)q(\);)631 1872
+y(NLPEvaluateHessianOfEqu)q(alit)q(yCon)q(stra)q(int\()q(P,c)q(,v,H)q
+(\);)324 2252 y Fi(2.1.4)112 b(T)-9 b(ransformations)37
+b(of)h(the)f(Problem)324 2437 y Fk(Sev)m(eral)43 b(common)e(op)s
 (erations)h(on)g(problems)g(are)h(pro)m(vided.)74 b(They)44
-b(are)f(not)f(nec-)324 1711 y(essary)-8 b(,)40 b(but)e(ma)m(y)f(b)s(e)h
+b(are)f(not)f(nec-)324 2557 y(essary)-8 b(,)40 b(but)e(ma)m(y)f(b)s(e)h
 (of)f(help.)58 b(A)37 b(sophisticated)h(user)g(ma)m(y)f(of)g(course)i
-(write)e(their)324 1831 y(o)m(wn.)470 1951 y(The)d(\014rst)f(op)s
+(write)e(their)324 2678 y(o)m(wn.)470 2798 y(The)d(\014rst)f(op)s
 (eration)e(simply)g(creates)j(a)e(cop)m(y)i(of)e(the)h(problem:)580
-2130 y Fe(NLProblem)54 b(Q;)580 2371 y(Q=NLCopyProblem\(P\);)324
-2670 y Fk(The)26 b(other)g(transformations)e(b)s(elo)m(w)i(c)m(hange)g
+3002 y Fe(NLProblem)54 b(Q;)580 3242 y(Q=NLCopyProblem\(P\);)324
+3566 y Fk(The)26 b(other)g(transformations)e(b)s(elo)m(w)i(c)m(hange)g
 (the)h(problem,)f(so)f(a)h(cop)m(y)h(can)f(b)s(e)g(useful)324
-2791 y(to)32 b(compare)g(results.)470 2911 y(Next)j(there)h(is)e(a)g
+3687 y(to)32 b(compare)g(results.)470 3807 y(Next)j(there)h(is)e(a)g
 (transformation)e(whic)m(h)j(lo)s(oks)f(for)g(simple)f(b)s(ounds)i
-(where)h(the)324 3031 y(upp)s(er)f(and)g(lo)m(w)m(er)g(b)s(ounds)h(are)
+(where)h(the)324 3927 y(upp)s(er)f(and)g(lo)m(w)m(er)g(b)s(ounds)h(are)
 e(iden)m(tical,)g(and)h(adds)g(a)g(linear)e(equalit)m(y)i(constrain)m
-(t)324 3152 y(whic)m(h)46 b(requires)g(that)f(the)h(v)-5
+(t)324 4048 y(whic)m(h)46 b(requires)g(that)f(the)h(v)-5
 b(ariable)44 b(tak)m(e)i(that)f(v)-5 b(alue,)48 b(and)e(remo)m(v)m(es)g
-(the)g(simple)324 3272 y(b)s(ounds.)580 3451 y Fe
-(NLEliminateFixedVariable)q(s\(P\))q(;)324 3750 y Fk(This)35
+(the)g(simple)324 4168 y(b)s(ounds.)580 4371 y Fe
+(NLEliminateFixedVariable)q(s\(P\))q(;)324 4695 y Fk(This)35
 b(is)g(useful)g(for)g(in)m(terior)e(p)s(oin)m(t)i(tec)m(hniques,)i
 (whic)m(h)f(replace)f(simple)f(b)s(ounds)i(b)m(y)324
-3871 y(log)31 b(barriers,)h(and)h(ha)m(v)m(e)h(problems)e(dealing)f
-(with)h(iden)m(tical)f(b)s(ounds.)470 3991 y(Inequalities)22
-b(are)h(sometimes)f(dealt)h(with)f(b)m(y)i(in)m(tro)s(ducing)e(extra)h
-(v)-5 b(ariables)22 b(called)324 4111 y(slac)m(ks.)44
-b(That)33 b(is,)1669 4232 y Fj(l)d Fg(\024)e Fj(f)11
-b Fk(\()p Fi(v)r Fk(\))27 b Fg(\024)h Fj(u)324 4394 y
-Fk(is)k(replaced)h(b)m(y)g(an)g(equalit)m(y)f(constrain)m(t)g(and)h
-(simple)e(b)s(ounds)i(on)g(the)g(slac)m(k)g({)1658 4577
-y Fj(f)11 b Fk(\()p Fi(v)r Fk(\))22 b Fg(\000)g Fj(s)28
-b Fk(=)f(0)1658 4697 y(0)h Fg(\024)g Fj(s)f Fg(\024)i
-Fj(u)21 b Fg(\000)i Fj(l)324 4882 y Fk(These)j(op)s(erations)e(tak)m(e)
-h(a)f(problem)f(with)h(inequalit)m(y)g(and)g(equalit)m(y)h(constrain)m
-(ts)f(and)324 5002 y(con)m(v)m(ert)34 b(it)d(to)i(a)f(problem)f(with)i
-(only)f(equalit)m(y)g(constrain)m(ts)h({)1894 5251 y(10)p
-eop
+4816 y(log)31 b(barriers,)h(and)h(ha)m(v)m(e)h(problems)e(dealing)f
+(with)h(iden)m(tical)f(b)s(ounds.)1894 5251 y(10)p eop
 %%Page: 11 11
-11 10 bop 631 548 a Fe(NLPConvertToEqualityAnd)q(Boun)q(dsOn)q(ly\(P)q
-(\);)470 864 y Fk(Finally)-8 b(,)39 b(equalities)f(are)h(sometimes)g
+11 10 bop 470 548 a Fk(Inequalities)22 b(are)h(sometimes)f(dealt)h
+(with)f(b)m(y)i(in)m(tro)s(ducing)e(extra)h(v)-5 b(ariables)22
+b(called)324 668 y(slac)m(ks.)44 b(That)33 b(is,)1669
+789 y Fj(l)d Fg(\024)e Fj(f)11 b Fk(\()p Fi(v)r Fk(\))27
+b Fg(\024)h Fj(u)324 960 y Fk(is)k(replaced)h(b)m(y)g(an)g(equalit)m(y)
+f(constrain)m(t)g(and)h(simple)e(b)s(ounds)i(on)g(the)g(slac)m(k)g({)
+1658 1166 y Fj(f)11 b Fk(\()p Fi(v)r Fk(\))22 b Fg(\000)g
+Fj(s)28 b Fk(=)f(0)1658 1286 y(0)h Fg(\024)g Fj(s)f Fg(\024)i
+Fj(u)21 b Fg(\000)i Fj(l)324 1494 y Fk(These)j(op)s(erations)e(tak)m(e)
+h(a)f(problem)f(with)h(inequalit)m(y)g(and)g(equalit)m(y)h(constrain)m
+(ts)f(and)324 1614 y(con)m(v)m(ert)34 b(it)d(to)i(a)f(problem)f(with)i
+(only)f(equalit)m(y)g(constrain)m(ts)h({)631 1812 y Fe
+(NLPConvertToEqualityAnd)q(Boun)q(dsOn)q(ly\(P)q(\);)470
+2131 y Fk(Finally)-8 b(,)39 b(equalities)f(are)h(sometimes)g
 (eliminated)d(b)m(y)41 b(in)m(tro)s(ducing)d(a)h(quadratic)324
-985 y(p)s(enalt)m(y)32 b(and)h(Lagrange)f(m)m(ultipliers.)41
-b(That)32 b(is,)1468 1187 y(minimize)348 b Fj(O)s Fk(\()p
-Fi(v)r Fk(\))1468 1308 y(sub)5 b(jectto)182 b Fj(f)11
-b Fk(\()p Fi(v)r Fk(\))27 b(=)h(0)324 1512 y(b)s(ecomes)1167
-1652 y(minimize)94 b Fj(O)s Fk(\()p Fi(v)r Fk(\))21 b(+)2022
-1584 y(1)p 1993 1629 108 4 v 1993 1720 a(2)p Fj(\026)2110
-1652 y(f)2169 1611 y Fc(2)2208 1652 y Fk(\()p Fi(v)r
+2251 y(p)s(enalt)m(y)32 b(and)h(Lagrange)f(m)m(ultipliers.)41
+b(That)32 b(is,)1468 2457 y(minimize)348 b Fj(O)s Fk(\()p
+Fi(v)r Fk(\))1468 2577 y(sub)5 b(jectto)182 b Fj(f)11
+b Fk(\()p Fi(v)r Fk(\))27 b(=)h(0)324 2784 y(b)s(ecomes)1167
+2924 y(minimize)94 b Fj(O)s Fk(\()p Fi(v)r Fk(\))21 b(+)2022
+2857 y(1)p 1993 2901 108 4 v 1993 2993 a(2)p Fj(\026)2110
+2924 y(f)2169 2883 y Fc(2)2208 2924 y Fk(\()p Fi(v)r
 Fk(\))h Fg(\000)h Fj(\025f)11 b Fk(\()p Fi(v)r Fk(\))324
-1867 y(In)30 b(the)h(limit)26 b(of)k(small)d(p)s(enalt)m(y)j(parameter)
+3141 y(In)30 b(the)h(limit)26 b(of)k(small)d(p)s(enalt)m(y)j(parameter)
 g Fj(\026)p Fk(,)g(and)g(minimizing)c(w.r.t.)43 b(b)s(oth)30
-b Fi(v)h Fk(and)324 1988 y Fj(\025)p Fk(,)44 b(the)f(solution)e(of)g
+b Fi(v)h Fk(and)324 3261 y Fj(\025)p Fk(,)44 b(the)f(solution)e(of)g
 (this)h(problem)f(is)h(the)h(same)f(as)g(the)h(solution)e(of)g(the)i
-(original)324 2108 y(problem.)470 2228 y(This)35 b(is)g(a)g(little)e
+(original)324 3382 y(problem.)470 3502 y(This)35 b(is)g(a)g(little)e
 (complicated,)h(b)s(ecause)j(of)d(the)i(group)f(structure.)53
-b(In)35 b(fact,)h(the)324 2349 y(terms)c(added)i(to)e(the)h(ob)5
-b(jectiv)m(e)33 b(are)1097 2599 y(minimize)95 b Fj(O)s
-Fk(\()p Fi(v)r Fk(\))21 b(+)1953 2531 y(1)p 1924 2576
-V 1924 2667 a(2)p Fj(\026)2058 2516 y Fd(X)2106 2698
-y Fh(i)2194 2599 y Fk(\()p Fj(f)2280 2614 y Fh(i)2308
-2599 y Fk(\()p Fi(v)r Fk(\))h Fg(\000)h Fj(\026\025)2683
-2614 y Fh(i)2711 2599 y Fk(\))2749 2550 y Fc(2)324 2880
+b(In)35 b(fact,)h(the)324 3622 y(terms)c(added)i(to)e(the)h(ob)5
+b(jectiv)m(e)33 b(are)1097 3875 y(minimize)95 b Fj(O)s
+Fk(\()p Fi(v)r Fk(\))21 b(+)1953 3808 y(1)p 1924 3852
+V 1924 3944 a(2)p Fj(\026)2058 3792 y Fd(X)2106 3974
+y Fh(i)2194 3875 y Fk(\()p Fj(f)2280 3890 y Fh(i)2308
+3875 y Fk(\()p Fi(v)r Fk(\))h Fg(\000)h Fj(\026\025)2683
+3890 y Fh(i)2711 3875 y Fk(\))2749 3827 y Fc(2)324 4159
 y Fk(Notice)35 b(that)h(this)f(p)s(erserv)m(es)k(the)d(group)g
 (structure)h(\(see)g(the)f(\015o)s(o)m(wing)f(sections\))i
-Ff(if)324 3001 y Fk(the)42 b(constrain)m(t)h(has)f(only)g(one)h(group)f
+Ff(if)324 4280 y Fk(the)42 b(constrain)m(t)h(has)f(only)g(one)h(group)f
 (and)g(the)h(trivial)c(group)k(function.)72 b(This)42
-b(is)324 3121 y(required)37 b(to)f(use)h(this)g(transformation.)53
+b(is)324 4400 y(required)37 b(to)f(use)h(this)g(transformation.)53
 b(If)36 b(this)g(is)g(true)h(the)g(groups)g(added)g(to)f(the)324
-3241 y(ob)5 b(jectiv)m(e)42 b(get)f(a)g(group)f(function)h
-Fj(g)t Fk(\()p Fj(x)p Fk(\))g(=)h Fj(x)2079 3205 y Fc(2)2119
-3241 y Fk(,)h(inherit)d(the)i(nonlinear)d(and)i(linear)324
-3362 y(elemen)m(ts)d(of)f(the)h(constrain)m(t.)58 b(The)39
+4521 y(ob)5 b(jectiv)m(e)42 b(get)f(a)g(group)f(function)h
+Fj(g)t Fk(\()p Fj(x)p Fk(\))g(=)h Fj(x)2079 4484 y Fc(2)2119
+4521 y Fk(,)h(inherit)d(the)i(nonlinear)d(and)i(linear)324
+4641 y(elemen)m(ts)d(of)f(the)h(constrain)m(t.)58 b(The)39
 b(constan)m(t)f(elemen)m(t)f(of)g(the)h(group)g(is)f(increased)324
-3482 y(b)m(y)46 b Fj(\026\025)588 3497 y Fh(i)616 3482
+4761 y(b)m(y)46 b Fj(\026\025)588 4776 y Fh(i)616 4761
 y Fk(,)i(and)e(the)f(group)g(scale)h(is)e(squared)j(and)e(then)h(m)m
 (ultiplied)c(b)m(y)k(2)p Fj(\026)p Fk(.)81 b(This)324
-3602 y(means)30 b(that)g(when)i(the)e(p)s(enalt)m(y)h(parameter)e
+4882 y(means)30 b(that)g(when)i(the)e(p)s(enalt)m(y)h(parameter)e
 Fj(\026)h Fk(or)g(the)h(Lagrange)f(m)m(ultipliers)d(\()p
-Fj(\025)3430 3617 y Fh(i)3458 3602 y Fk('s\))324 3723
+Fj(\025)3430 4897 y Fh(i)3458 4882 y Fk('s\))324 5002
 y(are)33 b(c)m(hanged)i(w)m(e)f(m)m(ust)g(kno)m(w)h(whic)m(h)f(groups)g
-(in)e(the)i(ob)5 b(jectiv)m(e)35 b(are)e(p)s(enalties,)g(and)324
-3843 y(or)d(eac)m(h,)i(what)g(the)f(original)c(constan)m(t)32
-b(elemen)m(t)f(and)g(group)f(scale)h(w)m(ere.)44 b(Therefore)324
-3964 y(the)38 b(routine)e(whic)m(h)i(creates)h(the)e(terms)h(in)e(the)i
-(ob)5 b(jectiv)m(e)38 b(requires)h(arra)m(ys)e(that)h(it)324
-4084 y(can)33 b(store)g(this)f(information)d(in)j({)631
-4280 y Fe(int)206 b(g[nc];)104 b(/*)52 b(the)g(ids)g(of)g(the)g(added)h
-(groups)g(*/)631 4400 y(double)g(mu;)631 4521 y(double)g(l[nc];)104
-b(/*)52 b(Lagrange)i(multipliers)g(*/)631 4641 y(double)f(b[nc];)104
-b(/*)52 b(Constant)i(elements)f(*/)631 4761 y(double)g(s[nc];)104
-b(/*)52 b(Group)h(scales)g(*/)631 5002 y(nc=NLPGetNumberOfEquali)q
-(tyCo)q(nstr)q(aint)q(s\(P\))q(;)1894 5251 y Fk(11)p
-eop
+(in)e(the)i(ob)5 b(jectiv)m(e)35 b(are)e(p)s(enalties,)g(and)1894
+5251 y(11)p eop
 %%Page: 12 12
-12 11 bop 631 668 a Fe(NLCreateAugmentedLagran)q(gian)q(\(P,)58
-b(mu,l,)52 b(g,b,s\);)631 909 y(NLSetLambaAndMuInAugmen)q(tedL)q(agra)q
-(ngia)q(n\(P,)58 b(nc,)52 b(mu,l,)h(g,b,s\);)324 1289
-y Fi(2.1.5)112 b(Groups)324 1474 y Fk(In)42 b(LANCELOT,)i(functions)e
-(are)g(made)f(of)h(a)g(sum)g(of)g Ff(gr)-5 b(oups)p Fk(.)71
-b(Eac)m(h)43 b(group)f(is)g(a)324 1594 y(scaled)f(scalar)g(function)g
-(of)g(a)g(nonlinear)f(function)h(of)g(the)h(problem)e(v)-5
-b(ariables.)69 b(A)324 1715 y(group)32 b(is)g(of)g(the)h(form)1390
-1791 y Fd(X)1549 1807 y Fk(1)p 1536 1851 75 4 v 1536
-1942 a Fj(s)1582 1957 y Fh(i)1620 1874 y Fj(g)1667 1889
-y Fh(i)1695 1874 y Fk(\()p Fj(N)1811 1889 y Fh(i)1839
-1874 y Fk(\()p Fi(v)r Fk(\))22 b(+)g Fi(a)2150 1889 y
-Fh(i)2179 1874 y Fj(:)p Fi(v)i Fg(\000)e Fj(b)2429 1889
-y Fh(i)2458 1874 y Fk(\))324 2089 y(When)31 b(a)g(group)g(is)f(created)
-i(the)f(group)f(function)h Fj(g)2265 2104 y Fh(i)2323
-2089 y Fk(is)g(the)g(iden)m(tit)m(y)-8 b(,)31 b(and)g(the)g(group)324
-2209 y(scale)i(is)f(1.)45 b(In)33 b(addition,)f(there)i(are)f(no)g
-(nonlinear)e(elemen)m(ts)j(\(the)f Fj(N)2973 2224 y Fh(i)3001
-2209 y Fk(\()p Fi(v)r Fk(\)\),)g(and)g(the)324 2330 y(linear)e(elemen)m
-(t)h Fi(a)1009 2345 y Fh(i)1038 2330 y Fj(:)p Fi(v)i
-Fk(and)f(the)g(constan)m(t)g(elemen)m(t)g Fj(b)2311 2345
-y Fh(i)2372 2330 y Fk(are)f(zero.)470 2450 y(The)43 b(user)f(creates)h
-(a)f(group)f(when)i(he)g(adds)f(a)f(constrain)m(t,)j(or)e(when)h(he)f
-(adds)324 2570 y(a)h(group)g(to)g(the)g(ob)5 b(jectiv)m(e)45
-b(or)e(constrain)m(t.)75 b(The)44 b(groups)g(are)f(asso)s(ciated)g
-(with)g(a)324 2691 y(constrain)m(t)c(or)f(the)i(ob)5
-b(jectiv)m(e,)42 b(so)d(the)g(user)h(sets,)i(e.g.)63
-b(group)39 b(3)g(in)f(the)h(ob)5 b(jectiv)m(e,)324 2811
-y(or)33 b(group)g(2)g(in)f(equalit)m(y)h(constrain)m(t)g(10,)h(and)f
-(so)g(on.)46 b(The)34 b(group)f(scale,)h(linear)d(and)324
-2931 y(constan)m(t)i(elemen)m(ts)g(are)g(set)g(with)f(routines)683
-3135 y Fe(int)52 b(g;)683 3255 y(int)g(c;)683 3376 y(NLGroupFunction)j
-(gf;)683 3496 y(double)e(s;)683 3616 y(NLVector)g(a;)683
-3737 y(double)g(b;)683 3978 y(NLPSetObjectiveGroupFuncti)q(on\(g)q
-(,gf\))q(;)683 4098 y(NLPSetEqualityConstraintGr)q(oupF)q(unct)q(ion\()
-q(c,g)q(,gf\))q(;)683 4218 y(NLPSetInequalityConstraint)q(Grou)q(pFun)q
-(ctio)q(n\(c)q(,g,g)q(f\);)683 4459 y(NLPSetObjectiveGroupScale\()q
-(g,s\))q(;)683 4579 y(NLPSetEqualityConstraintGr)q(oupS)q(cale)q(\(c,g)
-q(,s\))q(;)683 4700 y(NLPSetInequalityConstraint)q(Grou)q(pSca)q(le\(c)
-q(,g,)q(s\);)683 4941 y(NLPSetObjectiveGroupA\(g,a\))q(;)1894
-5251 y Fk(12)p eop
+12 11 bop 324 548 a Fk(or)30 b(eac)m(h,)i(what)g(the)f(original)c
+(constan)m(t)32 b(elemen)m(t)f(and)g(group)f(scale)h(w)m(ere.)44
+b(Therefore)324 668 y(the)38 b(routine)e(whic)m(h)i(creates)h(the)e
+(terms)h(in)e(the)i(ob)5 b(jectiv)m(e)38 b(requires)h(arra)m(ys)e(that)
+h(it)324 789 y(can)33 b(store)g(this)f(information)d(in)j({)631
+984 y Fe(int)206 b(g[nc];)104 b(/*)52 b(the)g(ids)g(of)g(the)g(added)h
+(groups)g(*/)631 1104 y(double)g(mu;)631 1225 y(double)g(l[nc];)104
+b(/*)52 b(Lagrange)i(multipliers)g(*/)631 1345 y(double)f(b[nc];)104
+b(/*)52 b(Constant)i(elements)f(*/)631 1466 y(double)g(s[nc];)104
+b(/*)52 b(Group)h(scales)g(*/)631 1706 y(nc=NLPGetNumberOfEquali)q
+(tyCo)q(nstr)q(aint)q(s\(P\))q(;)631 1947 y(NLCreateAugmentedLagran)q
+(gian)q(\(P,)58 b(mu,l,)52 b(g,b,s\);)631 2188 y
+(NLSetLambaAndMuInAugmen)q(tedL)q(agra)q(ngia)q(n\(P,)58
+b(nc,)52 b(mu,l,)h(g,b,s\);)324 2567 y Fi(2.1.5)112 b(Groups)324
+2751 y Fk(In)42 b(LANCELOT,)i(functions)e(are)g(made)f(of)h(a)g(sum)g
+(of)g Ff(gr)-5 b(oups)p Fk(.)71 b(Eac)m(h)43 b(group)f(is)g(a)324
+2872 y(scaled)f(scalar)g(function)g(of)g(a)g(nonlinear)f(function)h(of)
+g(the)h(problem)e(v)-5 b(ariables.)69 b(A)324 2992 y(group)32
+b(is)g(of)g(the)h(form)1390 3068 y Fd(X)1549 3084 y Fk(1)p
+1536 3128 75 4 v 1536 3220 a Fj(s)1582 3235 y Fh(i)1620
+3151 y Fj(g)1667 3166 y Fh(i)1695 3151 y Fk(\()p Fj(N)1811
+3166 y Fh(i)1839 3151 y Fk(\()p Fi(v)r Fk(\))22 b(+)g
+Fi(a)2150 3166 y Fh(i)2179 3151 y Fj(:)p Fi(v)i Fg(\000)e
+Fj(b)2429 3166 y Fh(i)2458 3151 y Fk(\))324 3362 y(When)31
+b(a)g(group)g(is)f(created)i(the)f(group)f(function)h
+Fj(g)2265 3377 y Fh(i)2323 3362 y Fk(is)g(the)g(iden)m(tit)m(y)-8
+b(,)31 b(and)g(the)g(group)324 3483 y(scale)i(is)f(1.)45
+b(In)33 b(addition,)f(there)i(are)f(no)g(nonlinear)e(elemen)m(ts)j
+(\(the)f Fj(N)2973 3498 y Fh(i)3001 3483 y Fk(\()p Fi(v)r
+Fk(\)\),)g(and)g(the)324 3603 y(linear)e(elemen)m(t)h
+Fi(a)1009 3618 y Fh(i)1038 3603 y Fj(:)p Fi(v)i Fk(and)f(the)g(constan)
+m(t)g(elemen)m(t)g Fj(b)2311 3618 y Fh(i)2372 3603 y
+Fk(are)f(zero.)470 3723 y(The)43 b(user)f(creates)h(a)f(group)f(when)i
+(he)g(adds)f(a)f(constrain)m(t,)j(or)e(when)h(he)f(adds)324
+3844 y(a)h(group)g(to)g(the)g(ob)5 b(jectiv)m(e)45 b(or)e(constrain)m
+(t.)75 b(The)44 b(groups)g(are)f(asso)s(ciated)g(with)g(a)324
+3964 y(constrain)m(t)c(or)f(the)i(ob)5 b(jectiv)m(e,)42
+b(so)d(the)g(user)h(sets,)i(e.g.)63 b(group)39 b(3)g(in)f(the)h(ob)5
+b(jectiv)m(e,)324 4084 y(or)33 b(group)g(2)g(in)f(equalit)m(y)h
+(constrain)m(t)g(10,)h(and)f(so)g(on.)46 b(The)34 b(group)f(scale,)h
+(linear)d(and)324 4205 y(constan)m(t)i(elemen)m(ts)g(are)g(set)g(with)f
+(routines)683 4400 y Fe(int)52 b(g;)683 4521 y(int)g(c;)683
+4641 y(NLGroupFunction)j(gf;)683 4761 y(double)e(s;)683
+4882 y(NLVector)g(a;)683 5002 y(double)g(b;)1894 5251
+y Fk(12)p eop
 %%Page: 13 13
-13 12 bop 683 548 a Fe(NLPSetEqualityConstraintGr)q(oupA)q(\(c,g)q
-(,a\);)683 668 y(NLPSetInequalityConstraint)q(Grou)q(pA\(c)q(,g,a)q
-(\);)683 909 y(NLPSetObjectiveGroupB\(g,b\))q(;)683 1029
-y(NLPSetEqualityConstraintGr)q(oupB)q(\(c,g)q(,b\);)683
-1150 y(NLPSetInequalityConstraint)q(Grou)q(pB\(c)q(,g,b)q(\);)324
-1439 y Fk(The)41 b(NL)-11 b(V)j(ector)41 b(data)f(structure)i(is)e
+13 12 bop 683 668 a Fe(NLPSetObjectiveGroupFuncti)q(on\(g)q(,gf\))q(;)
+683 789 y(NLPSetEqualityConstraintGr)q(oupF)q(unct)q(ion\()q(c,g)q
+(,gf\))q(;)683 909 y(NLPSetInequalityConstraint)q(Grou)q(pFun)q(ctio)q
+(n\(c)q(,g,g)q(f\);)683 1150 y(NLPSetObjectiveGroupScale\()q(g,s\))q(;)
+683 1270 y(NLPSetEqualityConstraintGr)q(oupS)q(cale)q(\(c,g)q(,s\))q(;)
+683 1391 y(NLPSetInequalityConstraint)q(Grou)q(pSca)q(le\(c)q(,g,)q
+(s\);)683 1631 y(NLPSetObjectiveGroupA\(g,a\))q(;)683
+1752 y(NLPSetEqualityConstraintGr)q(oupA)q(\(c,g)q(,a\);)683
+1872 y(NLPSetInequalityConstraint)q(Grou)q(pA\(c)q(,g,a)q(\);)683
+2113 y(NLPSetObjectiveGroupB\(g,b\))q(;)683 2233 y
+(NLPSetEqualityConstraintGr)q(oupB)q(\(c,g)q(,b\);)683
+2354 y(NLPSetInequalityConstraint)q(Grou)q(pB\(c)q(,g,b)q(\);)324
+2675 y Fk(The)41 b(NL)-11 b(V)j(ector)41 b(data)f(structure)i(is)e
 (describ)s(ed)h(b)s(elo)m(w)f(\(dense)i(or)e(spares)i(v)m(ectors\).)324
-1559 y(The)28 b(NLGroupF)-8 b(unction)27 b(data)g(structure)i(represen)
-m(ts)h(a)e(scalar)f(function)g(\(with)g(\014rst)324 1680
+2795 y(The)28 b(NLGroupF)-8 b(unction)27 b(data)g(structure)i(represen)
+m(ts)h(a)e(scalar)f(function)g(\(with)g(\014rst)324 2915
 y(and)33 b(second)h(deriv)-5 b(ativ)m(es\).)44 b(It)32
 b(can)h(b)s(e)g(created)h(b)m(y)g(passing)e(routines,)h(or)f(b)m(y)i(w)
-m(a)m(y)g(of)324 1800 y(a)e(string.)683 1968 y Fe(NLGroupFunction)55
-b(g;)683 2089 y(NLProblem)e(P;)683 2209 y(double)g
-(\(*G\)\(double,void*\);)683 2330 y(double)g(\(*dG\)\(double,void*\);)
-683 2450 y(double)g(\(*ddG\)\(double,void*\);)683 2570
-y(void)f(*data;)683 2691 y(void)g(\(*freedata\)\(void*\);)683
-2932 y(gf=NLCreateGroupFunction\(P)q(,"ty)q(pe",)q(G,dG)q(,dd)q(G,)2426
-3052 y(data,freedata\);)324 3341 y Fk(The)29 b(t)m(yp)s(e)f(is)f(a)h
+m(a)m(y)g(of)324 3036 y(a)e(string.)683 3236 y Fe(NLGroupFunction)55
+b(g;)683 3357 y(NLProblem)e(P;)683 3477 y(double)g
+(\(*G\)\(double,void*\);)683 3598 y(double)g(\(*dG\)\(double,void*\);)
+683 3718 y(double)g(\(*ddG\)\(double,void*\);)683 3838
+y(void)f(*data;)683 3959 y(void)g(\(*freedata\)\(void*\);)683
+4200 y(gf=NLCreateGroupFunction\(P)q(,"ty)q(pe",)q(G,dG)q(,dd)q(G,)2426
+4320 y(data,freedata\);)324 4641 y Fk(The)29 b(t)m(yp)s(e)f(is)f(a)h
 (string)f(asso)s(ciated)h(with)f(the)h(group.)42 b(G,dG,)27
-b(and)h(ddG)g(are)g(functions)324 3461 y(whic)m(h)41
+b(and)h(ddG)g(are)g(functions)324 4761 y(whic)m(h)41
 b(ev)-5 b(aluate)40 b(the)g(group)h(function,)g(and)g(its)f(\014rst)h
-(and)f(second)i(deriv)-5 b(ativ)m(es.)67 b(If)324 3582
+(and)f(second)i(deriv)-5 b(ativ)m(es.)67 b(If)324 4882
 y(dG)35 b(and/or)f(ddG)h(is)g(NULL)g(cen)m(tered)i(di\013erencing)d(is)
 h(used.)52 b(The)36 b(data)e(is)h(a)g(blo)s(c)m(k)324
-3702 y(of)f(memory)f(passed)j(to)e(the)h(functions)f(\(so)h(that)f(the)
-h(same)f(G)g(etc.)50 b(can)34 b(b)s(e)h(used)g(in)324
-3822 y(di\013eren)m(t)f(GroupF)-8 b(unctions\),)33 b(and)h(freedata)g
-(is)f(a)g(routine)g(that)h(is)f(called)f(when)j(the)324
-3943 y(GroupF)-8 b(unction)31 b(is)h(freed.)470 4063
-y(A)22 b(second)i(metho)s(d)e(of)f(creating)h(a)g(group)g(function)g
-(is)f("ByString".)40 b(F)-8 b(or)21 b(example:)683 4232
-y Fe(g=NLCreateGroupFunctionByS)q(trin)q(g\(P,)q("typ)q(e",)2426
-4352 y("s","sin\(s\)*cos\(2*s\)"\);)470 4641 y Fk(Eac)m(h)31
-b("CreateGroupF)-8 b(unction")30 b(should)g(b)s(e)h(matc)m(hed)f(with)g
-(a)g("NLF)-8 b(reeGroup-)324 4761 y(F)g(unction")31 b(later)g(on)h(in)f
-(the)i(users)g(co)s(de.)44 b(Reference)34 b(coun)m(ting)e(is)f(used,)j
-(so)e(a)g(group)324 4882 y(function)e(that)g(is)h(passed)h(to)e
-(Set...GroupF)-8 b(unction)30 b(can)h(b)s(e)g(safely)f("F)-8
-b(ree'd")31 b(imme-)324 5002 y(diately)g(afterw)m(ard.)1894
+5002 y(of)f(memory)f(passed)j(to)e(the)h(functions)f(\(so)h(that)f(the)
+h(same)f(G)g(etc.)50 b(can)34 b(b)s(e)h(used)g(in)1894
 5251 y(13)p eop
 %%Page: 14 14
-14 13 bop 324 548 a Fi(2.1.6)112 b(Nonlinear)36 b(Elemen)m(ts)324
-733 y Fk(Nonlinear)41 b(elemen)m(ts)h(are)h(scalar)f(v)-5
-b(alued)42 b(functions)g(of)g(a)g(subset)i(of)e(the)h(problem)324
-853 y(v)-5 b(ariables.)40 b(A)27 b(group)g(has)g(a)g(list)e(of)i
+14 13 bop 324 548 a Fk(di\013eren)m(t)34 b(GroupF)-8
+b(unctions\),)33 b(and)h(freedata)g(is)f(a)g(routine)g(that)h(is)f
+(called)f(when)j(the)324 668 y(GroupF)-8 b(unction)31
+b(is)h(freed.)470 789 y(A)22 b(second)i(metho)s(d)e(of)f(creating)h(a)g
+(group)g(function)g(is)f("ByString".)40 b(F)-8 b(or)21
+b(example:)683 990 y Fe(g=NLCreateGroupFunctionByS)q(trin)q(g\(P,)q
+("typ)q(e",)2426 1110 y("s","sin\(s\)*cos\(2*s\)"\);)470
+1432 y Fk(Eac)m(h)31 b("CreateGroupF)-8 b(unction")30
+b(should)g(b)s(e)h(matc)m(hed)f(with)g(a)g("NLF)-8 b(reeGroup-)324
+1552 y(F)g(unction")31 b(later)g(on)h(in)f(the)i(users)g(co)s(de.)44
+b(Reference)34 b(coun)m(ting)e(is)f(used,)j(so)e(a)g(group)324
+1672 y(function)e(that)g(is)h(passed)h(to)e(Set...GroupF)-8
+b(unction)30 b(can)h(b)s(e)g(safely)f("F)-8 b(ree'd")31
+b(imme-)324 1793 y(diately)g(afterw)m(ard.)324 2052 y
+Fi(2.1.6)112 b(Nonlinear)36 b(Elemen)m(ts)324 2237 y
+Fk(Nonlinear)41 b(elemen)m(ts)h(are)h(scalar)f(v)-5 b(alued)42
+b(functions)g(of)g(a)g(subset)i(of)e(the)h(problem)324
+2357 y(v)-5 b(ariables.)40 b(A)27 b(group)g(has)g(a)g(list)e(of)i
 (nonlinear)e(elemen)m(ts)j(whose)g(v)-5 b(alues)27 b(are)g(summed,)324
-973 y(then)49 b(added)f(to)g(the)h(v)-5 b(alue)47 b(of)h(the)g(linear)f
-(and)h(constan)m(t)h(elemen)m(ts)f(to)g(giv)m(e)g(the)324
-1094 y(argumen)m(t)32 b(to)g(the)h(group)g(function.)43
+2478 y(then)49 b(added)f(to)g(the)h(v)-5 b(alue)47 b(of)h(the)g(linear)
+f(and)h(constan)m(t)h(elemen)m(ts)f(to)g(giv)m(e)g(the)324
+2598 y(argumen)m(t)32 b(to)g(the)h(group)g(function.)43
 b(Eac)m(h)33 b(nonlinear)e(elemen)m(t)i(is)f(of)g(the)h(form:)1395
-1305 y Fj(N)10 b Fk(\()p Fi(v)r Fk(\))28 b(=)1751 1222
-y Fd(X)1799 1405 y Fh(i)1888 1305 y Fj(w)1958 1320 y
-Fh(i)1986 1305 y Fj(f)2034 1320 y Fh(i)2062 1305 y Fk(\()2100
-1222 y Fd(X)2143 1405 y Fh(j)2236 1305 y Fj(R)2310 1320
-y Fh(ij)2371 1305 y Fj(e)2416 1320 y Fh(j)2453 1305 y
-Fk(\))324 1600 y(The)34 b(elemen)m(t)g(w)m(eigh)m(t)g
-Fj(w)1267 1615 y Fh(i)1329 1600 y Fk(is)f(a)h(scalar)f(\(default)g(is)g
-Fj(w)2325 1615 y Fh(i)2383 1600 y Fk(=)c(1\).)47 b(The)35
-b(elemen)m(t)e(function)324 1721 y Fj(f)372 1736 y Fh(i)431
-1721 y Fk(is)d(a)g(scalar)g(v)-5 b(alued)30 b(function)g(of)g(a)g(set)i
+2815 y Fj(N)10 b Fk(\()p Fi(v)r Fk(\))28 b(=)1751 2732
+y Fd(X)1799 2915 y Fh(i)1888 2815 y Fj(w)1958 2830 y
+Fh(i)1986 2815 y Fj(f)2034 2830 y Fh(i)2062 2815 y Fk(\()2100
+2732 y Fd(X)2143 2915 y Fh(j)2236 2815 y Fj(R)2310 2830
+y Fh(ij)2371 2815 y Fj(e)2416 2830 y Fh(j)2453 2815 y
+Fk(\))324 3116 y(The)34 b(elemen)m(t)g(w)m(eigh)m(t)g
+Fj(w)1267 3131 y Fh(i)1329 3116 y Fk(is)f(a)h(scalar)f(\(default)g(is)g
+Fj(w)2325 3131 y Fh(i)2383 3116 y Fk(=)c(1\).)47 b(The)35
+b(elemen)m(t)e(function)324 3236 y Fj(f)372 3251 y Fh(i)431
+3236 y Fk(is)d(a)g(scalar)g(v)-5 b(alued)30 b(function)g(of)g(a)g(set)i
 (of)e Ff(internal)i(variables)p Fk(,)e(whic)m(h)h(are)g(a)f(linear)324
-1841 y(com)m(bination)h(of)i(the)h(elemen)m(t)g(v)-5
-b(ariables)32 b Fj(e)1973 1856 y Fh(j)2043 1841 y Fk(\(a)h(subset)i(of)
-f(the)g(problem)e(v)-5 b(ariables\).)324 1961 y(The)32
-b(range)f(transformation)e Fj(R)1524 1976 y Fh(ij)1616
-1961 y Fk(relates)i(elemen)m(t)g(v)-5 b(ariables)30 b(to)h(in)m(ternal)
-f(v)-5 b(ariables.)470 2082 y(An)33 b(elemen)m(t)f(function)g(is)h
-(created)g(with)f(one)h(of)f(the)h(routines:)631 2278
-y Fe(NLElementFunction)56 b(ef;)631 2398 y(NLMatrix)e(R;)631
-2519 y(double)f(\(*F\)\(int,double*,void*\);)631 2639
+3356 y(com)m(bination)h(of)i(the)h(elemen)m(t)g(v)-5
+b(ariables)32 b Fj(e)1973 3371 y Fh(j)2043 3356 y Fk(\(a)h(subset)i(of)
+f(the)g(problem)e(v)-5 b(ariables\).)324 3477 y(The)32
+b(range)f(transformation)e Fj(R)1524 3492 y Fh(ij)1616
+3477 y Fk(relates)i(elemen)m(t)g(v)-5 b(ariables)30 b(to)h(in)m(ternal)
+f(v)-5 b(ariables.)470 3597 y(An)33 b(elemen)m(t)f(function)g(is)h
+(created)g(with)f(one)h(of)f(the)h(routines:)631 3798
+y Fe(NLElementFunction)56 b(ef;)631 3919 y(NLMatrix)e(R;)631
+4039 y(double)f(\(*F\)\(int,double*,void*\);)631 4159
 y(double)g(\(*dF\)\(int,int,double*,vo)q(id*\))q(;)631
-2759 y(double)g(\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
-2880 y(void)g(*data;)631 3000 y(void)g(\(*freedata\)\(void*\);)631
-3121 y(NLMatrix)h(ddF0;)631 3361 y(ef=NLCreateElementFunct)q(ion\()q
-(P,"e)q(type)q(",n,)q(R,F)q(,dF,)q(ddF,)2631 3482 y(data,freedata\);)
-631 3722 y(ef=NLCreateElementFunct)q(ionW)q(ithI)q(niti)q(alHe)q(ssi)q
-(an\(P)q(,"et)q(ype")q(,)2631 3843 y(n,R,F,dF,ddF,)2631
-3963 y(data,freedata,)2631 4084 y(ddF0\);)631 4324 y
-(ef=NLCreateElementFunct)q(ionB)q(yStr)q(ing\()q(P,"e)q(typ)q(e",n)q
-(,R,)2631 4445 y("[x,y,z,w]",)2631 4565 y("x**2+y**2-z*w"\);)324
-4882 y Fk(Here,)40 b Fe(n)e Fk(is)f(the)i(n)m(um)m(b)s(er)f(of)f
-(elemen)m(t)h(v)-5 b(ariables,)38 b Fe(R)g Fk(the)g(range)g
-(transformation)e(\(or)324 5002 y(NULL\),)26 b(F,)f(dF,)h(and)f(ddF)h
-(are)g(routines)f(whic)m(h)h(ev)-5 b(alute)26 b(F)f(and)h(its)f(deriv)
--5 b(ativ)m(es)26 b(\(ddF)1894 5251 y(14)p eop
+4280 y(double)g(\(*ddF\)\(int,int,int,doubl)q(e*,v)q(oid*)q(\);)631
+4400 y(void)g(*data;)631 4521 y(void)g(\(*freedata\)\(void*\);)631
+4641 y(NLMatrix)h(ddF0;)631 4882 y(ef=NLCreateElementFunct)q(ion\()q
+(P,"e)q(type)q(",n,)q(R,F)q(,dF,)q(ddF,)2631 5002 y(data,freedata\);)
+1894 5251 y Fk(14)p eop
 %%Page: 15 15
-15 14 bop 324 548 a Fk(ma)m(y)34 b(b)s(e)g(NULL\).)h(If)f(ddF)g(is)g
-(NULL,)h(ddF0)f(giv)m(es)g(an)g(initial)d(guess)k(at)f(the)h(Hessian)
-324 668 y(whic)m(h)k(is)f(then)h(up)s(dated)g(using)f(rank)g(one)h(up)s
-(dates.)62 b(Note)38 b(that)h(the)f(up)s(dates)i(are)324
-789 y(done)29 b(on)g(the)g(deriv)-5 b(ativ)m(es)29 b(w.r.t.)43
+15 14 bop 631 668 a Fe(ef=NLCreateElementFunct)q(ionW)q(ithI)q(niti)q
+(alHe)q(ssi)q(an\(P)q(,"et)q(ype")q(,)2631 789 y(n,R,F,dF,ddF,)2631
+909 y(data,freedata,)2631 1029 y(ddF0\);)631 1270 y
+(ef=NLCreateElementFunct)q(ionB)q(yStr)q(ing\()q(P,"e)q(typ)q(e",n)q
+(,R,)2631 1391 y("[x,y,z,w]",)2631 1511 y("x**2+y**2-z*w"\);)324
+1835 y Fk(Here,)40 b Fe(n)e Fk(is)f(the)i(n)m(um)m(b)s(er)f(of)f
+(elemen)m(t)h(v)-5 b(ariables,)38 b Fe(R)g Fk(the)g(range)g
+(transformation)e(\(or)324 1955 y(NULL\),)26 b(F,)f(dF,)h(and)f(ddF)h
+(are)g(routines)f(whic)m(h)h(ev)-5 b(alute)26 b(F)f(and)h(its)f(deriv)
+-5 b(ativ)m(es)26 b(\(ddF)324 2076 y(ma)m(y)34 b(b)s(e)g(NULL\).)h(If)f
+(ddF)g(is)g(NULL,)h(ddF0)f(giv)m(es)g(an)g(initial)d(guess)k(at)f(the)h
+(Hessian)324 2196 y(whic)m(h)k(is)f(then)h(up)s(dated)g(using)f(rank)g
+(one)h(up)s(dates.)62 b(Note)38 b(that)h(the)f(up)s(dates)i(are)324
+2316 y(done)29 b(on)g(the)g(deriv)-5 b(ativ)m(es)29 b(w.r.t.)43
 b(the)29 b(in)m(ternal)f(v)-5 b(ariables,)29 b(and)g(that)f(the)i
-(deriv)-5 b(ativ)m(es)324 909 y(are)32 b(deriv)-5 b(ativ)m(es)33
-b(w.r.t)g(the)g(in)m(ternal)e(v)-5 b(ariables.)470 1029
+(deriv)-5 b(ativ)m(es)324 2437 y(are)32 b(deriv)-5 b(ativ)m(es)33
+b(w.r.t)g(the)g(in)m(ternal)e(v)-5 b(ariables.)470 2557
 y(NLMatrices,)43 b(whic)m(h)e(are)f(used)i(to)e(represen)m(t)i(the)f
-(range)f(transformation)e(and)324 1150 y(the)33 b(initial)c(Hessian)k
-(are)f(describ)s(ed)i(b)s(elo)m(w.)470 1270 y(A)f(nonlinear)e(elemen)m
-(t)h(is)g(created)i(with)e(the)h(routine:)734 1474 y
-Fe(NLNonlinearElement)56 b(N;)734 1594 y(NLElementFunction)g(ef;)734
-1714 y(int)c(*vars;)734 1955 y(N=NLCreateNonlinearElemen)q(t\(P,)q
-("typ)q(e",e)q(f,v)q(ars\))q(;)324 2279 y Fk(the)27 b
+(range)f(transformation)e(and)324 2677 y(the)33 b(initial)c(Hessian)k
+(are)f(describ)s(ed)i(b)s(elo)m(w.)470 2798 y(A)f(nonlinear)e(elemen)m
+(t)h(is)g(created)i(with)e(the)h(routine:)734 3001 y
+Fe(NLNonlinearElement)56 b(N;)734 3122 y(NLElementFunction)g(ef;)734
+3242 y(int)c(*vars;)734 3483 y(N=NLCreateNonlinearElemen)q(t\(P,)q
+("typ)q(e",e)q(f,v)q(ars\))q(;)324 3807 y Fk(the)27 b
 Fe(vars)g Fk(arra)m(y)g(giv)m(es)g(a)f(list)f(of)h(the)h(problem)f(v)-5
 b(ariables)25 b(\(b)m(y)i(n)m(um)m(b)s(er,)h(starting)e(with)324
-2399 y(0!\))43 b(whic)m(h)33 b(b)s(ecome)g(the)g(elemen)m(t)f(v)-5
-b(ariables.)470 2520 y(A)33 b(nonlinear)e(elemen)m(t)h(can)h(b)s(e)g
+3927 y(0!\))43 b(whic)m(h)33 b(b)s(ecome)g(the)g(elemen)m(t)f(v)-5
+b(ariables.)470 4047 y(A)33 b(nonlinear)e(elemen)m(t)h(can)h(b)s(e)g
 (added)g(to)f(a)g(group)g(using)h(the)g(appropriate)e(rou-)324
-2640 y(tine:)580 2844 y Fe(int)52 b(c;)580 2964 y(int)g(g;)580
-3084 y(double)h(w;)580 3205 y(NLNonlinearElement)j(N;)580
-3445 y(NLPAddNonlinearElementTo)q(Obje)q(ctiv)q(eGro)q(up\(P)q(,g,)q
-(w,N\))q(:)580 3566 y(NLPAddNonlinearElementTo)q(Equa)q(lity)q(Cons)q
-(trai)q(ntG)q(roup)q(\(P,c)q(,g,w)q(,N\))q(:)580 3686
-y(NLPAddNonlinearElementTo)q(Ineq)q(uali)q(tyCo)q(nstr)q(ain)q(tGro)q
-(up\(P)q(,c,g)q(,w,)q(N\):)324 4010 y Fk(where)34 b(of)e(course,)h(w)g
-(is)f(the)h(elemen)m(t)g(w)m(eigh)m(t.)470 4130 y(Eac)m(h)23
-b("NLCreateElemen)m(tF)-8 b(unction...")21 b(and)h
-("NLCreateNonlinearElemen)m(t...")324 4251 y(should)f(b)s(e)h(paired)g
-(with)f(a)g("NLF)-8 b(reeElemen)m(tF)g(unction")21 b(and)h("NLF)-8
-b(reeNonlinearEle-)324 4371 y(men)m(t")32 b(\(see)i(Memory)f(Managemen)
-m(t)f(b)s(elo)m(w\).)324 4631 y Fi(2.1.7)112 b(V)-9 b(ectors)324
-4816 y Fk(The)38 b(NL)-11 b(V)j(ector)38 b(is)f(a)g(data)g(structure)h
-(for)f(...)58 b(v)m(ectors!)h(There)39 b(are)e(t)m(w)m(o)h(\\t)m(yp)s
-(es")g(of)324 4936 y(v)m(ector)g(curren)m(tly)g(supp)s(orted:)54
-b(sparse)38 b(and)f(dense.)59 b(Sparse)39 b(v)m(ectors)f(are)g(stored)f
-(as)1894 5251 y(15)p eop
+4168 y(tine:)580 4371 y Fe(int)52 b(c;)580 4491 y(int)g(g;)580
+4612 y(double)h(w;)580 4732 y(NLNonlinearElement)j(N;)580
+4973 y(NLPAddNonlinearElementTo)q(Obje)q(ctiv)q(eGro)q(up\(P)q(,g,)q
+(w,N\))q(:)1894 5251 y Fk(15)p eop
 %%Page: 16 16
-16 15 bop 324 548 a Fk(a)32 b(list)f(of)g(non-zero)i(co)s(ordinates,)f
-(dense)h(v)m(ectors)h(as)f(a)f(con)m(tiguous)g(arra)m(y)g(of)g(co)s
-(ordi-)324 668 y(nates.)44 b(They)34 b(are)f(created)g(using)f(the)h
-(routines:)529 868 y Fe(NLVector)53 b(NLCreateVector\(int)j(n\);)529
-989 y(NLVector)d(NLCreateVectorWithSparse)q(Data)q(\(int)58
-b(n,int)53 b(nz,)2477 1109 y(int)f(*el,double)i(*vl\);)529
-1350 y(NLVector)f(NLCreateDenseVector\(int)58 b(n\);)529
-1470 y(NLVector)53 b(NLCreateVectorWithFullDa)q(ta\(i)q(nt)k(n,double)d
-(*vl\);)529 1591 y(NLVector)f(NLCreateDenseWrappedVect)q(or\(i)q(nt)k
-(n,double)d(*data\);)324 1911 y Fk(The)35 b(\014rst)g(t)m(w)m(o)g
+16 15 bop 580 548 a Fe(NLPAddNonlinearElementTo)q(Equa)q(lity)q(Cons)q
+(trai)q(ntG)q(roup)q(\(P,c)q(,g,w)q(,N\))q(:)580 668
+y(NLPAddNonlinearElementTo)q(Ineq)q(uali)q(tyCo)q(nstr)q(ain)q(tGro)q
+(up\(P)q(,c,g)q(,w,)q(N\):)324 989 y Fk(where)34 b(of)e(course,)h(w)g
+(is)f(the)h(elemen)m(t)g(w)m(eigh)m(t.)470 1109 y(Eac)m(h)23
+b("NLCreateElemen)m(tF)-8 b(unction...")21 b(and)h
+("NLCreateNonlinearElemen)m(t...")324 1230 y(should)f(b)s(e)h(paired)g
+(with)f(a)g("NLF)-8 b(reeElemen)m(tF)g(unction")21 b(and)h("NLF)-8
+b(reeNonlinearEle-)324 1350 y(men)m(t")32 b(\(see)i(Memory)f(Managemen)
+m(t)f(b)s(elo)m(w\).)324 1609 y Fi(2.1.7)112 b(V)-9 b(ectors)324
+1794 y Fk(The)38 b(NL)-11 b(V)j(ector)38 b(is)f(a)g(data)g(structure)h
+(for)f(...)58 b(v)m(ectors!)h(There)39 b(are)e(t)m(w)m(o)h(\\t)m(yp)s
+(es")g(of)324 1914 y(v)m(ector)g(curren)m(tly)g(supp)s(orted:)54
+b(sparse)38 b(and)f(dense.)59 b(Sparse)39 b(v)m(ectors)f(are)g(stored)f
+(as)324 2035 y(a)32 b(list)f(of)g(non-zero)i(co)s(ordinates,)f(dense)h
+(v)m(ectors)h(as)f(a)f(con)m(tiguous)g(arra)m(y)g(of)g(co)s(ordi-)324
+2155 y(nates.)44 b(They)34 b(are)f(created)g(using)f(the)h(routines:)
+529 2355 y Fe(NLVector)53 b(NLCreateVector\(int)j(n\);)529
+2476 y(NLVector)d(NLCreateVectorWithSparse)q(Data)q(\(int)58
+b(n,int)53 b(nz,)2477 2596 y(int)f(*el,double)i(*vl\);)529
+2837 y(NLVector)f(NLCreateDenseVector\(int)58 b(n\);)529
+2957 y(NLVector)53 b(NLCreateVectorWithFullDa)q(ta\(i)q(nt)k(n,double)d
+(*vl\);)529 3077 y(NLVector)f(NLCreateDenseWrappedVect)q(or\(i)q(nt)k
+(n,double)d(*data\);)324 3398 y Fk(The)35 b(\014rst)g(t)m(w)m(o)g
 (create)f(sparse)i(v)m(ectors)g(\(n)e(is)g(the)g(dimension)f(of)h(the)h
-(v)m(ector,)g(nz)g(the)324 2032 y(n)m(um)m(b)s(er)40
+(v)m(ector,)g(nz)g(the)324 3518 y(n)m(um)m(b)s(er)40
 b(of)g(nonzero)s(es,)j(and)d(the)h(co)s(ordinate)e(el[i])g(is)g(giv)m
-(en)h(b)m(y)h(vl[i]\).)65 b(The)41 b(third)324 2152 y(routine)36
+(en)h(b)m(y)h(vl[i]\).)65 b(The)41 b(third)324 3639 y(routine)36
 b(creates)i(a)e(v)m(ector)i(whose)g(co)s(ordinates)f(are)g(all)d(zero.)
-57 b(The)38 b(fourth)e(routine)324 2272 y(creates)30
+57 b(The)38 b(fourth)e(routine)324 3759 y(creates)30
 b(a)g(dense)h(v)m(ector,)g(and)f(the)f(co)s(ordinates)g(in)g(vl)g(are)h
-(copied)f(in)m(to)g(a)g(new)h(arra)m(y)-8 b(.)324 2393
+(copied)f(in)m(to)g(a)g(new)h(arra)m(y)-8 b(.)324 3880
 y(The)29 b(dense)g(wrapp)s(ed)g(v)m(ector)g(stores)g(a)e(p)s(oin)m(ter)
 h(to)f(the)i(data)e(arra)m(y)-8 b(.)42 b(This)28 b(allo)m(ws)f(the)324
-2513 y(user)33 b(to)f(c)m(hange)i(the)f(v)m(ector)h(b)m(y)f(c)m
-(hanging)f(the)h(data)f(arra)m(y)-8 b(.)470 2634 y(Access)35
+4000 y(user)33 b(to)f(c)m(hange)i(the)f(v)m(ector)h(b)m(y)f(c)m
+(hanging)f(the)h(data)f(arra)m(y)-8 b(.)470 4120 y(Access)35
 b(to)d(the)h(v)m(ector)h(is)e(pro)m(vided)h(through)f(routines)h(lik)m
-(e:)580 2834 y Fe(c=NLVGetC\(v,i\);)580 2954 y(NLVSetC\(v,i,c\);)324
-3275 y Fk(these)e(ha)m(v)m(e)h(high)d(o)m(v)m(erhead,)k(so)d(I'd)h
+(e:)580 4320 y Fe(c=NLVGetC\(v,i\);)580 4441 y(NLVSetC\(v,i,c\);)324
+4761 y Fk(these)e(ha)m(v)m(e)h(high)d(o)m(v)m(erhead,)k(so)d(I'd)h
 (recommend)f(instead)g(that)h(y)m(ou)g(use)g(a)f(wrapp)s(ed)324
-3395 y(dense)37 b(v)m(ector,)h(or)d(do)h(y)m(our)g(manipulations)d(b)s
+4882 y(dense)37 b(v)m(ector,)h(or)d(do)h(y)m(our)g(manipulations)d(b)s
 (efore)j(creating)f(the)h(v)m(ector.)55 b(In)m(ternal)324
-3515 y(routines)32 b(access)j(the)e(data)f(directly)g(when)h(they)h
-(can,)f(so)g(a)m(v)m(oid)f(the)h(o)m(v)m(erhead.)324
-3775 y Fi(2.1.8)112 b(Matrices)324 3959 y Fk(NLMatrices)28
-b(are)h(similar)c(to)j(the)g(NL)-11 b(V)j(ectors.)43
-b(There)30 b(are)e(dense)i(matrices,)f(and)f(t)m(w)m(o)324
-4080 y(kinds)33 b(of)f(sparse)i(matrices)d(curren)m(tly)j(supp)s
-(orted,)580 4280 y Fe(int)52 b(n,m;)580 4400 y(double)h(*data;)580
-4641 y(NLMatrix)h(NLCreateMatrix\(n,m\);)580 4761 y(NLMatrix)g
-(NLCreateMatrixWithData\(n,m,)q(data)q(\);)580 4882 y(NLMatrix)g
-(NLCreateDenseWrappedMatrix\()q(n,m,)q(dat)q(a\);)1894
-5251 y Fk(16)p eop
+5002 y(routines)32 b(access)j(the)e(data)f(directly)g(when)h(they)h
+(can,)f(so)g(a)m(v)m(oid)f(the)h(o)m(v)m(erhead.)1894
+5251 y(16)p eop
 %%Page: 17 17
-17 16 bop 580 548 a Fe(NLMatrix)54 b(NLCreateSparseMatrix\(n,m\);)580
-668 y(NLMatrix)g(NLCreateWSMPSparseMatrix\(n\))q(;)324
-992 y Fk(The)41 b(\014rst)g(three)h(constructors)g(are)e(for)h(dense)h
-(matrices)d(\(i.e.)68 b(range)40 b(transforma-)324 1112
+17 16 bop 324 548 a Fi(2.1.8)112 b(Matrices)324 733 y
+Fk(NLMatrices)28 b(are)h(similar)c(to)j(the)g(NL)-11
+b(V)j(ectors.)43 b(There)30 b(are)e(dense)i(matrices,)f(and)f(t)m(w)m
+(o)324 853 y(kinds)33 b(of)f(sparse)i(matrices)d(curren)m(tly)j(supp)s
+(orted,)580 1041 y Fe(int)52 b(n,m;)580 1161 y(double)h(*data;)580
+1402 y(NLMatrix)h(NLCreateMatrix\(n,m\);)580 1522 y(NLMatrix)g
+(NLCreateMatrixWithData\(n,m,)q(data)q(\);)580 1643 y(NLMatrix)g
+(NLCreateDenseWrappedMatrix\()q(n,m,)q(dat)q(a\);)580
+1883 y(NLMatrix)g(NLCreateSparseMatrix\(n,m\);)580 2004
+y(NLMatrix)g(NLCreateWSMPSparseMatrix\(n\))q(;)324 2312
+y Fk(The)41 b(\014rst)g(three)h(constructors)g(are)e(for)h(dense)h
+(matrices)d(\(i.e.)68 b(range)40 b(transforma-)324 2432
 y(tions\).)67 b(The)42 b(\014rst)g(creates)g(and)f Fj(n)28
 b Fg(\002)g Fj(m)41 b Fk(matrix)e(with)i(zero)g(elemen)m(ts.)69
-b(The)41 b(send)324 1233 y(copies)g(the)g(arra)m(y)f(data)h(in)m(to)f
+b(The)41 b(send)324 2553 y(copies)g(the)g(arra)m(y)f(data)h(in)m(to)f
 (the)h(matrix,)g(and)f(the)i(third)d(uses)k(a)d(p)s(oin)m(ter)g(to)g
-(the)324 1353 y(data)c(arra)m(y)h(\(so)f(that)g(c)m(hanging)h(data)f(c)
+(the)324 2673 y(data)c(arra)m(y)h(\(so)f(that)g(c)m(hanging)h(data)f(c)
 m(hanges)i(the)f(elemen)m(ts)f(of)g(the)h(arra)m(y\).)56
-b(The)324 1474 y(dense)32 b(matrices)d(are)h(stored)h(b)m(y)g(column,)f
+b(The)324 2793 y(dense)32 b(matrices)d(are)h(stored)h(b)m(y)g(column,)f
 (\022)-49 b(a)30 b(la)f(F)m(OR)-8 b(TRAN,)30 b(so)h(that)f(elemen)m(t)g
-Fj(i;)17 b(j)36 b Fk(is)324 1594 y(lo)s(cated)c(in)f(en)m(try)j
+Fj(i;)17 b(j)36 b Fk(is)324 2914 y(lo)s(cated)c(in)f(en)m(try)j
 Fj(data)p Fk([)p Fj(i)23 b Fk(+)f Fj(n)g Fg(\003)g Fj(j)6
-b Fk(].)470 1714 y(The)25 b(\014rst)f(sparse)g(format)e(\()p
+b Fk(].)470 3034 y(The)25 b(\014rst)f(sparse)g(format)e(\()p
 Fe(NLCreateSparseMatrix)p Fk(\))29 b(stores)c(a)e(list)f(of)h(elemen)m
-(ts,)324 1835 y(together)45 b(with)g(the)g(asso)s(ciated)g(ro)m(w)g
+(ts,)324 3155 y(together)45 b(with)g(the)g(asso)s(ciated)g(ro)m(w)g
 (and)g(column.)80 b(The)46 b(second)g(sparse)g(format)324
-1955 y(stores)38 b(the)g(matrix)e(as)i(sparse)h(ro)m(ws.)60
+3275 y(stores)38 b(the)g(matrix)e(as)i(sparse)h(ro)m(ws.)60
 b(Access)39 b(to)f(the)g(v)m(ector)g(is)g(pro)m(vided)g(through)324
-2076 y(routines)32 b(lik)m(e:)529 2279 y Fe(NLMatrix)53
-b(A;)529 2399 y(Aij=NLMGetElement\(A,i,j\);)529 2520
-y(NLMSetElement\(A,i,j,Aij\);)324 2844 y Fk(for)43 b(sparse)i(formats)e
+3395 y(routines)32 b(lik)m(e:)529 3583 y Fe(NLMatrix)53
+b(A;)529 3703 y(Aij=NLMGetElement\(A,i,j\);)529 3824
+y(NLMSetElement\(A,i,j,Aij\);)324 4132 y Fk(for)43 b(sparse)i(formats)e
 (setting)h(an)g(elemen)m(t)g(creates)h(a)f(nonzero)g(elemen)m(t)g(\(if)
-f(Aij)g(is)324 2964 y(nonzero\).)324 3224 y Fi(2.1.9)112
-b(Memory)37 b(Managemen)m(t)324 3408 y Fk(When)c(the)g(problem)f(is)g
-(no)g(longer)g(needed)529 3612 y Fe(NLFreeProblem\(P\);)324
-3936 y Fk(releases)38 b(the)h(storage.)59 b(It)38 b(calls)e
-Fe(NLFree..)62 b Fk(for)37 b(all)f(of)h(the)h(groups,)i(elemen)m(t)e
-(func-)324 4056 y(tions,)43 b(and)f(so)g(on)g(whic)m(h)g(are)g(stored)h
-(in)e(the)h(problem.)70 b(When)43 b(the)f(user)g(creates)324
-4176 y(one)36 b(of)f(these)i(data)f(structures)h(a)f("reference)h(coun)
-m(t")f(asso)s(ciated)g(with)f(it)g(is)g(set)i(to)324
-4297 y("1".)47 b(When)35 b(the)g(problem)e(stores)i(a)f(p)s(oin)m(ter)g
-(to)g(the)g(data)g(structure)h(the)g(reference)324 4417
-y(coun)m(t)g(is)g(increased)g(b)m(y)h(one.)50 b(The)36
-b("NLF)-8 b(ree...")35 b(routines)g(decreases)i(the)e(reference)324
-4537 y(coun)m(t)e(b)m(y)g(one)f(and)h(if)e(the)h(coun)m(t)h(is)f(zero,)
-h(releases)g(the)f(memory)g(used)h(b)m(y)g(the)g(data)324
-4658 y(structure.)45 b(F)-8 b(or)31 b(example:)631 4861
-y Fe(g=NLCreateGroupFunction)q(\(...)q(\);)314 b(ref)52
-b(count)g(=)g(1)631 4982 y(NLPSetObjectiveGroupFun)q(ctio)q(n\(..)q
-(.\);)58 b(ref)52 b(count)g(=)g(2)1894 5251 y Fk(17)p
-eop
+f(Aij)g(is)324 4252 y(nonzero\).)324 4509 y Fi(2.1.9)112
+b(Memory)37 b(Managemen)m(t)324 4694 y Fk(When)c(the)g(problem)f(is)g
+(no)g(longer)g(needed)529 4882 y Fe(NLFreeProblem\(P\);)1894
+5251 y Fk(17)p eop
 %%Page: 18 18
-18 17 bop 631 548 a Fe(NLFreeGroupFunction\(...)q(\);)519
-b(ref)52 b(count)g(=)g(1)f(not)h(yet)631 789 y(NLFreeProblem\(...\);)
-826 b(ref)52 b(count)g(=)g(0)f(DELETE)i(g!)324 1112 y
-Fk(This)31 b(ensures)i(that)e(memory)g(is)f(released,)i(but)g(not)f(un)
-m(til)f(ev)m(ery)m(one)j(who)f(is)f(using)g(it)324 1233
-y(is)c(done)i(with)f(it.)41 b(It)28 b(relies)f(on)h(an)g(\\honor)g(co)s
-(de".)42 b(If)28 b(y)m(ou)g(decided)h(to)f(free)g(the)h(group)324
-1353 y(t)m(wice)k(in)f(the)h(co)s(de)g(segmen)m(t)g(ab)s(o)m(v)m(e)g(y)
+18 17 bop 324 548 a Fk(releases)38 b(the)h(storage.)59
+b(It)38 b(calls)e Fe(NLFree..)62 b Fk(for)37 b(all)f(of)h(the)h
+(groups,)i(elemen)m(t)e(func-)324 668 y(tions,)43 b(and)f(so)g(on)g
+(whic)m(h)g(are)g(stored)h(in)e(the)h(problem.)70 b(When)43
+b(the)f(user)g(creates)324 789 y(one)36 b(of)f(these)i(data)f
+(structures)h(a)f("reference)h(coun)m(t")f(asso)s(ciated)g(with)f(it)g
+(is)g(set)i(to)324 909 y("1".)47 b(When)35 b(the)g(problem)e(stores)i
+(a)f(p)s(oin)m(ter)g(to)g(the)g(data)g(structure)h(the)g(reference)324
+1029 y(coun)m(t)g(is)g(increased)g(b)m(y)h(one.)50 b(The)36
+b("NLF)-8 b(ree...")35 b(routines)g(decreases)i(the)e(reference)324
+1150 y(coun)m(t)e(b)m(y)g(one)f(and)h(if)e(the)h(coun)m(t)h(is)f(zero,)
+h(releases)g(the)f(memory)g(used)h(b)m(y)g(the)g(data)324
+1270 y(structure.)45 b(F)-8 b(or)31 b(example:)631 1448
+y Fe(g=NLCreateGroupFunction)q(\(...)q(\);)314 b(ref)52
+b(count)g(=)g(1)631 1569 y(NLPSetObjectiveGroupFun)q(ctio)q(n\(..)q
+(.\);)58 b(ref)52 b(count)g(=)g(2)631 1689 y(NLFreeGroupFunction\(...)q
+(\);)519 b(ref)52 b(count)g(=)g(1)f(not)h(yet)631 1930
+y(NLFreeProblem\(...\);)826 b(ref)52 b(count)g(=)g(0)f(DELETE)i(g!)324
+2228 y Fk(This)31 b(ensures)i(that)e(memory)g(is)f(released,)i(but)g
+(not)f(un)m(til)f(ev)m(ery)m(one)j(who)f(is)f(using)g(it)324
+2348 y(is)c(done)i(with)f(it.)41 b(It)28 b(relies)f(on)h(an)g(\\honor)g
+(co)s(de".)42 b(If)28 b(y)m(ou)g(decided)h(to)f(free)g(the)h(group)324
+2469 y(t)m(wice)k(in)f(the)h(co)s(de)g(segmen)m(t)g(ab)s(o)m(v)m(e)g(y)
 m(ou)g(could)f(get)h(some)f(nice)h(side)g(e\013ects.)324
-1613 y Fi(2.1.10)112 b(Error)37 b(Handling)324 1798 y
+2724 y Fi(2.1.10)112 b(Error)37 b(Handling)324 2909 y
 Fk(Most)29 b(routines)h(return)f(a)g(return)h(co)s(de)f(that)g
 (indicates)g(whether)h(the)g(op)s(eration)e(w)m(as)324
-1918 y(successful.)45 b(If)31 b(the)g(routine)g(creates)h(or)e(returns)
+3029 y(successful.)45 b(If)31 b(the)g(routine)g(creates)h(or)e(returns)
 j(a)d(data)h(structure)h(an)f(in)m(v)-5 b(alid)29 b(v)-5
-b(alue)324 2039 y(is)24 b(returned)h(if)e(the)i(routine)f(is)g(not)g
+b(alue)324 3150 y(is)24 b(returned)h(if)e(the)i(routine)f(is)g(not)g
 (successful.)43 b(In)24 b(addition)f(a)h(simple)f(error)h(handling)324
-2159 y(is)32 b(also)g(pro)m(vided.)529 2362 y Fe(int)52
-b(NLGetNErrors\(\);)324 2686 y Fk(returns)33 b(the)g(total)e(n)m(um)m
+3270 y(is)32 b(also)g(pro)m(vided.)529 3448 y Fe(int)52
+b(NLGetNErrors\(\);)324 3746 y Fk(returns)33 b(the)g(total)e(n)m(um)m
 (b)s(er)i(of)f(errors)h(that)g(ha)m(v)m(e)h(o)s(ccured,)f(and)529
-2890 y Fe(void)52 b(NLClearErrors\(\);)324 3213 y Fk(resets)34
+3924 y Fe(void)52 b(NLClearErrors\(\);)324 4222 y Fk(resets)34
 b(the)f(coun)m(t.)44 b(Individual)31 b(errors)i(can)g(b)s(e)g(examined)
-f(with)g(the)h(routines)529 3417 y Fe(int)52 b(NLGetErrorSev\(int)k
-(n\);)529 3537 y(char)c(*NLGetErrorRoutine\(int)57 b(n\);)529
-3657 y(char)52 b(*NLGetErrorMsg\(int)k(n\);)529 3778
-y(int)c(NLGetErrorLine\(int)k(n\);)529 3898 y(char)c
-(*NLGetErrorFile\(int)57 b(n\);)324 4222 y Fk(The)34
-b(sev)m(erit)m(y)g(is)f(4,)g(8)g(or)f(12,)h(the)g(Routine)g(is)f(the)h
-(routine)g(whic)m(h)g(issued)h(the)g(error,)324 4342
-y(and)k(the)h(line)e(and)i(\014le)f(giv)m(e)h(the)f(line)g(of)g(source)
-h(co)s(de)g(where)h(it)d(w)m(as)j(issued.)62 b(The)324
-4463 y(message)37 b(usually)f(giv)m(es)h(information)d(ab)s(out)i(what)
-i(caused)g(the)f(error)g(\(usually)f(an)324 4583 y(in)m(v)-5
-b(alid)30 b(argumen)m(t)i(to)h(the)g(routine\).)1894
-5251 y(18)p eop
+f(with)g(the)h(routines)529 4400 y Fe(int)52 b(NLGetErrorSev\(int)k
+(n\);)529 4521 y(char)c(*NLGetErrorRoutine\(int)57 b(n\);)529
+4641 y(char)52 b(*NLGetErrorMsg\(int)k(n\);)529 4761
+y(int)c(NLGetErrorLine\(int)k(n\);)529 4882 y(char)c
+(*NLGetErrorFile\(int)57 b(n\);)1894 5251 y Fk(18)p eop
 %%Page: 19 19
-19 18 bop 324 548 a Fl(3)161 b(Solving)46 b(a)g(Nonlinear)h
-(Optimization)f(Problem)566 731 y(Solv)l(er)53 b(with)h(LANCELOT)324
-950 y Fk(The)38 b(LANCELOT)g(Nonlinear)d(Optimization)f(Problem)i(Solv)
-m(er)g(consists)i(of)f(a)f(pa-)324 1070 y(rameter)25
-b(list.)40 b(The)26 b(problem)e(solv)m(er)i(is)f(created)h(b)m(y)h(a)e
-(subroutine)h(call,)f(and)h(has)g(a)f(set)324 1190 y(of)h(default)f
-(parameters,)j(whic)m(h)f(can)f(b)s(e)h(mo)s(di\014ed.)40
-b(The)27 b(user)g(in)m(v)m(ok)m(es)h(LANCELOT)324 1311
-y(b)m(y)38 b(passing)g(a)f(problem)f(\(see)j(ab)s(o)m(v)m(e\))f(and)g
-(a)f(starting)f(guess.)60 b(The)38 b(same)g(problem)324
-1431 y(solv)m(er)29 b(ma)m(y)f(b)s(e)g(used)i(on)e(di\013eren)m(t)h
+19 18 bop 324 548 a Fk(The)34 b(sev)m(erit)m(y)g(is)f(4,)g(8)g(or)f
+(12,)h(the)g(Routine)g(is)f(the)h(routine)g(whic)m(h)g(issued)h(the)g
+(error,)324 668 y(and)k(the)h(line)e(and)i(\014le)f(giv)m(e)h(the)f
+(line)g(of)g(source)h(co)s(de)g(where)h(it)d(w)m(as)j(issued.)62
+b(The)324 789 y(message)37 b(usually)f(giv)m(es)h(information)d(ab)s
+(out)i(what)i(caused)g(the)f(error)g(\(usually)f(an)324
+909 y(in)m(v)-5 b(alid)30 b(argumen)m(t)i(to)h(the)g(routine\).)324
+1242 y Fl(3)161 b(Solving)46 b(a)g(Nonlinear)h(Optimization)f(Problem)
+566 1425 y(Solv)l(er)53 b(with)h(LANCELOT)324 1644 y
+Fk(The)38 b(LANCELOT)g(Nonlinear)d(Optimization)f(Problem)i(Solv)m(er)g
+(consists)i(of)f(a)f(pa-)324 1764 y(rameter)25 b(list.)40
+b(The)26 b(problem)e(solv)m(er)i(is)f(created)h(b)m(y)h(a)e(subroutine)
+h(call,)f(and)h(has)g(a)f(set)324 1884 y(of)h(default)f(parameters,)j
+(whic)m(h)f(can)f(b)s(e)h(mo)s(di\014ed.)40 b(The)27
+b(user)g(in)m(v)m(ok)m(es)h(LANCELOT)324 2005 y(b)m(y)38
+b(passing)g(a)f(problem)f(\(see)j(ab)s(o)m(v)m(e\))f(and)g(a)f
+(starting)f(guess.)60 b(The)38 b(same)g(problem)324 2125
+y(solv)m(er)29 b(ma)m(y)f(b)s(e)g(used)i(on)e(di\013eren)m(t)h
 (problems,)g(and)f(sev)m(eral)h(problem)e(solv)m(er)i(ma)m(y)f(b)s(e)
-324 1552 y(created.)580 1875 y Fe(NLLancelot)54 b
-(L=NLCreateLancelot\(\);)324 2199 y Fk(V)-8 b(arious)31
+324 2245 y(created.)580 2569 y Fe(NLLancelot)54 b
+(L=NLCreateLancelot\(\);)324 2893 y Fk(V)-8 b(arious)31
 b(parameters,)h(lik)m(e)f(ho)m(w)i(m)m(uc)m(h)f(to)g(prin)m(t)f(to)h
-(the)g(screen,)i(are)e(giv)m(en)g(defaults)324 2319 y(that)g(can)h(b)s
+(the)g(screen,)i(are)e(giv)m(en)g(defaults)324 3013 y(that)g(can)h(b)s
 (e)g(queried)g(or)f(set)h(via)f(additional)e(subroutine)j(calls.)42
-b(F)-8 b(or)32 b(example)580 2523 y Fe(void)52 b
-(LNSetPrintLevel\(Lancelo)q(t,in)q(t\);)324 2847 y Fk(giv)m(es)33
+b(F)-8 b(or)32 b(example)580 3217 y Fe(void)52 b
+(LNSetPrintLevel\(Lancelo)q(t,in)q(t\);)324 3541 y Fk(giv)m(es)33
 b(the)g(v)-5 b(alue)32 b(for)g(the)h Fe(PRINT-LEVEL)i
-Fk(line)d(in)f(the)i Fe(SPEC.SPC)i Fk(\014le.)470 2967
+Fk(line)d(in)f(the)i Fe(SPEC.SPC)i Fk(\014le.)470 3661
 y(When)29 b(the)f("LNMinimize")d(or)j("LNMaximize")e(routine)h(is)g
-(called,)h(a)g Fe(SPEC.SPC)324 3087 y Fk(\014le)c(con)m(taining)f(the)h
+(called,)h(a)g Fe(SPEC.SPC)324 3781 y Fk(\014le)c(con)m(taining)f(the)h
 (curren)m(t)i(parameters)e(is)g(dump)s(ed,)i(as)e(w)m(ell)g(as)g(an)g
-Fe(OUTSDIF.d)j Fk(\014le)324 3208 y(con)m(taining)22
+Fe(OUTSDIF.d)j Fk(\014le)324 3902 y(con)m(taining)22
 b(information)f(ab)s(out)i(the)i(problem.)39 b(A)24 b(global)d(v)-5
-b(ariable)23 b(is)g(set)h(to)g(p)s(oin)m(t)f(to)324 3328
+b(ariable)23 b(is)g(set)h(to)g(p)s(oin)m(t)f(to)324 4022
 y(the)36 b(problem)e(b)s(eing)g(solv)m(ed,)j(and)f(the)g(Lancelot)e
 (main)g(program)g(is)h(in)m(v)m(ok)m(ed.)53 b(This)324
-3449 y(calls)42 b(bac)m(k)j(to)f Fe(ELFUNS)p Fk(,)h Fe(GROUPS)p
+4143 y(calls)42 b(bac)m(k)j(to)f Fe(ELFUNS)p Fk(,)h Fe(GROUPS)p
 Fk(,)h(etc.,)h(whic)m(h)d(refer)g(to)g(the)g(problem)f(referenced)324
-3569 y(b)m(y)g(the)f(global)e(p)s(oin)m(ter)h(to)h(pro)m(vide)g
+4263 y(b)m(y)g(the)f(global)e(p)s(oin)m(ter)h(to)h(pro)m(vide)g
 (information)d(to)j(Lancelot.)71 b(When)43 b(Lancelot)324
-3689 y(terminates)28 b(the)g Fe(SOLUTION.d)k Fk(\014le)c(is)g(read)g
+4383 y(terminates)28 b(the)g Fe(SOLUTION.d)k Fk(\014le)c(is)g(read)g
 (to)h(get)f(the)h(solution,)f(whic)m(h)h(is)f(sen)m(t)i(bac)m(k)324
-3810 y(to)i(the)h(user.)734 4013 y Fe(LNMinimize\(L,P,v0,v\);)1894
+4504 y(to)i(the)h(user.)734 4707 y Fe(LNMinimize\(L,P,v0,v\);)1894
 5251 y Fk(19)p eop
 %%Page: 20 20
 20 19 bop 324 548 a Fl(4)161 b(Example)324 767 y Fk(W)-8
