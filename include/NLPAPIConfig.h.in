@@ -1,1 +1,2 @@
 #undef F77_FUNC
+#undef F77_FUNC_
