@@ -391,7 +391,7 @@ double NLEEvalDer(NLElementFunction F,int i,int n,double *x, void *data)
 
   if(F->F!=NULL)
    {
-    if(F->dF==(double*)NULL) /* i.e. no gradient given by user */
+    if(F->dF==(double (*)(int,int,double*,void*))NULL) /* i.e. no gradient given by user */
      {
       if(verbose){printf("  differencing\n");fflush(stdout);}
       t=x[i];
@@ -996,28 +996,28 @@ R,char *vars,char *expr)
    {
     sprintf(NLEFErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLElementFunction)NULL;
    }
 
   if(type==(char*)NULL)
    {
     sprintf(NLEFErrorMsg,"type (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLElementFunction)NULL;
    }
 
   if(vars==(char*)NULL)
    {
     sprintf(NLEFErrorMsg,"vars (argument 5) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLElementFunction)NULL;
    }
 
   if(expr==(char*)NULL)
    {
     sprintf(NLEFErrorMsg,"expr (argument 6) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLElementFunction)NULL;
    }
 
   verbose=0;
