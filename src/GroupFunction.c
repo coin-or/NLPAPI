@@ -261,28 +261,28 @@ NLGroupFunction NLCreateGroupFunctionByString(NLProblem P, char *type, char *var
    {
     sprintf(NLGFuncErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLGroupFunction)NULL;
    }
 
   if(type==(char*)NULL)
    {
     sprintf(NLGFuncErrorMsg,"type (argument 2) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLGroupFunction)NULL;
    }
 
   if(var==(char*)NULL)
    {
     sprintf(NLGFuncErrorMsg,"var (argument 3) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLGroupFunction)NULL;
    }
 
   if(expr==(char*)NULL)
    {
     sprintf(NLGFuncErrorMsg,"expr (argument 4) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
-    return 12;
+    return (NLGroupFunction)NULL;
    }
 
   result=(NLGroupFunction)malloc(sizeof(struct NLGrpPartGFn));

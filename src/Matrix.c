@@ -1376,7 +1376,7 @@ void NLMSumSubMatrixInto(NLMatrix M, double s, int n, int *r, double *data)
     return;
    }
 
-  if(r==(double*)NULL)
+  if(r==(int*)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Array of row indices (fourth argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
@@ -1558,20 +1558,6 @@ void NLMPrintSparsityStructure(int n,int *nCols,int **rowIndex)
  {
   char RoutineName[]="NLMPrintSparsityStructure";
   int i,j;
-
-  if(this==(NLMatrix)NULL)
-   {
-    sprintf(NLMatrixErrorMsg,"File pointer (argument 1), is NULL");
-    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
-   }
-
-  if(this==(NLMatrix)NULL)
-   {
-    sprintf(NLMatrixErrorMsg,"Matrix (argument 2), is NULL");
-    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
-   }
 
   printf("Sparsity structure:\n");
   for(i=0;i<n;i++)

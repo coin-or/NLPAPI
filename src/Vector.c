@@ -418,7 +418,7 @@ int NLVGetNonZeroCoord(NLVector v,int n)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return -1;
    }
-  if(this->sparse)
+  if(v->sparse)
    {
     if(n<0|| !(n<v->nNonZeros))
      {

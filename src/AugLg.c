@@ -36,8 +36,8 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
 
   if(P==(NLProblem)NULL)
    {
-    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
-    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
     return;
    }
 
@@ -117,13 +117,14 @@ FreeAndReturn:
 
 int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double *lambda, int *objGroup, double *constraintB, double *constraintS)
  {
+  char RoutineName[]="NLSetLambaAndMuInAugmentedLagrangian";
   int i;
   int group;
 
   if(P==(NLProblem)NULL)
    {
-    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
-    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
     return;
    }
 
@@ -139,6 +140,7 @@ int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double 
 
 void NLEliminateFixedVariables(NLProblem P)
  {
+  char RoutineName[]="NLEliminateFixedVariables";
   int i,nf,n;
   char type[128];
   double ui,li;
@@ -146,8 +148,8 @@ void NLEliminateFixedVariables(NLProblem P)
 
   if(P==(NLProblem)NULL)
    {
-    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
-    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
     return;
    }
    
