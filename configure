@@ -3248,9 +3248,9 @@ else
   DEFLAN=-DNLPAPI_NO_LANCELOT;LANLIBS=
 fi
 
-as_ac_File=`echo "ac_cv_file_$IPOPTDIR/README" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $IPOPTDIR/README" >&5
-echo $ECHO_N "checking for $IPOPTDIR/README... $ECHO_C" >&6
+as_ac_File=`echo "ac_cv_file_$IPOPTDIR/doc/README" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $IPOPTDIR/doc/README" >&5
+echo $ECHO_N "checking for $IPOPTDIR/doc/README... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -3258,7 +3258,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$IPOPTDIR/README"; then
+if test -r "$IPOPTDIR/doc/README"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
