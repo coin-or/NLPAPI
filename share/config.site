@@ -2,11 +2,13 @@
 
 #    Have Lancelot? Tell me the driectory in which it was installed.
 
-with_LANCELOT="/u/mhender/Lancelot/VanillaLancelot"
+#with_LANCELOT="$HOME/Lancelot/VanillaLancelot"
 
-#    Have IPOPT? Tell me the flags to link with IPOPT. (Ipopt uses Harwell, lapack and blas.)
+#    Have IPOPT? Tell me the flags to link with IPOPT.
+#    Need to include dependencies for IPOPT (such as blas, lapack)
+#    see the Makefile in the COIN/Ipopt/EXAMPLE/C_example/ directory
 
-with_ipopt="-L../Ipopt/lib -lipopt -L/home/mhenderson/lib -llapack -lblas -lHSL"
+#with_ipopt="-L../Ipopt/lib -lipopt -llapack -lblas"
 
 #    Have the Harwell subroutines? Tell me the flags to link with HSL.
 #         Lancelot requires 
@@ -16,7 +18,7 @@ with_ipopt="-L../Ipopt/lib -lipopt -L/home/mhenderson/lib -llapack -lblas -lHSL"
 #         Ipopt requires (and uses) some of the sparse solvers, and determines
 #            at installation which are present.
 
-with_hsl="-L/home/mhenderson/lib -lHSL"
+#with_hsl="-L$HOME/lib -lHSL"
 
 #    Below are things that shouldn't change across UNIX platforms.
 
