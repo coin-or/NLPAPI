@@ -19,7 +19,7 @@ FLIBS    = @FLIBS@
 INSTALL = @INSTALL@
 installdir = @INSTDIR@
 LD        = @CC@
-LIBS = @LIBS@ @LANLIBS@ @IPOPTLIBS@ $(FLIBS) -lm
+LIBS = @LIBS@ -L./lib -lNLPAPI -lExpCmp @LANLIBS@ @IPOPTLIBS@ $(FLIBS) -lm
 LDFLAGS = @LDFLAGS@
 RM        = @RM@
 RANLIB    = @RANLIB@
@@ -239,7 +239,7 @@ uninstall:
 .SUFFIXES: .SIF
 
 CUTEINCS = -I./include
-CUTELIBS=$(LIBS)
+CUTELIBS=-L./lib -lCUTE $(LIBS) 
 CUTELIB=lib/libCUTE.a
 
 bin/decodeSIF: src/ParseSIFFile.c
