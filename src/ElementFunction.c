@@ -11,6 +11,8 @@
 /*              September 26, 2001 Added support for declaring the degree of a variable */
 /*              October 3, 2001    Added rank one updates and differencing */
 
+/*  Please refer to the LICENSE file in the top directory*/
+
 #include <NLPAPI.h>
 #include <ExpCmp.h>
 #include <time.h>

@@ -2,6 +2,11 @@
 /*       version: %W% %D% %T% */
 /*       Date: January 7, 2003, modified EqSBProblem.c */
 
+/*   (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES      */
+/*   CORPORATION January 7, 2003.  ALL RIGHTS RESERVED.   */
+
+/*  Please refer to the LICENSE file in the top directory*/
+
 #include <NLPAPI.h>
 
 static double NLgSq(double x,void *d){return(x*x);}
