@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="src/Lance.c"
 ac_default_prefix=.
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR INSTDIR FSFX OSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX OSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA DEFLAN DEFIPOPT LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -2686,6 +2686,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
 echo "$as_me:$LINENO: checking for dummy main to link with Fortran 77 libraries" >&5
 echo $ECHO_N "checking for dummy main to link with Fortran 77 libraries... $ECHO_C" >&6
 if test "${ac_cv_f77_dummy_main+set}" = set; then
@@ -3221,6 +3222,57 @@ ac_ext=f
 ac_compile='$F77 -c $FFLAGS conftest.$ac_ext >&5'
 ac_link='$F77 -o conftest$ac_exeext $FFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_f77_compiler_gnu
+
+
+as_ac_File=`echo "ac_cv_file_$LANDIR/lancelot/objects/double/sbmin.o" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $LANDIR/lancelot/objects/double/sbmin.o" >&5
+echo $ECHO_N "checking for $LANDIR/lancelot/objects/double/sbmin.o... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$LANDIR/lancelot/objects/double/sbmin.o"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  DEFLAN=
+else
+  DEFLAN=-DNLPAPI_NO_LANCELOT
+fi
+
+as_ac_File=`echo "ac_cv_file_$IPOPTDIR/README" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $IPOPTDIR/README" >&5
+echo $ECHO_N "checking for $IPOPTDIR/README... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$IPOPTDIR/README"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  DEFIPOPT=
+else
+  DEFIPOPT=-DNLPAPI_NO_IPOPT
+fi
+
+
 
 
           ac_config_files="$ac_config_files Makefile"
@@ -3848,6 +3900,7 @@ s,@FFLAGS@,$FFLAGS,;t t
 s,@ac_ct_F77@,$ac_ct_F77,;t t
 s,@FLIBS@,$FLIBS,;t t
 s,@LANDIR@,$LANDIR,;t t
+s,@IPOPTDIR@,$IPOPTDIR,;t t
 s,@INSTDIR@,$INSTDIR,;t t
 s,@FSFX@,$FSFX,;t t
 s,@OSFX@,$OSFX,;t t
@@ -3862,6 +3915,8 @@ s,@RM@,$RM,;t t
 s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
+s,@DEFLAN@,$DEFLAN,;t t
+s,@DEFIPOPT@,$DEFIPOPT,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

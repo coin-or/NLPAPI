@@ -11,7 +11,7 @@ exdir    = Examples
 bindir    = bin
 CC        = @CC@
 CFLAGS    = @CFLAGS@
-DEFINES=@DEFS@ -DVANILLALANCELOT
+DEFINES=@DEFS@ @DEFLAN@ @DEFIPOPT@ -DVANILLALANCELOT
 F77       = @F77@
 FSFX      = @FSFX@
 FFLAGS    = @FFLAGS@
@@ -24,6 +24,7 @@ LDFLAGS = @LDFLAGS@
 RM        = @RM@
 RANLIB    = @RANLIB@
 INCLUDES = -I./include
+IPOPTDIR = @IPOPTDIR@
 
 APILIBRARY = lib/libNLPAPI.a
 LANLIBRARY = lib/libLancelot.a
