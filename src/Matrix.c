@@ -334,7 +334,23 @@ int NLMGetNumberOfRefs(NLMatrix this)
 
 void NLPrintMatrix(FILE *fid,NLMatrix this)
  {
+  char RoutineName[]="NLPrintMatrix";
   int i,j;
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"File pointer (argument 1), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (argument 2), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
   for(i=0;i<this->nRows;i++)
    {
     fprintf(fid,"          [");
@@ -659,6 +675,13 @@ int NLMSetToZero(NLMatrix this)
   int i,j;
   char RoutineName[]="NLMSetToZero";
 
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return 0;
+   }
+
   switch(this->sparse)
    {
     case FULL:
@@ -674,13 +697,20 @@ int NLMSetToZero(NLMatrix this)
      break;
    }
 
-  return;
+  return 1;
  }
 
 NLMatrix NLMatrixClone(NLMatrix this)
  {
   char RoutineName[]="NLMatrixClone";
   NLMatrix clone;
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return (NLMatrix)NULL;
+   }
 
   if(!this->sparse)
    {
@@ -724,16 +754,43 @@ NLMatrix NLMatrixClone(NLMatrix this)
 
 int NLMSparse(NLMatrix this)
  {
+  char RoutineName[]="NLMSparse";
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return -1;
+   }
+
   return this->sparse;
  }
 
 double *NLMData(NLMatrix this)
  {
+  char RoutineName[]="NLMData";
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return (double*)NULL;
+   }
+
   return this->data;
  }
 
 int NLMnE(NLMatrix this)
  {
+  char RoutineName[]="NLMnE";
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return -1;
+   }
+
   switch(this->sparse)
    {
     case FULL:
@@ -753,11 +810,29 @@ int NLMnE(NLMatrix this)
 
 int *NLMRow(NLMatrix this)
  {
+  char RoutineName[]="NLMRow";
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return (int*)NULL;
+   }
+
   return this->row;
  }
 
 int *NLMCol(NLMatrix this)
  {
+  char RoutineName[]="NLMCol";
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument) is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return (int*)NULL;
+   }
+
   return this->col;
  }
 
@@ -771,21 +846,21 @@ void NLMMMMProd(NLMatrix R,double *M,double *B)
 
   if(R==(NLMatrix)NULL)
    {
-    sprintf(NLMatrixErrorMsg,"R (first argument), is NULL");
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
 
   if(M==(double*)NULL)
    {
-    sprintf(NLMatrixErrorMsg,"X (second argument), is NULL");
+    sprintf(NLMatrixErrorMsg,"Matrix (second argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
 
   if(B==(double*)NULL)
    {
-    sprintf(NLMatrixErrorMsg,"b (third argument), is NULL");
+    sprintf(NLMatrixErrorMsg,"Result (third argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
     return;
    }
@@ -987,20 +1062,60 @@ void NLGetGershgorinBounds(NLMatrix this,double *M,double *L,double *U)
 
   tin=clock();
 
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(L==(double*)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Address for the lower bound (third argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(U==(double*)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Address for the upper bound (fourth argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
   if(this->sparse==FULL)
    {
     for(i=0;i<this->nRows;i++)
      {
       rowsum=0.;
       for(j=0;j<this->nCols;j++)
-        if(j!=i)rowsum+=fabs(this->data[i+this->nRows*j])/sqrt(M[i])/sqrt(M[j]);
+       {
+        if(M!=(double*)NULL)
+         {
+          if(j!=i)rowsum+=fabs(this->data[i+this->nRows*j])/sqrt(M[i])/sqrt(M[j]);
+         }else{
+          if(j!=i)rowsum+=fabs(this->data[i+this->nRows*j]);
+         }
+       }
       if(i==0)
        {
-        *L=MAX(*L, this->data[i+this->nRows*i]/M[i]+rowsum);
-        *U=MAX(*U,-this->data[i+this->nRows*i]/M[i]+rowsum);
+        if(M!=(double*)NULL)
+         {
+          *L= this->data[i+this->nRows*i]/M[i]+rowsum;
+          *U=-this->data[i+this->nRows*i]/M[i]+rowsum;
+         }else{
+          *L= this->data[i+this->nRows*i]+rowsum;
+          *U=-this->data[i+this->nRows*i]+rowsum;
+         }
        }else{
-        *L= this->data[i+this->nRows*i]/M[i]+rowsum;
-        *U=-this->data[i+this->nRows*i]/M[i]+rowsum;
+        if(M!=(double*)NULL)
+         {
+          *L=MAX(*L, this->data[i+this->nRows*i]/M[i]+rowsum);
+          *U=MAX(*U,-this->data[i+this->nRows*i]/M[i]+rowsum);
+         }else{
+          *L=MAX(*L, this->data[i+this->nRows*i]+rowsum);
+          *U=MAX(*U,-this->data[i+this->nRows*i]+rowsum);
+         }
        }
      }
    }else if(this->sparse==DUMBSPARSE)
@@ -1014,9 +1129,12 @@ void NLGetGershgorinBounds(NLMatrix this,double *M,double *L,double *U)
      {
       if(this->row[i]==this->col[i])
        {
-        NLdiag[this->row[i]]=this->data[i]/M[this->row[i]];
+        if(M!=(double*)NULL)NLdiag[this->row[i]]=this->data[i]/M[this->row[i]];
+         else NLdiag[this->row[i]]=this->data[i];
+ 
        }else{
-        NLrowsum[this->row[i]]+=fabs(this->data[i])/sqrt(M[this->row[i]])/sqrt(M[this->col[i]]);
+        if(M!=(double*)NULL)NLrowsum[this->row[i]]+=fabs(this->data[i])/sqrt(M[this->row[i]])/sqrt(M[this->col[i]]);
+         else NLrowsum[this->row[i]]+=fabs(this->data[i]);
        }
      }
     *L= NLdiag[0]+NLrowsum[0];
@@ -1037,10 +1155,17 @@ void NLGetGershgorinBounds(NLMatrix this,double *M,double *L,double *U)
      {
       for(j=this->row[i]+1;j<this->row[i+1];j++)
        {
-        NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
-        NLrowsum[this->col[j]]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+        if(M!=(double*)NULL)
+         {
+          NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+          NLrowsum[this->col[j]]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+         }else{
+          NLrowsum[i]+=fabs(this->data[j]);
+          NLrowsum[this->col[j]]+=fabs(this->data[j]);
+         }
        }
-      NLdiag[i]=this->data[this->row[i]]/M[i];
+      if(M!=(double*)NULL)NLdiag[i]=this->data[this->row[i]]/M[i];
+       else NLdiag[i]=this->data[this->row[i]];
      }
     *L= NLdiag[0]+NLrowsum[0];
     *U=-NLdiag[0]+NLrowsum[0];
@@ -1069,6 +1194,13 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
 
   tin=clock();
 
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
   if(this->sparse==FULL)
    {
     result=0.;
@@ -1091,7 +1223,8 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
     for(i=0;i<this->nRows;i++)NLrowsum[i]=0.;
     for(i=0;i<this->nE;i++)
      {
-      NLrowsum[this->row[i]]+=fabs(this->data[i])/sqrt(M[this->row[i]])/sqrt(M[this->col[i]]);
+      if(M!=(double*)NULL)NLrowsum[this->row[i]]+=fabs(this->data[i])/sqrt(M[this->row[i]])/sqrt(M[this->col[i]]);
+       else NLrowsum[this->row[i]]+=fabs(this->data[i]);
      }
     result=0.;
     for(i=0;i<this->nRows;i++)if(result<NLrowsum[i])result=NLrowsum[i];
@@ -1103,11 +1236,18 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
     for(i=0;i<this->nRows;i++)
      {
       j=this->row[i];
-      NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+      if(M!=(double*)NULL)NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+       else NLrowsum[i]+=fabs(this->data[j]);
       for(j=this->row[i]+1;j<this->row[i+1];j++)
        {
-        NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
-        NLrowsum[this->col[j]]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+        if(M!=(double*)NULL)
+         {
+          NLrowsum[i]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+          NLrowsum[this->col[j]]+=fabs(this->data[j])/sqrt(M[i])/sqrt(M[this->col[j]]);
+         }else{
+          NLrowsum[i]+=fabs(this->data[j]);
+          NLrowsum[this->col[j]]+=fabs(this->data[j]);
+         }
        }
      }
     result=0.;
@@ -1132,6 +1272,27 @@ double NLMatrixDoubleProduct(NLVector u,NLMatrix this,NLVector v)
   clock_t tin;
 
   tin=clock();
+
+  if(u==(NLVector)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"left vector (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (second argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(v==(NLVector)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"right vector (third argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
 
   n=NLVGetNC(u);
   m=NLVGetNC(v);
@@ -1201,6 +1362,27 @@ void NLMSumSubMatrixInto(NLMatrix M, double s, int n, int *r, double *data)
   clock_t tin;
 
   tin=clock();
+
+  if(M==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(r==(double*)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Array of row indices (fourth argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(data==(double*)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Array of submatrix elements (fifth argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
 
 /* Put in code for DUMBSPARSE and WSMPMATRIX */
 
@@ -1283,6 +1465,20 @@ void NLMSumRankOneInto(NLMatrix M, double s, double *data)
 
   tin=clock();
 
+  if(M==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(data==(double*)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Vector (third argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
 /* Put in code for DUMBSPARSE and WSMPMATRIX */
 
   if(verbose)
@@ -1354,7 +1550,22 @@ void NLMSumRankOneInto(NLMatrix M, double s, double *data)
 void NLMInsertNonzeros(int**,int*,int,int*,int,int);
 void NLMPrintSparsityStructure(int n,int *nCols,int **rowIndex)
  {
+  char RoutineName[]="NLMPrintSparsityStructure";
   int i,j;
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"File pointer (argument 1), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(this==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Matrix (argument 2), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
 
   printf("Sparsity structure:\n");
   for(i=0;i<n;i++)
@@ -1368,7 +1579,6 @@ void NLMPrintSparsityStructure(int n,int *nCols,int **rowIndex)
 
   return;
  }
-
 
 void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NLMatrix H)
  {
@@ -1394,6 +1604,27 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
   int diag[1];
 
   tin=clock();
+
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Problem (first argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(f!='O'&&f!='I'&&f!='E'&&f!='M')
+   {
+    sprintf(NLMatrixErrorMsg,"type %c (second argument), is not valid. Must be 'O', 'I', 'E', or 'M'",f);
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
+  if(H==(NLMatrix)NULL)
+   {
+    sprintf(NLMatrixErrorMsg,"Hessian (fourth argument), is NULL");
+    NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
+    return;
+   }
 
 /* f='O', Objective */
 /* f='I', Inequality i */

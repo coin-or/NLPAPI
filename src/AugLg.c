@@ -29,6 +29,13 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
   int trace=0;
   int rc;
 
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
   n=NLPGetNumberOfVariables(P);
   nc=NLPGetNumberOfEqualityConstraints(P);
 
@@ -54,7 +61,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
                            is the sum of the groups from the constraint. The
                            element variables are the non-zero's from the a's,
                            and the element variables from the NE's. */
-      sprintf(NLErrorMsg,"!!!!Equality Constraint %d has %d groups. This is not supported yet.\n",i,NLPGetNumberOfEqualityConstraintGroups(P,i));
+      sprintf(NLErrorMsg,"Equality Constraint %d has %d groups. This is not supported yet.\n",i,NLPGetNumberOfEqualityConstraintGroups(P,i));
       NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
       printf("%s",NLErrorMsg);fflush(stdout);
       rc=12;
@@ -66,7 +73,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
 /*   if constraint is a single, nontrivial group, add an objective group which
                                                is g(x)^2 with the NE's from the 
                                                constraint */
-      sprintf(NLErrorMsg,"!!!!Equality Constraint %d has a nontrivial group function. This is not supported yet.\n",i);fflush(stderr);
+      sprintf(NLErrorMsg,"Equality Constraint %d has a nontrivial group function. This is not supported yet.\n",i);fflush(stderr);
       NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
       printf("%s",NLErrorMsg);fflush(stdout);
       rc=12;
@@ -108,6 +115,13 @@ int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double 
   int i;
   int group;
 
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    return;
+   }
+
   for(i=0;i<nc;i++)
    {
     group=NLPGetObjectiveGroupNumber(P,objGroup[i]);
@@ -124,6 +138,13 @@ void NLEliminateFixedVariables(NLProblem P)
   char type[128];
   double ui,li;
   NLVector a;
+
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
+    return;
+   }
    
   n=NLPGetNumberOfVariables(P);
   nf=0;

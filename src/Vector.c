@@ -412,11 +412,21 @@ int NLVGetNonZeroCoord(NLVector v,int n)
     NLSetError(4,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
     return -1;
    }
-  if(n<0|| !(n<v->nNonZeros))
+  if(this->sparse)
    {
-    sprintf(NLVectorErrorMsg,"NonZero Coordinate %d (argument 2) is illegal. Must be in 0 to %d",n,v->nNonZeros-1);
-    NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
-    return -1;
+    if(n<0|| !(n<v->nNonZeros))
+     {
+      sprintf(NLVectorErrorMsg,"NonZero Coordinate %d (argument 2) is illegal. Must be in 0 to %d",n,v->nNonZeros-1);
+      NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
+      return -1;
+     }
+   }else{
+    if(n<0|| !(n<v->nC))
+     {
+      sprintf(NLVectorErrorMsg,"NonZero Coordinate %d (argument 2) is illegal. Must be in 0 to %d",n,v->nC-1);
+      NLSetError(12,RoutineName,NLVectorErrorMsg,__LINE__,__FILE__);
+      return -1;
+     }
    }
 
   if(v->sparse)

@@ -985,6 +985,34 @@ R,char *vars,char *expr)
   int i,j;
   int verbose;
 
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLEFErrorMsg,"Problem (argument 1) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return 12;
+   }
+
+  if(type==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"type (argument 1) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return 12;
+   }
+
+  if(vars==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"vars (argument 5) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return 12;
+   }
+
+  if(expr==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"expr (argument 6) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return 12;
+   }
+
   verbose=0;
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
