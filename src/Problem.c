@@ -192,6 +192,8 @@ int NLEvaluateGroupNCalls=0;
 double NLEvaluateElementTime=0.;
 int NLEvaluateElementNCalls=0;
 
+int NLDontInitGradToZero=0;
+
 NLProblem NLCreateProblem(char *probName, int nV)
  {
   char RoutineName[]="NLCreateProblem";
@@ -6409,7 +6411,7 @@ int NLPEvaluateGradientOfObjective(NLProblem this,NLVector x,NLVector g)
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
 /* sum g' * ( sum w f' R + a ) */
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nGroupsInObjective;i++)
    {
     group=this->groupsInObjective[i];
@@ -6701,6 +6703,12 @@ double NLPEvaluateEqualityConstraint(NLProblem this,int constraint,NLVector x)
   return c;
  }
 
+/* AW: I added this to switch to setting of gradient vector to zero at every call */
+void NLSetDontInitGradToZero(int i)
+ {
+  NLDontInitGradToZero=i;
+ }
+
 int NLPEvaluateGradientOfEqualityConstraint(NLProblem this,int constraint,NLVector x,NLVector g)
  {
   char RoutineName[]="NLPEvaluateGradientOfEqualityConstraint";
@@ -6746,7 +6754,7 @@ int NLPEvaluateGradientOfEqualityConstraint(NLProblem this,int constraint,NLVect
    }
 #endif
 
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nEqualityConstraintGroups[constraint];i++)
    {
     group=(this->equalityConstraintGroups[constraint])[i];
@@ -7071,7 +7079,7 @@ int NLPEvaluateGradientOfInequalityConstraint(NLProblem this,int constraint,NLVe
    }
 #endif
 
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nInequalityConstraintGroups[constraint];i++)
    {
     group=(this->inequalityConstraintGroups[constraint])[i];

@@ -14,19 +14,22 @@ int main(int argc,char *argv[])
   double *x=(double*)NULL;
   double *x0=(double*)NULL;
   double *l0=(double*)NULL;
+  NLIpopt Ip;
   NLLancelot Lan;
   double ui,li;
   int i,n;
   int rc;
   int option;
   int lancelot;
+  int ipopt;
   int printproblem;
   int nc;
 
-  lancelot=1;
+  lancelot=0;
+  ipopt=1;
   printproblem=0;
 
-  while((option=getopt(argc,argv,"pL"))!=EOF)
+  while((option=getopt(argc,argv,"pLI"))!=EOF)
    {
     switch(option)
      {
@@ -35,12 +38,18 @@ int main(int argc,char *argv[])
        break;
       case 'L':
        lancelot=1;
+       ipopt=0;
+       break;
+      case 'I':
+       lancelot=0;
+       ipopt=1;
        break;
       default:
-       printf("\nusage: \n\n%s -gpL\n",argv[0]);
+       printf("\nusage: \n\n%s -pLI\n",argv[0]);
        printf("\noptions:\n\n");
-       printf("-g \n        Animate the solution.\n");
        printf("-p \n        Print the problem\n");
+       printf("-I \n        Solve Problem using Ipopt\n");
+       printf("-L \n        Solve Problem using Lancelot\n");
        return 0;
        break;
      }
@@ -96,7 +105,13 @@ int main(int argc,char *argv[])
     fflush(stdout);
    }
 
-  if(lancelot)
+  if(ipopt)
+   {
+    Ip=NLCreateIpopt();
+    IPAddOption(Ip,"ioutput",1.);
+    rc=IPMinimize(Ip,P,x0,(double*)NULL,(double*)NULL,x);
+   }
+  else if(lancelot)
    {
     Lan=NLCreateLancelot();
     LNSetPrintLevel(Lan,1);
@@ -138,7 +153,9 @@ int main(int argc,char *argv[])
 /* Clean up                                                   */
 
   NLClearErrors();
-  if(lancelot)
+  if(ipopt)
+    NLFreeIpopt(Ip);
+  else if(lancelot)
     NLFreeLancelot(Lan);
   NLFreeProblem(P);
   free(x);

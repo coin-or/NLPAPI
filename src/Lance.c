@@ -24,26 +24,6 @@
 void NLSetError(int,char*,char*,int,char*);
 static char LNLanceErrorMsg[256]="";
 
-#ifdef NLPAPI_NO_LANCELOT
-int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
- {
-  char RoutineName[]="LNMinimize";
-
-  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
-  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
-  return 12;
- }
-
-int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
- {
-  char RoutineName[]="LNMinimize";
-
-  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
-  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
-  return 12;
- }
-#else
-
 void F77_FUNC(elfuns,ELFUNS)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*);
 void F77_FUNC(groups,GROUPS)(F77DOUBLEPRECISION*,F77INTEGER*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77LOGICAL*);
 void F77_FUNC(ranges,RANGES)(F77INTEGER*,F77LOGICAL*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*);
@@ -3326,6 +3306,11 @@ int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
  {
   char RoutineName[]="LNMinimize";
 
+#ifdef NLPAPI_NO_LANCELOT
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+#else
   int i,j,k;
   int verbose;
   int rc;
@@ -3484,12 +3469,18 @@ int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
    }
 
   return rc;
+#endif
  }
 
 int LNMaximize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
  {
   char RoutineName[]="LNMaximize";
 
+#ifdef NLPAPI_NO_LANCELOT
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+#else
   int i,j,k;
   int rc;
   char *aliveFile;
@@ -3647,6 +3638,7 @@ int LNMaximize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
    }
 
   return rc;
+#endif
  }
 
 void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *fuvals,F77INTEGER *nElements,F77INTEGER *istaev,F77INTEGER *ielvar,
@@ -3757,4 +3749,3 @@ void F77_FUNC(lnpgetinitialhessian,LNPGETINITIALHESSIAN)(F77INTEGER *e, F77DOUBL
  }
 
 /* #include <../src/LanceCUTER.c>*/
-#endif
