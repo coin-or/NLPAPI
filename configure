@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="src/Lance.c"
 ac_default_prefix=.
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LAN_TARGS LANLIBS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT RANLIB ac_ct_RANLIB F77 FFLAGS ac_ct_F77 FLIBS LANDIR IPOPTDIR INSTDIR FSFX AR ARPARMS LIBprefix LIBsuffix OFLAG IFLAG CSFX RM INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LAN_TARGS LAN_IARGS LANLIBS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3235,9 +3235,9 @@ ac_compiler_gnu=$ac_cv_f77_compiler_gnu
 # Check whether --with-LANCELOT or --without-LANCELOT was given.
 if test "${with_LANCELOT+set}" = set; then
   withval="$with_LANCELOT"
-  LANDIR=$withval
+  LANDIR=$withval;LAN_IARGS=installLANDIR;
 else
-  LANDIR=
+  LANDIR=;LAN_IARGS=;
 fi;
 
 if test ! -z "$LANDIR"; then
@@ -3268,7 +3268,7 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  LAN_TARGS=LANLIBRARY
+  LAN_TARGS=LANLIBRARY;
 else
   { { echo "$as_me:$LINENO: error: Lancelot is not in $LANDIR" >&5
 echo "$as_me: error: Lancelot is not in $LANDIR" >&2;}
@@ -3285,6 +3285,7 @@ if test "${with_ipopt+set}" = set; then
 else
   use_ipopt=;
 fi;
+
 # Check if user supplied option makes sense
 if test ! -z "$use_ipopt"; then
     echo "$as_me:$LINENO: checking whether ipopt, linked using flags \"$use_ipopt\", works" >&5
@@ -3684,6 +3685,7 @@ fi
 if test ! -z "$LANDIR"; then
    LIBS="-L./lib -lNLPAPI -lExpCmp -lLancelot $LIBS"
 fi
+
 
 
 
@@ -4328,6 +4330,7 @@ s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
 s,@LAN_TARGS@,$LAN_TARGS,;t t
+s,@LAN_IARGS@,$LAN_IARGS,;t t
 s,@LANLIBS@,$LANLIBS,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t

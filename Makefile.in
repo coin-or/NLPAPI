@@ -276,9 +276,5 @@ bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort
 CUTE: SIFS
 	./makeCUTE
 
-install:$(installdir)/lib/libNLPAPI.a
-
-install:$(installdir)/include/NLPAPI.h
-
-install:$(installdir)/include/NLPAPIConfig.h
-
+install: @LAN_IARGS@ $(installdir)/lib/libNLPAPI.a $(installdir)/include/NLPAPI.h $(installdir)/include/NLPAPIConfig.h
+installLANDIR: $(installdir)/lib/libLancelot.a
