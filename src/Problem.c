@@ -57,6 +57,8 @@ void NLVectorDecreaseLength(NLVector,int);
 void NLPDeleteGroup(NLProblem,int);
 char *NLEGetExpr(NLElementFunction);
 
+int NLPtrunc(double);
+
 double NLPEvaluateGroup(NLProblem,int,NLVector);
 double NLPEvaluateElement(NLProblem,int,NLVector);
 
@@ -7671,9 +7673,9 @@ void NLPPrintVector(FILE *fid,int *j, NLProblem P,NLVector a)
         (*j)++;
        }else{
         if((*j)>0&&v>0)fprintf(fid,"+");
-        if(itrunc(v)==v)fprintf(fid,"%d",itrunc(v));
-         else if(itrunc(v*10)==10*v)fprintf(fid,"%.1lf",v);
-         else if(itrunc(v*100)==100*v)fprintf(fid,"%.2lf",v);
+        if(NLPtrunc(v)==v)fprintf(fid,"%d",NLPtrunc(v));
+         else if(NLPtrunc(v*10)==10*v)fprintf(fid,"%.1lf",v);
+         else if(NLPtrunc(v*100)==100*v)fprintf(fid,"%.2lf",v);
          else fprintf(fid,"%lf",v);
         fprintf(fid,"*(%s)",NLPGetVariableName(P,i));
         (*j)++;
@@ -7702,9 +7704,9 @@ void NLPrintElement(FILE *fid,NLProblem P,int i)
       if(k>0&&w>0)fprintf(fid,"+");
       if(fabs(fabs(w)-1)>1.e-14)
        {
-        if(itrunc(w)==w)fprintf(fid,"%d*",itrunc(w));
-         else if(itrunc(w*10)==10*w)fprintf(fid,"%.1lf*",w);
-         else if(itrunc(w*100)==100*w)fprintf(fid,"%.2lf*",w);
+        if(NLPtrunc(w)==w)fprintf(fid,"%d*",NLPtrunc(w));
+         else if(NLPtrunc(w*10)==10*w)fprintf(fid,"%.1lf*",w);
+         else if(NLPtrunc(w*100)==100*w)fprintf(fid,"%.2lf*",w);
          else fprintf(fid,"%21.14le*",w);
        }else{
         if(w<0)fprintf(fid,"-");
@@ -7730,9 +7732,9 @@ void NLPrintElement(FILE *fid,NLProblem P,int i)
    {
     if(NLPGetGroupB(P,i)<0&&k>0)fprintf(fid,"+",-NLPGetGroupB(P,i));
     b=-NLPGetGroupB(P,i);
-    if(itrunc(b)==b)fprintf(fid,"%d",itrunc(b));
-     else if(itrunc(b*10)==10*b)fprintf(fid,"%.1lf",b);
-     else if(itrunc(b*100)==100*b)fprintf(fid,"%.2lf",b);
+    if(NLPtrunc(b)==b)fprintf(fid,"%d",NLPtrunc(b));
+     else if(NLPtrunc(b*10)==10*b)fprintf(fid,"%.1lf",b);
+     else if(NLPtrunc(b*100)==100*b)fprintf(fid,"%.2lf",b);
      else fprintf(fid,"%lf",b);
    }
 
@@ -7846,9 +7848,9 @@ void NLPrintGroupShort(FILE *fid,NLProblem P,int group,int first)
 
   if(fabs(s-1)>1.e-14)
    {
-    if(itrunc(s)==s)fprintf(fid,"%d*",itrunc(s));
-     else if(itrunc(s*10)==10*s)fprintf(fid,"%.1lf*",s);
-     else if(itrunc(s*100)==100*s)fprintf(fid,"%.2lf*",s);
+    if(NLPtrunc(s)==s)fprintf(fid,"%d*",NLPtrunc(s));
+     else if(NLPtrunc(s*10)==10*s)fprintf(fid,"%.1lf*",s);
+     else if(NLPtrunc(s*100)==100*s)fprintf(fid,"%.2lf*",s);
      else fprintf(fid,"%lf*(",s);
    }
 
@@ -9476,4 +9478,12 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
   if(tname!=tmpname)free(tname);
 
   return 0;
+ }
+
+int NLPtrunc(double a)
+ {
+  int result;
+
+  result=floor(a);
+  return result;
  }
