@@ -3268,9 +3268,9 @@ fi
 echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
 if test `eval echo '${'$as_ac_File'}'` = yes; then
-  DEFIPOPT=;IPOPT_TARGS=;IPOPTTMP=`find $IPOPTDIR -name IPOPTLIBS.lst -print`;IPOPTLIBS="`cat $IPOPTTMP`"
+  DEFIPOPT=;IPOPT_TARGS=;IPOPTTMP=`find $IPOPTDIR -name IPOPTLIBS.lst -print`;IPOPTLIBS="`echo \" \" | cat $IPOPTTMP`"
 else
-  DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPT_TARGS=;IPOPTLIBS=
+  DEFIPOPT=-DNLPAPI_NO_IPOPT;IPOPT_TARGS=;IPOPTTMP=;IPOPTLIBS=
 fi
 
 
