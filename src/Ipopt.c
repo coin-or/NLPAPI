@@ -916,7 +916,7 @@ void NLPSetLagrangianMultipliers(NLProblem P, NLVector lambda)
       return;
     }
 
-  if(P==(NLProblem)NULL)
+  if(lambda==(NLVector)NULL)
     {
       sprintf(IPErrorMsg,"lambda (argument 2) is NULL");
       NLSetError(4,RoutineName,IPErrorMsg,__LINE__,__FILE__);
