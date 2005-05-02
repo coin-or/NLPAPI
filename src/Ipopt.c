@@ -388,8 +388,11 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
   if(JACNZ!=-1)
     {
       free(JACCON);
+      JACCON=NULL;
       free(JACVAR);
+      JACVAR=NULL;
       JACNZ=-1;
+      JACNZMAX=0;
     }
   if(HESSROW!=NULL)
     {
@@ -621,6 +624,7 @@ void EV_A(F77INTEGER *TASK, F77INTEGER *N,
 
   lnx=NLCreateDenseWrappedVector(*N,X);
   g=(double*)malloc((*N)*sizeof(double));
+  for(i=0;i<*N;i++) g[i] = 0.;
   lng=NLCreateDenseWrappedVector(*N,g);
   NLSetDontInitGradToZero(TRUE);
 
@@ -676,9 +680,6 @@ void EV_H(F77INTEGER *TASK, F77INTEGER *N,
   int i,j;
   double *data;
 
-  /* Set Lagrangian multipliers and if necessary invalidate cache */
-  checkinv( N, X, M, LAM );
-
   if(*TASK==0) /* Get number of nonzeros */
     {
       if( lnH==(NLMatrix)NULL )
@@ -725,6 +726,9 @@ void EV_H(F77INTEGER *TASK, F77INTEGER *N,
     }
   else
     {
+
+      /* Set Lagrangian multipliers and if necessary invalidate cache */
+      checkinv( N, X, M, LAM );
 
       lnx=NLCreateDenseWrappedVector(*N,X);
       NLPEvaluateHessianOfObjective(PLag,lnx,lnH);
