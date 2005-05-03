@@ -9185,8 +9185,14 @@ NLProblem NLCopyProblem(NLProblem P)
       this->groupScale[i]=P->groupScale[i];
       this->nElementsInGroup[i]=P->nElementsInGroup[i];
       this->mElementsInGroup[i]=P->mElementsInGroup[i];
-      this->elementWeight[i]=(double*)malloc((this->mElementsInGroup[i])*sizeof(double));
-      this->elementWeightSet[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));
+      if(this->mElementsInGroup[i]>0)
+       {
+        this->elementWeight[i]=(double*)malloc((this->mElementsInGroup[i])*sizeof(double));
+        this->elementWeightSet[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));    
+       }else{
+        this->elementWeight[i]=(double*)NULL;
+        this->elementWeightSet[i]=(int*)NULL;
+       }
       this->element[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));
       for(j=0;j<this->nElementsInGroup[i];j++)
        {
