@@ -668,6 +668,8 @@ int NLPAddGroup(NLProblem this,char *name)
        {
         this->groupName[i]=(char*)NULL;
         this->groupFunction[i]=(NLGroupFunction)NULL;
+        this->groupFunctionData[i]=(void*)NULL;
+        this->freeGroupFunctionData[i]=(groupFunctionDataFreer)NULL;
         this->groupA[i]=(NLVector)NULL;
         this->groupB[i]=0.;
         this->groupBSet[i]=FALSE;
@@ -3551,6 +3553,7 @@ NLNonlinearElementPtr NLPGetNonlinearElement(NLProblem this,int e)
 int NLPAddNonlinearElement(NLProblem this,NLNonlinearElementPtr E)
  {
   char RoutineName[]="NLPAddNonlinearElement";
+  int i;
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
@@ -3625,6 +3628,17 @@ int NLPAddNonlinearElement(NLProblem this,NLNonlinearElementPtr E)
       NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
       printf("%s",NLProblemErrorMsg);fflush(stdout);
       return -1;
+     }
+
+    for(i=this->nNonlinearElements;i<this->mNonlinearElements;i++)
+     {
+      this->nonlinearElement[i]=(NLNonlinearElementPtr)NULL;
+      this->elementCached[i]=0;
+      this->internalVariables[i]=(double*)NULL;
+      this->elementVariables[i]=(double*)NULL;
+      this->elementValue[i]=0.;
+      this->elementGradient[i]=(double*)NULL;
+      this->elementHessian[i]=(double*)NULL;
      }
 
    }
