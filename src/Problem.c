@@ -413,6 +413,7 @@ void NLFreeProblem(NLProblem this)
     for(i=0;i<this->nGroups;i++)
      {
       if(verbose)printf("  delete group %d\n",i);
+      if(this->groupName!=(char*)NULL)free(this->groupName[i]);
       if(this->groupFunction!=(NLGroupFunction*)NULL && this->groupFunction[i]!=(NLGroupFunction)NULL)NLFreeGroupFunction(this->groupFunction[i]);
       if(this->groupA!=(NLVector*)NULL && this->groupA[i]!=(NLVector)NULL)NLFreeVector(this->groupA[i]);
       if(this->elementWeight!=(double**)NULL&& this->elementWeight[i]!=(double*)NULL)free(this->elementWeight[i]);
