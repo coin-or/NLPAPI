@@ -9168,6 +9168,10 @@ NLProblem NLCopyProblem(NLProblem P)
         return (NLProblem)NULL;
        }
       strcpy(this->groupName[i],P->groupName[i]);
+     }
+    for(i=this->nGroups;i<this->mGroups;i++)this->groupName[i]=(char*)NULL;
+    for(i=0;i<this->mGroups;i++)
+     {
       this->groupFunction[i]=P->groupFunction[i];if(P->groupFunction[i]!=(NLGroupFunction)NULL)NLRefGroupFunction(P->groupFunction[i]);
       this->groupFunctionData[i]=P->groupFunctionData[i];
       this->freeGroupFunctionData[i]=P->freeGroupFunctionData[i];
@@ -9215,6 +9219,7 @@ NLProblem NLCopyProblem(NLProblem P)
        }
       strcpy(this->groupTypeName[i],P->groupTypeName[i]);
      }
+    for(i=this->nGroupTypes;i<this->mGroupTypes;i++)this->groupTypeName[i]=(char*)NULL;
    }else{
     this->groupTypeName=(char**)NULL;
    }
@@ -9280,9 +9285,10 @@ NLProblem NLCopyProblem(NLProblem P)
       return (NLProblem)NULL;
      }
   
-    for(i=0;i<this->nNonlinearElements;i++)
+    for(i=0;i<this->mNonlinearElements;i++)
      {
-      this->nonlinearElement[i]=P->nonlinearElement[i];NLRefNonlinearElement(P->nonlinearElement[i]);
+      this->nonlinearElement[i]=P->nonlinearElement[i];
+      if(this->nonlinearElement[i]!=(NLNonlinearElementPtr)NULL)NLRefNonlinearElement(P->nonlinearElement[i]);
       this->elementCached[i]=P->elementCached[i];
       this->internalVariables[i]=(double*)NULL;
       this->elementValue[i]=P->elementValue[i];
@@ -9317,6 +9323,7 @@ NLProblem NLCopyProblem(NLProblem P)
        }
       strcpy(this->elementTypeName[i],P->elementTypeName[i]);
      }
+    for(i=this->nElementTypes;i<this->mElementTypes;i++)this->elementTypeName[i]=(char*)NULL;
    }else{
     this->elementTypeName=(char**)NULL;
    }
@@ -9406,6 +9413,12 @@ NLProblem NLCopyProblem(NLProblem P)
       for(j=0;j<this->nEqualityConstraintGroups[i];j++)
        (this->equalityConstraintGroups[i])[j]=(P->equalityConstraintGroups[i])[j];
      }
+    for(i=this->nEqualityConstraints;i<this->mEqualityConstraints;i++)
+     {
+      (this->nEqualityConstraintGroups)[i]=0;
+      (this->mEqualityConstraintGroups)[i]=0;
+      this->equalityConstraintGroups[i]=(int*)NULL;
+     }
    }else{
     this->nEqualityConstraintGroups=(int*)NULL;
     this->mEqualityConstraintGroups=(int*)NULL;
@@ -9456,6 +9469,12 @@ NLProblem NLCopyProblem(NLProblem P)
        }
       for(j=0;j<this->nMinMaxConstraintGroups[i];j++)
        (this->minMaxConstraintGroups[i])[j]=(P->minMaxConstraintGroups[i])[j];
+     }
+    for(i=this->nMinMaxConstraints;i<this->mMinMaxConstraints;i++)
+     {
+      (this->nMinMaxConstraintGroups[i])=0;
+      (this->mMinMaxConstraintGroups[i])=0;
+      this->minMaxConstraintGroups[i]=(int*)NULL;
      }
    }else{
     this->nMinMaxConstraintGroups=(int*)NULL;
@@ -9526,6 +9545,12 @@ NLProblem NLCopyProblem(NLProblem P)
        (this->inequalityConstraintGroups[i])[j]=(P->inequalityConstraintGroups[i])[j];
       this->inequalityConstraintLowerBound[i]=P->inequalityConstraintLowerBound[i];
       this->inequalityConstraintUpperBound[i]=P->inequalityConstraintUpperBound[i];
+     }
+    for(i=this->nInequalityConstraints;i<this->mInequalityConstraints;i++)
+     {
+      (this->nInequalityConstraintGroups[i])=0;
+      (this->mInequalityConstraintGroups[i])=0;
+      this->inequalityConstraintGroups[i]=(int*)NULL;
      }
    }else{
     this->nInequalityConstraintGroups=(int*)NULL;
