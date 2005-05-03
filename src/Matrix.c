@@ -1845,7 +1845,8 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
   for(i=0;i<n;i++)H->nE+=nCols[i];
 
   H->mE=H->nE;
-  H->data=(double*)malloc((H->mE)*sizeof(double));
+  H->wrapped=0;
+  H->data=(double*)realloc(H->data,(H->mE)*sizeof(double));
   if(H->data==(double*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
 
   if(H->sparse==DUMBSPARSE)

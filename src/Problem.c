@@ -317,6 +317,7 @@ NLProblem NLCreateProblem(char *probName, int nV)
   this->nElementTypes=0;
   this->mElementTypes=-1;
   this->elementTypeName=(char**)NULL;
+  this->elementRangeSet=(int*)NULL;
 
   this->nGroupsInObjective=0;
   this->mGroupsInObjective=-1;
@@ -385,7 +386,7 @@ void NLFreeProblem(NLProblem this)
 
   verbose=FALSE;
 
-  if(verbose)printf("NLFreeProblem()\n");
+  if(verbose)printf("NLFreeProblem(0x%8.8x)\n",this);
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
@@ -415,12 +416,17 @@ void NLFreeProblem(NLProblem this)
       if(verbose)printf("  delete group %d\n",i);
       if(this->groupName!=(char**)NULL)free(this->groupName[i]);
       if(this->groupFunction!=(NLGroupFunction*)NULL && this->groupFunction[i]!=(NLGroupFunction)NULL)NLFreeGroupFunction(this->groupFunction[i]);
+      if(this->freeGroupFunctionData[i]!=(groupFunctionDataFreer)NULL
+       &&this->groupFunctionData[i]!=(void*)NULL)(this->freeGroupFunctionData[i])(this->groupFunctionData[i]);
       if(this->groupA!=(NLVector*)NULL && this->groupA[i]!=(NLVector)NULL)NLFreeVector(this->groupA[i]);
       if(this->elementWeight!=(double**)NULL&& this->elementWeight[i]!=(double*)NULL)free(this->elementWeight[i]);
       if(this->elementWeightSet!=(int**)NULL&& this->elementWeightSet[i]!=(int*)NULL)free(this->elementWeightSet[i]);
+      if(this->element[i]!=(int*)NULL)free(this->element[i]);
      }
     if(this->groupName!=(char**)NULL)free(this->groupName);
     if(this->groupFunction!=(NLGroupFunction*)NULL)free(this->groupFunction);
+    if(this->groupFunctionData!=(void**)NULL)free(this->groupFunctionData);
+    if(this->freeGroupFunctionData!=(groupFunctionDataFreer*)NULL)free(this->freeGroupFunctionData);
     if(this->groupA!=(NLVector*)NULL)free(this->groupA);
     if(this->groupB!=(double*)NULL)free(this->groupB);
     if(this->groupBSet!=(int*)NULL)free(this->groupBSet);
@@ -472,6 +478,7 @@ void NLFreeProblem(NLProblem this)
     if(verbose)printf("  delete element label list %d\n",i);
     if(this->elementTypeName!=(char**)NULL)free(this->elementTypeName);
    }
+  if(this->elementRangeSet!=(int*)NULL)free(this->elementRangeSet);
 
   if(verbose)printf("  delete Objective Lists\n");
   if(this->groupsInObjective!=(int*)NULL)free(this->groupsInObjective);
@@ -503,6 +510,7 @@ void NLFreeProblem(NLProblem this)
   if(this->inequalityConstraintLowerBound!=(double*)NULL)free(this->inequalityConstraintLowerBound);
   if(this->inequalityConstraintUpperBound!=(double*)NULL)free(this->inequalityConstraintUpperBound);
 
+  free(this);
   if(verbose)printf("done NLFreeProblem()\n");
   return;
  }
@@ -9332,6 +9340,7 @@ NLProblem NLCopyProblem(NLProblem P)
   if(this->mElementTypes>0)
    {
     this->elementTypeName=(char**)malloc((this->mElementTypes)*sizeof(char*));
+    this->elementRangeSet=(int*)malloc((this->mElementTypes)*sizeof(int));
     for(i=0;i<this->nElementTypes;i++)
      {
       this->elementTypeName[i]=(char*)malloc((strlen(P->elementTypeName[i])+1)*sizeof(char));
@@ -9343,10 +9352,16 @@ NLProblem NLCopyProblem(NLProblem P)
         return (NLProblem)NULL;
        }
       strcpy(this->elementTypeName[i],P->elementTypeName[i]);
+      this->elementRangeSet[i]=P->elementRangeSet[i];
      }
-    for(i=this->nElementTypes;i<this->mElementTypes;i++)this->elementTypeName[i]=(char*)NULL;
+    for(i=this->nElementTypes;i<this->mElementTypes;i++)
+     {
+      this->elementTypeName[i]=(char*)NULL;
+      this->elementRangeSet[i]=0;
+     }
    }else{
     this->elementTypeName=(char**)NULL;
+    this->elementRangeSet=(int*)NULL;
    }
 
   this->nGroupsInObjective=P->nGroupsInObjective;
@@ -9631,6 +9646,7 @@ int NLPAddEqualityConstraint(NLProblem this, char *name, int nvars, int *vars, d
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
 
   if(tname!=tmpname)free(tname);
@@ -9685,6 +9701,7 @@ int NLPAddInequalityConstraint(NLProblem this, char *name, double l, double u, i
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
 
   NLPSetInequalityConstraintUpperBound(this,constraint,u);
@@ -9750,6 +9767,7 @@ int NLPSetObjective(NLProblem this, char *name, int nvars, int *vars, double (*F
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
 
   if(tname!=tmpname)free(tname);
@@ -9804,6 +9822,7 @@ int NLPAddEqualityConstraintByString(NLProblem this, char *name, int nvars, int 
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
 
   if(tname!=tmpname)free(tname);
@@ -9858,6 +9877,7 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
 
   if(u<1.e19)NLPSetInequalityConstraintUpperBound(this,constraint,u);
@@ -9925,6 +9945,7 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
 
   if(tname!=tmpname)free(tname);
