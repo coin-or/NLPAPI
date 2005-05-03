@@ -1834,8 +1834,8 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
     NLMInsertNonzeros(rowIndex,nCols,nlv,lv,sym,n);
   
     if(lv!=(int*)NULL)free(lv);
-    if(ez!=(int*)NULL)free(ez);
    }
+  if(ez!=(int*)NULL)free(ez);
 
 /* Now have a list of the nonzeros in the lower part of H */
 
