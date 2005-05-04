@@ -380,7 +380,7 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
   NLFreeProblem(PEq);
   if(lnH!=(NLMatrix)NULL)
     {
-      free(lnH);
+      NLFreeMatrix(lnH);
       lnH=(NLMatrix)NULL;
     }
 
