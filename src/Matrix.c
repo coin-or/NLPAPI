@@ -1895,8 +1895,12 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
 
   if(verbose){NLPrintMatrix(stdout,H);printf("Done %s\n",RoutineName);fflush(stdout);}
 
-  free(nCols);
-  free(rowIndex);
+  if(nCols!=(int*)NULL)free(nCols);
+  if(rowIndex!=(int**)NULL)
+   {
+    for(i=0;i<n;i++)if(rowIndex[i]!=(int*)NULL)free(rowIndex[i]);
+    free(rowIndex);
+   }
 
   NLDetermineSparsityTime+=(clock()-tin)*1./CLOCKS_PER_SEC;
   NLDetermineSparsityNCalls++;
