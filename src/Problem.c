@@ -1273,7 +1273,6 @@ int NLPAddNonlinearElementToGroup(NLProblem this,int group,double weight,NLNonli
   (this->elementWeight[group])[this->nElementsInGroup[group]]=weight;
   (this->elementWeightSet[group])[this->nElementsInGroup[group]]=TRUE;
   (this->element[group])[this->nElementsInGroup[group]]=E;
-  NLRefNonlinearElement(this->nonlinearElement[E]);
 
   this->nElementsInGroup[group]++;
   if(verbose)printf(" done addNonlinearElementToGroup\n");
@@ -5741,12 +5740,7 @@ void NLPDeleteGroup(NLProblem this,int group)
   for(i=0;i<this->nElementsInGroup[group];i++)
    {
     element=(this->element[group])[i];
-    if(NLFreeNonlinearElement(this,element))
-     {
-      this->nonlinearElement[element]=(NLNonlinearElementPtr)NULL;
-      while(this->nNonlinearElements>-1 && this->nonlinearElement[this->nNonlinearElements-1]==(NLNonlinearElementPtr)NULL)
-           this->nNonlinearElements--;
-     }
+    (this->element[group])[i]=-1;
     (this->elementWeight[group])[i]=1.;
     (this->elementWeightSet[group])[i]=0;
    }
@@ -9215,7 +9209,7 @@ NLProblem NLCopyProblem(NLProblem P)
        }else{
         this->elementWeight[i]=(double*)NULL;
         this->elementWeightSet[i]=(int*)NULL;
-	this->element[i]=(int*)NULL;
+        this->element[i]=(int*)NULL;
        }
       for(j=0;j<this->nElementsInGroup[i];j++)
        {

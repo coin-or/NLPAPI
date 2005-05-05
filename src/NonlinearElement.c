@@ -84,7 +84,6 @@ void NLRefNonlinearElement(NLNonlinearElementPtr this)
 #endif
 
   this->nRefs++;
-
   return;
  }
 
@@ -146,7 +145,6 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
   int verbose;
 
   verbose=0;
-  if(verbose){printf("%s, F=0x%8.8x\n",RoutineName,F);fflush(stdout);}
 
 #ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
