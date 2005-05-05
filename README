@@ -10,6 +10,8 @@ the routines (e..g configure with-hsl="-L/local/lib -lHSL"). Finally, Ipopt is d
 way, via the with-ipopt=<opt> option. Again <opt> contains the link flags. Ipopt requires
 Lapack, Harwell and BLAS, so -l flags may need to be included for those.
 
+NOTE: The current version of Ipopt is not threadsafe!
+
 To install:
         edit share/config.site to define where LANCELOT, Ipopt and the Harwell subroutine
            library are installed.
