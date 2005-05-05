@@ -195,6 +195,7 @@ void NLRefElementFunction(NLElementFunction this)
 #endif
 
   this->nRefs++;
+  return;
  }
 
 void NLFreeElementFunction(NLElementFunction this)
@@ -220,6 +221,7 @@ void NLFreeElementFunction(NLElementFunction this)
     if(this->x0!=(double*)NULL)free(this->x0);
     if(this->y!=(double*)NULL)free(this->y);
     if(this->Hs!=(double*)NULL)free(this->Hs);
+    if(this->variablePower!=(int*)NULL)free(this->variablePower);
     free(this);
    }
   return;
