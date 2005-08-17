@@ -199,7 +199,7 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
     return (NLNonlinearElement)NULL;
    }
   for(i=0;i<n;i++)result->ElVars[i]=vars[i];
-  result->nRefs=0;
+  result->nRefs=1;
   result->data=data;
   result->freeData=freeData;
 
