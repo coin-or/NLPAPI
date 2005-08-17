@@ -222,6 +222,7 @@ void NLFreeElementFunction(NLElementFunction this)
     if(this->y!=(double*)NULL)free(this->y);
     if(this->Hs!=(double*)NULL)free(this->Hs);
     if(this->variablePower!=(int*)NULL)free(this->variablePower);
+    if(this->R!=(NLMatrix)NULL)NLFreeMatrix(this->R);
     free(this);
    }
   return;
