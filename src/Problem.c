@@ -9643,6 +9643,7 @@ int NLPAddEqualityConstraint(NLProblem this, char *name, int nvars, int *vars, d
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9698,6 +9699,7 @@ int NLPAddInequalityConstraint(NLProblem this, char *name, double l, double u, i
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   NLPSetInequalityConstraintUpperBound(this,constraint,u);
   NLPSetInequalityConstraintLowerBound(this,constraint,l);
@@ -9764,6 +9766,7 @@ int NLPSetObjective(NLProblem this, char *name, int nvars, int *vars, double (*F
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9819,6 +9822,7 @@ int NLPAddEqualityConstraintByString(NLProblem this, char *name, int nvars, int 
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9874,6 +9878,7 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(u<1.e19)NLPSetInequalityConstraintUpperBound(this,constraint,u);
    else NLPUnSetInequalityConstraintUpperBound(this,constraint);
@@ -9942,6 +9947,7 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
   NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
