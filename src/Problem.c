@@ -4051,7 +4051,7 @@ int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nEqualityConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nEqualityConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nEqualityConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
@@ -4079,7 +4079,7 @@ int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nInequalityConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nInequalityConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nInequalityConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
@@ -4107,7 +4107,7 @@ int NLPSetMinMaxConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nMinMaxConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nMinMaxConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nMinMaxConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }

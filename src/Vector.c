@@ -543,7 +543,7 @@ int NLVIncrementC(NLVector this,int i,double vl)
 
   if(!(this->sparse))
    {
-    this->data[j]+=vl;
+    this->data[i]+=vl;
     return 1;
    }
 
