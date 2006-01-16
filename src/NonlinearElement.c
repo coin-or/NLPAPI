@@ -35,7 +35,7 @@ int *NLNEGetElementVariables(NLProblem P, NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (int*)NULL;
    }
 
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
@@ -97,14 +97,14 @@ int NLFreeNonlinearElement(NLProblem P, NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return 1;
    }
 
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element %d (argument 1) is invalid. Must be in [0,%d)",t,NLPGetNumberOfNonlinearElements(P));
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return 1;
    }
 #endif
 
@@ -151,14 +151,14 @@ NLNonlinearElement NLCreateNonlinearElementParm(NLProblem P, char *name,NLElemen
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLNonlinearElement)NULL;
    }
 
   if(F==(NLElementFunction)NULL)
    {
     sprintf(NLNEErrorMsg,"Element Function (argument 3) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLNonlinearElement)NULL;
    }
 #endif
 
@@ -216,13 +216,13 @@ int NLNEGetIndex(NLProblem P,NLNonlinearElement t,int var)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 2) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
   this=NLPGetNonlinearElement(P,t);
@@ -231,7 +231,7 @@ int NLNEGetIndex(NLProblem P,NLNonlinearElement t,int var)
    {
     sprintf(NLNEErrorMsg,"Variable (argument 3) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -248,13 +248,13 @@ int NLNEGetInternalDimension(NLProblem P,NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 2) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
   this=NLPGetNonlinearElement(P,t);
@@ -272,13 +272,13 @@ int NLNEGetElementDimension(NLProblem P,NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 2) is invalid %d > 0 && %d < %d",t,t,NLPGetNumberOfNonlinearElements(P));
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
   this=NLPGetNonlinearElement(P,t);
@@ -296,13 +296,13 @@ char *NLNEGetName(NLProblem P,NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (char*)NULL;
    }
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 2) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (char*)NULL;
    }
 #endif
   this=NLPGetNonlinearElement(P,t);
@@ -320,13 +320,13 @@ NLMatrix NNLEGetRangeXForm(NLProblem P,NLNonlinearElement t)
    {
     sprintf(NLNEErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLMatrix)NULL;
    }
   if(t<0||t>=NLPGetNumberOfNonlinearElements(P))
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 2) is invalid");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLMatrix)NULL;
    }
 #endif
   this=NLPGetNonlinearElement(P,t);
@@ -343,7 +343,7 @@ NLElementFunction NLNEPGetElementFunction(NLNonlinearElementPtr this)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLElementFunction)NULL;
    }
 #endif
   return this->F;
@@ -358,7 +358,7 @@ NLMatrix NLNEPGetRangeXForm(NLNonlinearElementPtr this)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLMatrix)NULL;
    }
 #endif
   return NLEGetRangeXForm(this->F);
@@ -373,13 +373,13 @@ int NLNEPGetIndex(NLNonlinearElementPtr this,int i)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
   if(i<0||i>this->nElementVariables)
    {
     sprintf(NLNEErrorMsg,"index (argument 2) is Invalid (%d in range %d to %d)",i,0,this->nElementVariables);
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -395,7 +395,7 @@ int NLNEPGetInternalDimension(NLNonlinearElementPtr this)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
   return this->nInternalVariables;
@@ -410,7 +410,7 @@ int NLNEPGetElementDimension(NLNonlinearElementPtr this)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
   return this->nElementVariables;
@@ -425,7 +425,7 @@ char *NLNEPGetName(NLNonlinearElementPtr this)
    {
     sprintf(NLNEErrorMsg,"Nonlinear Element (argument 1) is NULL");
     NLSetError(12,RoutineName,NLNEErrorMsg,__LINE__,__FILE__);
-    return;
+    return (char*)NULL;
    }
 #endif
   return this->name;

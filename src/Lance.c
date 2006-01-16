@@ -3652,7 +3652,7 @@ void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *f
   double *Hessian;
   int i,j,k,m;
   int jk;
-  NLElementFunction elementFunction;
+  NLElementFunction elementFunction=(NLElementFunction)NULL;
   int nx,nl;
   double *X,*L,*F;
   int verbose;

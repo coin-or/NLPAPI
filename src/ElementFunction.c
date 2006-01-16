@@ -756,7 +756,7 @@ NLMatrix NLEGetRangeXForm(NLElementFunction this)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLMatrix)NULL;
    }
 #endif
   return this->R;
