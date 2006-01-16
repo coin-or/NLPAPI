@@ -465,7 +465,8 @@ int NLVGetNonZeroCoord(NLVector v,int n)
   if(v->sparse)
     return((v->nonZero)[n]);
    else
-    return((v->data)[n]);
+    return n;
+/*  return((v->data)[n]);  David Jensen found this one. Not the value, the coordinate! */
  }
 
 double NLVGetNonZero(NLVector v,int n)
