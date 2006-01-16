@@ -38,7 +38,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
    {
     sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
     NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
-    return;
+    return 4;
    }
 
   n=NLPGetNumberOfVariables(P);
@@ -111,6 +111,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
     NLPSetGroupScale(P,group,2*mu*constraintS[i]*constraintS[i]);
    }
 
+  rc=0;
 FreeAndReturn:
   return rc;
  }
@@ -125,7 +126,7 @@ int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double 
    {
     sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
     NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
-    return;
+    return 4;
    }
 
   for(i=0;i<nc;i++)

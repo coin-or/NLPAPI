@@ -1337,21 +1337,21 @@ double NLMatrixDoubleProduct(NLVector u,NLMatrix this,NLVector v)
    {
     sprintf(NLMatrixErrorMsg,"left vector (first argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
+    return 0.;
    }
 
   if(this==(NLMatrix)NULL)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (second argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
+    return 0.;
    }
 
   if(v==(NLVector)NULL)
    {
     sprintf(NLMatrixErrorMsg,"right vector (third argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
+    return 0.;
    }
 #endif
 
