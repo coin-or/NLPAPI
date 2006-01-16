@@ -766,21 +766,21 @@ NLMatrix NLMatrixClone(NLMatrix this)
        {
         sprintf(NLMatrixErrorMsg,"Out of memory, trying to allocate sparse matrix (%d bytes)",clone->mE*sizeof(double));
         NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-        return;
+        return (NLMatrix)NULL;
        }
       clone->row=(int*)realloc((void*)clone->row,clone->mE*sizeof(int));
       if(clone->row==(int*)NULL)
        {
         sprintf(NLMatrixErrorMsg,"Out of memory, trying to allocate sparse matrix (%d bytes)",clone->mE*sizeof(int));
         NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-        return;
+        return (NLMatrix)NULL;
        }
       clone->col=(int*)realloc((void*)clone->col,clone->mE*sizeof(int));
       if(clone->col==(int*)NULL)
        {
         sprintf(NLMatrixErrorMsg,"Out of memory, trying to allocate sparse matrix (%d bytes)",clone->mE*sizeof(int));
         NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-        return;
+        return (NLMatrix)NULL;
        }
      }
     clone->nE=this->nE;
@@ -1024,6 +1024,7 @@ double NLGetMinScaledDiagonal(NLMatrix this, double *M)
   clock_t tin;
 
   tin=clock();
+  result=0.;
   if(this->sparse==FULL)
    {
     result=this->data[0]/M[0];
@@ -1068,6 +1069,7 @@ double NLGetMaxScaledDiagonal(NLMatrix this, double *M)
   clock_t tin;
 
   tin=clock();
+  result=0.;
   if(this->sparse==FULL)
    {
     result=this->data[0]/M[0];
@@ -1254,7 +1256,7 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
    {
     sprintf(NLMatrixErrorMsg,"Matrix (first argument), is NULL");
     NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1.;
    }
 #endif
 
@@ -1276,7 +1278,7 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
    }else if(this->sparse==DUMBSPARSE)
    {
     NLrowsum=(double*)realloc((void*)NLrowsum,(this->nRows)*sizeof(double));
-    if(NLrowsum==(double*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
+    if(NLrowsum==(double*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return -1.; }
     for(i=0;i<this->nRows;i++)NLrowsum[i]=0.;
     for(i=0;i<this->nE;i++)
      {
@@ -1288,7 +1290,7 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
    }else if(this->sparse==WSMPSPARSE)
    {
     NLrowsum=(double*)realloc((void*)NLrowsum,(this->nRows)*sizeof(double));
-    if(NLrowsum==(double*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
+    if(NLrowsum==(double*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return -1.; }
     for(i=0;i<this->nRows;i++)NLrowsum[i]=0.;
     for(i=0;i<this->nRows;i++)
      {
@@ -1312,7 +1314,7 @@ double NLMatrixOneNorm(NLMatrix this,double *M)
    }else{
     sprintf(NLMatrixErrorMsg,"Matrix (argument 1) is unknown format (%d)",this->sparse);
     NLSetError(4,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__);
-    return 0;
+    return  -1.;
    }
 
   NLMatrixOneNormTime+=(clock()-tin)*1./CLOCKS_PER_SEC;
@@ -1719,6 +1721,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
     ng=NLPGetNumberOfGroupsInEqualityConstraint(P,constraint);
    else if(f=='M')
     ng=NLPGetNumberOfGroupsInMinMaxConstraint(P,constraint);
+   else ng=0;
 
   for(ig=0;ig<ng;ig++)
    {
@@ -1730,6 +1733,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
       g=NLPGetEqualityConstraintGroupNumber(P,constraint);
      else if(f=='M')
       g=NLPGetMinMaxConstraintGroupNumber(P,constraint);
+     else g=0;
 
     if(verbose){printf("\nGroup %d:\n",g);fflush(stdout);}
 
@@ -1759,7 +1763,7 @@ void NLMDetermineHessianSparsityStructure(NLProblem P,char f, int constraint, NL
        }else{
         v=NLVData(a);
         nlv=0;
-        for(i=0;i<n;i++)if(v[i]!=0.);nlv++;
+        for(i=0;i<n;i++)if(v[i]!=0.)nlv++;
         lv=(int*)malloc(nlv*sizeof(int));
         if(lv==(int*)NULL){ sprintf(NLMatrixErrorMsg,"Out of memory");NLSetError(12,RoutineName,NLMatrixErrorMsg,__LINE__,__FILE__); return; }
         t=0;
@@ -1990,7 +1994,7 @@ void NLMInsertNonzeros(int **rows,int *nCols,int nnz,int *nz, int sym, int n)
       rw=rows[iz];
       while(j<nnz || J<nJ)
        {
-        if(j<nnz)jz=nz[j];
+        if(j<nnz)jz=nz[j];else jz=0;
         if(j<nnz && sym && jz<iz)j++;
          else if( (j>=nnz&&J<nJ) || (j<nnz&&J<nJ&&rw[J]<jz))J++;
          else if( (j<nnz&&J>=nJ) || (j<nnz&&J<nJ&&rw[J]>jz)){nnew++;j++;}
@@ -2003,7 +2007,7 @@ void NLMInsertNonzeros(int **rows,int *nCols,int nnz,int *nz, int sym, int n)
       I=0;
       while(j<nnz || J<nJ)
        {
-        if(j<nnz)jz=nz[j];
+        if(j<nnz)jz=nz[j];else jz=0;
         if(j<nnz && sym && jz<iz)j++;
          else if((j>=nnz&&J<nJ) || (j<nnz&&J<nJ&&rw[J]<jz)){newrow[I]=rw[J];I++;J++;}
          else if((j<nnz&&J>=nJ) || (j<nnz&&J<nJ&&rw[J]>jz)){newrow[I]=jz;I++;j++;}

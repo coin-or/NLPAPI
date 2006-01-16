@@ -2908,9 +2908,10 @@ void NLPrintProblem(FILE *fid,NLProblem P)
       i=NLPGetInequalityConstraintNumberOfGroup(P,I,J);
       fprintf(fid,"   Group: %d number %d\n",J,i);
       NLPrintGroup(fid,P,i);
-      s=1./NLPGetGroupScale(P,i);
       fprintf(fid,"\n");
      }
+    i=NLPGetInequalityConstraintNumberOfGroup(P,I,0); /* In LANCELOT only one group in constraint */
+    s=1./NLPGetGroupScale(P,i);
 
     fprintf(fid,"       Bounds: [");
     if(NLPIsInequalityConstraintLowerBoundSet(P,I))
@@ -4038,7 +4039,7 @@ int NLPSetObjectiveGroupB(NLProblem this,int group,double b)
 int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetEqualityConstraintB";
-  int group;
+  int group=0;
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
@@ -4066,7 +4067,7 @@ int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
 int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetInequalityConstraintB";
-  int group;
+  int group=0;
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
@@ -4094,7 +4095,7 @@ int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
 int NLPSetMinMaxConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetMinMaxConstraintB";
-  int group;
+  int group=0;
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
@@ -5769,14 +5770,14 @@ int NLPGetNumberOfMinMaxConstraintGroups(NLProblem this,int constraint)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nMinMaxConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nMinMaxConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -5793,14 +5794,14 @@ int NLPGetNumberOfEqualityConstraintGroups(NLProblem this,int constraint)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nEqualityConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nEqualityConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -5817,14 +5818,14 @@ int NLPGetNumberOfInequalityConstraintGroups(NLProblem this,int constraint)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nInequalityConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nInequalityConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -6174,7 +6175,7 @@ int NLPGetInequalityConstraintNumberOfGroup(NLProblem this,int constraint,int gr
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nInequalityConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -6203,7 +6204,7 @@ int NLPGetEqualityConstraintNumberOfGroup(NLProblem this,int constraint,int grou
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nEqualityConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 
@@ -6233,7 +6234,7 @@ int NLPGetMinMaxConstraintNumberOfGroup(NLProblem this,int constraint,int group)
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nMinMaxConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 #endif
 

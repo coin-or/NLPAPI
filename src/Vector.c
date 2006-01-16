@@ -524,7 +524,7 @@ int NLVIncrementC(NLVector this,int i,double vl)
  {
   static char RoutineName[]="NLVSetC";
   int rc;
-  int j;
+  int j=0;
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLVector)NULL)
