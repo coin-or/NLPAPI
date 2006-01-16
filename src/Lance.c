@@ -3672,6 +3672,7 @@ void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *f
   for(i=0;i<*nElements;i++)
    {
     element=elementList[i]-1;
+    elementFunction=NLNEGetElementFunction(LANSOLProblem,element);
 
 /* element is a nonlinear element */
 
