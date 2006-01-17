@@ -1011,9 +1011,9 @@ double NLMatrixDoubleProductTime=0.;
 int NLMatrixDoubleProductNCalls=0;
 
 double NLDetermineSparsityTime=0.;
-int NLDetermineSparsityNCalls=0.;
+int NLDetermineSparsityNCalls=0;
 double NLSumIntoTime=0.;
-int NLSumIntoNCalls=0.;
+int NLSumIntoNCalls=0;
 
 double NLGetMinScaledDiagonal(NLMatrix this, double *M)
  {
