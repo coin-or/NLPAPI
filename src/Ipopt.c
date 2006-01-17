@@ -168,12 +168,12 @@ int IPMinimize(NLIpopt this,NLProblem P,double *x0,double *z0,double *l0,double 
   return 12;
 #else
   int i, nXorig, nMinMax, nIneq, ix;
-  F77INTEGER N,M,NLB,NUB,*pILB,*pIUB,IERR,ITER;
-  F77DOUBLEPRECISION *pBNDS_L,*pBNDS_U,*pX,*pV_L,*pV_U,*pLAM,*pC;
+  F77INTEGER N,M,NLB,NUB,*pILB=(F77INTEGER*)NULL,*pIUB=(F77INTEGER*)NULL,IERR,ITER;
+  F77DOUBLEPRECISION *pBNDS_L=(F77DOUBLEPRECISION*)NULL,*pBNDS_U=(F77DOUBLEPRECISION*)NULL,*pX,*pV_L=(F77DOUBLEPRECISION*)NULL,*pV_U=(F77DOUBLEPRECISION*)NULL,*pLAM=(F77DOUBLEPRECISION*)NULL,*pC=(F77DOUBLEPRECISION*)NULL;
   F77INTEGER *ibuffer, zero=0;
   F77DOUBLEPRECISION *dbuffer;
   double val, bl;
-  double *Slackinit;
+  double *Slackinit=(double*)NULL;
   NLVector lnx;
 
   /* Get the number of variables of the original problem (for setting starting points later...) */
