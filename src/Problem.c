@@ -9957,8 +9957,5 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
 
 int NLPtrunc(double a)
  {
-  int result;
-
-  result=floor(a);
-  return result;
+  return (int)floor(a);
  }

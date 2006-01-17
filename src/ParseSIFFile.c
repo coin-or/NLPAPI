@@ -623,8 +623,8 @@ NextLine:
     parseFields(line,code,name1,name2,&val1Set,&val1,name3,&val2Set,&val2);
     if(!val1Set)val1=findParmValue(name2);
     if(!val2Set)val2=findParmValue(name3);
-    iv1=val1;
-    iv2=val2;
+    iv1=(int)val1;
+    iv2=(int)val2;
     addDo(name1,iv1,iv2);
     if(fromfile)addToStack(line);
     setDoStart(nDos-1,cInStack);
@@ -634,7 +634,7 @@ NextLine:
    {
     parseFields(line,code,name1,name2,&val1Set,&val1,name3,&val2Set,&val2);
     if(!val1Set)val1=findParmValue(name2);
-    iv=val1;
+    iv=(int)val1;
     setDoIncr(name1,iv);
     if(fromfile)addToStack(line);
     setDoStart(nDos-1,cInStack);
@@ -1072,67 +1072,67 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
      switch(code[1])
       {
        case 'E':
-        iv=val1;
+        iv=(int)val1;
         if(verbose){printf("Code IE, set variable %s to %d\n",name1,iv);}
         setParameter(name1,iv*1.0);
         break;
        case 'R':
-        iv=val1;
-        iv=findParmValue(name2);
+        iv=(int)val1;
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("Code IR, set variable %s to %d=int(%lf)\n",name1,iv,findParmValue(name2));}
         setParameter(name1,parval);
         break;
        case 'A':
-        iv=val1+findParmValue(name2);
+        iv=(int)(val1+findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IA, set variable %s to %f=int(%lf+%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'S':
-        iv=val1-findParmValue(name2);
+        iv=(int)(val1-findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IS, set variable %s to %f=int(%lf-%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'M':
-        iv=val1*findParmValue(name2);
+        iv=(int)(val1*findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IM, set variable %s to %f=int(%lf*%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'D':
-        iv=val1/findParmValue(name2);
+        iv=(int)(val1/findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IM, set variable %s to %f=int(%lf/%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '=':
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("Code I=, set variable %s to %f=int(%lf)\n",name1,parval,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '+':
-        iv=findParmValue(name2)+findParmValue(name3);
+        iv=(int)(findParmValue(name2)+findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I+, set variable %s to %f=int(%lf+%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '-':
-        iv=findParmValue(name2)-findParmValue(name3);
+        iv=(int)(findParmValue(name2)-findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I-, set variable %s to %f=int(%lf-%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '*':
-        iv=findParmValue(name2)*findParmValue(name3);
+        iv=(int)(findParmValue(name2)*findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I*, set variable %s to %f=int(%lf*%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '/':
-        iv=findParmValue(name2)/findParmValue(name3);
+        iv=(int)(findParmValue(name2)/findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I*, set variable %s to %f=int(%lf/%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
@@ -1149,7 +1149,7 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         setParameter(name1,val1);
         break;
        case 'I':
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         setParameter(name1,parval);
         break;
@@ -1241,7 +1241,7 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
        case 'I':
         expandName(name1,tmpname1);expandName(name2,tmpname2);
         if(verbose){printf("  expanded name1=->%s<-, name2=->%s<-\n",tmpname1,tmpname2);fflush(stdout);}
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("  set %s to %f\n",tmpname1,parval);fflush(stdout);}
         setParameter(tmpname1,parval);
@@ -5183,7 +5183,7 @@ void expandName(char *in,char *out)
     while(in[i]!=0x0 && in[i]!=',' && in[i]!=')'){parm[k]=in[i];i++;k++;}
     parm[k]=0x0;
     if(verbose){printf("   next parm: -->%s<--\n",parm);fflush(stdout);}
-    iv=findParmValue(parm);
+    iv=(int)findParmValue(parm);
     if(verbose){printf("        value: %lf->%d\n",findParmValue(parm),iv);fflush(stdout);}
     sprintf(val,"%d",iv);
     if(verbose){printf("        value: -->%s<-- len %d\n",val,strlen(val));fflush(stdout);}
