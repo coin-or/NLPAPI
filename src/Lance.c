@@ -391,7 +391,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
 /* Second Line */
 
   fprintf(outsdif,"%2d",ialgor);
-  for(i=0;i<strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
+  for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
   for(i=strlen(pname);i<8;i++)fprintf(outsdif," ");
   if(DOUBLE)fprintf(outsdif,"D");
    else fprintf(outsdif," ");
@@ -400,7 +400,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
   if(verbose)
    {
     fprintf(stdout,"%2d",ialgor);
-    for(i=0;i<strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
+    for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
     for(i=strlen(pname);i<8;i++)fprintf(stdout," ");
     fprintf(stdout,"\n");
    }
@@ -1341,11 +1341,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetGroupName(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1374,20 +1374,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
        }
       sprintf(string,"X%d",i+1);
       if((c=strstr(buffer,"E"))!=(char*)NULL)c[0]='D';
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1417,20 +1417,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
         return(0);
        }
       sprintf(string,"C%d",i);
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1452,20 +1452,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
         return(0);
        }
       sprintf(string,"J%d",i);
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1484,11 +1484,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetElementType(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1505,11 +1505,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetGroupType(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1618,7 +1618,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
   if(verbose)fprintf(stdout,"\n");
 #endif
 
-  for(i=0;i<strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
+  for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
   for(i=strlen(pname);i<8;i++)fprintf(outsdif," ");
   if(NFREE>bigint)fprintf(outsdif," ");
   fprintf(outsdif,intfmt,NFREE);
@@ -1677,7 +1677,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     fprintf(stdout,"%s","NNLNIN");
 #endif
     fprintf(stdout,"\n");
-    for(i=0;i<strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
+    for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
     for(i=strlen(pname);i<8;i++)fprintf(stdout," ");
     if(NFREE>bigint)fprintf(stdout," ");
     fprintf(stdout,intfmt,NFREE);
