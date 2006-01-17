@@ -386,7 +386,7 @@ void NLFreeProblem(NLProblem this)
 
   verbose=FALSE;
 
-  if(verbose)printf("NLFreeProblem(0x%8.8x)\n",this);
+  if(verbose)printf("NLFreeProblem(0x%8.8x)\n",(int)this);
 
 #ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
