@@ -1,0 +1,18 @@
+To install NLPAPI:
+        edit share/config.site to define where LANCELOT, Ipopt and the Harwell subroutine
+           library are installed.
+
+	./configure
+	make
+
+   if you want to install the libraries, includes and binaries somewhere else, you can use something like
+
+        ./configure --prefix=/usr/local
+
+   and then
+
+        make install
+
+   will copy them there. "./configure --help" explains all this. Or just copy the things yourself.
+
+contact: mhender@us.ibm.com
