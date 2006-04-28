@@ -2,7 +2,7 @@
 
 #    Have Lancelot? Tell me the driectory in which it was installed.
 
-#with_LANCELOT="$HOME/Lancelot/VanillaLancelot"
+#with_LANCELOT="$HOME/Lancelot"
 
 #    Have IPOPT? Tell me the flags to link with IPOPT.
 #    Need to include dependencies for IPOPT (such as blas, lapack)
