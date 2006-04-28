@@ -25,9 +25,9 @@ struct ECTokenizedCode *ECTokenizeExpression(char *sourceCode)
 {
  struct ECTokenizedCode *result;
  ECState              State;
- ECConstanttype       constantType;
+ ECConstanttype       constantType=ECUnset;
  size_t               ichar;
- size_t               tokenStart;
+ size_t               tokenStart=(size_t)0;
  int                  Continue;
  int                  symbolTableId;
  int                  integerTableId;

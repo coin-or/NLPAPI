@@ -1,10 +1,17 @@
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: %W% %D% %T% */
+/*  (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 11/11/1997.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory*/
+
 /*      date:   November 11, 1997                     */
 /*              February 2, 1999   Ported to C        */
 /*              January 10, 2001   Fixed alloc. problem with Tall Thin */
 /*              September 26, 2001 Added support for declaring the degree of a variable */
 /*              October 3, 2001    Added rank one updates and differencing */
+
+/*  Please refer to the LICENSE file in the top directory*/
 
 #include <NLPAPI.h>
 #include <ExpCmp.h>
@@ -162,12 +169,14 @@ int NLEGetDimension(NLElementFunction this)
  {
   char RoutineName[]="NLEGetDimension";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nV);
  }
@@ -176,26 +185,31 @@ void NLRefElementFunction(NLElementFunction this)
  {
   char RoutineName[]="NLRefElementFunction";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs++;
+  return;
  }
 
 void NLFreeElementFunction(NLElementFunction this)
  {
   char RoutineName[]="NLFreeElementFunction";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nRefs--;
 
@@ -207,6 +221,8 @@ void NLFreeElementFunction(NLElementFunction this)
     if(this->x0!=(double*)NULL)free(this->x0);
     if(this->y!=(double*)NULL)free(this->y);
     if(this->Hs!=(double*)NULL)free(this->Hs);
+    if(this->variablePower!=(int*)NULL)free(this->variablePower);
+    if(this->R!=(NLMatrix)NULL)NLFreeMatrix(this->R);
     free(this);
    }
   return;
@@ -240,6 +256,7 @@ R,double (*F)(int,double*,void*),double (*dF)(int,int,double*,void*),double (*dd
     return (NLElementFunction)NULL;
    }
   result->nV=n;
+#ifndef NL_NOINPUTCHECKS
   if(!(n>0))
    {
     sprintf(NLEFErrorMsg,"Number of coordinates is not positive %d",n);
@@ -247,6 +264,7 @@ R,double (*F)(int,double*,void*),double (*dF)(int,int,double*,void*),double (*dd
     free(result);
     return (NLElementFunction)NULL;
    }
+#endif
   result->variablePower=(int*)malloc(n*sizeof(int));
   if(result->variablePower==(int*)NULL)
    {
@@ -298,26 +316,32 @@ double NLEEval(NLElementFunction F,int n,double *x,void *data)
   if(verbose){printf("%s, type %s\n",RoutineName,NLPGetElementType(F->P,F->type));
               printf("    f=0x%8.8x, df=0x%8.8x, ddf=0x%8.8x, data=0x%8.8x\n",F->F,F->dF,F->ddF,data);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(F==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
+#ifndef NL_NOINPUTCHECKS
   if(n!=F->nV)
    {
     sprintf(NLEFErrorMsg,"Number of arguments to Element Function (%d) is illegal (argument 2). Must be %d. Argument 1 is %8.8x",n,F->nV,F);
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
+#ifndef NL_NOINPUTCHECKS
   if(x==(double*)NULL)
    {
     sprintf(NLEFErrorMsg,"Pointer to x (argument 3) is NULL. F is %8.8x",F);
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   if(F->F!=NULL)
    {
@@ -357,6 +381,7 @@ double NLEEvalDer(NLElementFunction F,int i,int n,double *x, void *data)
     printf("    f=0x%8.8x, df=0x%8.8x, ddf=0x%8.8x\n",F->F,F->dF,F->ddF);fflush(stdout);
    }
 
+#ifndef NL_NOINPUTCHECKS
   if(F==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
@@ -381,10 +406,11 @@ double NLEEvalDer(NLElementFunction F,int i,int n,double *x, void *data)
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   if(F->F!=NULL)
    {
-    if(F->dF==(double*)NULL) /* i.e. no gradient given by user */
+    if(F->dF==(double (*)(int,int,double*,void*))NULL) /* i.e. no gradient given by user */
      {
       if(verbose){printf("  differencing\n");fflush(stdout);}
       t=x[i];
@@ -435,6 +461,7 @@ double NLEEvalSecDer(NLElementFunction F,int i,int j,int n,double *x, void *data
 
    }
 
+#ifndef NL_NOINPUTCHECKS
   if(F==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
@@ -465,6 +492,7 @@ double NLEEvalSecDer(NLElementFunction F,int i,int j,int n,double *x, void *data
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   if(F->F!=NULL)
    {
@@ -723,12 +751,14 @@ NLMatrix NLEGetRangeXForm(NLElementFunction this)
  {
   char RoutineName[]="NLEGetRangeXForm";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
-    return;
+    return (NLMatrix)NULL;
    }
+#endif
   return this->R;
  }
 
@@ -736,12 +766,14 @@ int NLEGetType(NLElementFunction this)
  {
   char RoutineName[]="NLEGetType";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
   return this->type;
  }
 
@@ -770,6 +802,7 @@ NLElementFunction NLCreateElementFunctionWithInitialHessian(NLProblem P,char *ty
     return (NLElementFunction)NULL;
    }
   result->nV=n;
+#ifndef NL_NOINPUTCHECKS
   if(!(n>0))
    {
     sprintf(NLEFErrorMsg,"Number of coordinates is not positive %d",n);
@@ -777,6 +810,7 @@ NLElementFunction NLCreateElementFunctionWithInitialHessian(NLProblem P,char *ty
     free(result);
     return (NLElementFunction)NULL;
    }
+#endif
   result->variablePower=(int*)malloc(n*sizeof(int));
   if(result->variablePower==(int*)NULL)
    {
@@ -854,12 +888,14 @@ double *NLElementFunctionGetInitialHessianMatrix(NLElementFunction this)
  {
   char RoutineName[]="NLElementFunctionGetInitialHessianMatrix";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return (double*)NULL;
    }
+#endif
 
   return this->ddF0;
  }
@@ -868,19 +904,20 @@ int NLEFAssertPolynomialOrderOfElementVariable(NLElementFunction this,int i,int 
  {
   char RoutineName[]="NLEFAssertPolynomialOrderOfElementVariable";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return 12;
    }
-
   if(i<0 || i>=this->nV)
    {
     sprintf(NLEFErrorMsg,"variable %d (argument 2) is invalid, must be in [0,%d)",i,this->nV);
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
   this->variablePower[i]=p;
   return 0;
@@ -890,6 +927,7 @@ int NLEFQueryPolynomialOrderOfElementVariable(NLElementFunction this,int i)
  {
   char RoutineName[]="NLEFQueryPolynomialOrderOfElementVariable";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLElementFunction)NULL)
    {
     sprintf(NLEFErrorMsg,"Element Function (argument 1) is NULL");
@@ -903,6 +941,7 @@ int NLEFQueryPolynomialOrderOfElementVariable(NLElementFunction this,int i)
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return NLVARIABLEDEPENDENCENOTSET;
    }
+#endif
 
   return this->variablePower[i];
  }
@@ -985,6 +1024,36 @@ R,char *vars,char *expr)
   int i,j;
   int verbose;
 
+#ifndef NL_NOINPUTCHECKS
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLEFErrorMsg,"Problem (argument 1) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return (NLElementFunction)NULL;
+   }
+
+  if(type==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"type (argument 1) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return (NLElementFunction)NULL;
+   }
+
+  if(vars==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"vars (argument 5) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return (NLElementFunction)NULL;
+   }
+
+  if(expr==(char*)NULL)
+   {
+    sprintf(NLEFErrorMsg,"expr (argument 6) is NULL");
+    NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
+    return (NLElementFunction)NULL;
+   }
+#endif
+
   verbose=0;
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
@@ -1002,6 +1071,7 @@ R,char *vars,char *expr)
     return (NLElementFunction)NULL;
    }
   result->nV=n;
+#ifndef NL_NOINPUTCHECKS
   if(!(n>0))
    {
     sprintf(NLEFErrorMsg,"Number of coordinates is not positive %d",n);
@@ -1009,6 +1079,7 @@ R,char *vars,char *expr)
     free(result);
     return (NLElementFunction)NULL;
    }
+#endif
   result->variablePower=(int*)malloc(n*sizeof(int));
   if(result->variablePower==(int*)NULL)
    {
@@ -1040,21 +1111,25 @@ R,char *vars,char *expr)
   result->sF=ECCreateFunction(vars,expr);
 
   result->expr=(char*)malloc((strlen(expr)+1)*sizeof(char));
+#ifndef NL_NOINPUTCHECKS
   if(result->expr==(char*)NULL)
    {
     sprintf(NLEFErrorMsg,"Out of memory, trying to allocate %d bytes",(strlen(expr)+1)*sizeof(char));
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return (NLElementFunction)NULL;
    }
+#endif
   strcpy(result->expr,expr);
 
   n=ECFunctionM(result->sF);
+#ifndef NL_NOINPUTCHECKS
   if(ECFunctionN(result->sF)!=1)
    {
     sprintf(NLEFErrorMsg,"String %s represents a vector valued function. Must be a scalar.",expr);
     NLSetError(12,RoutineName,NLEFErrorMsg,__LINE__,__FILE__);
     return (NLElementFunction)NULL;
    }
+#endif
 
   result->vars=(char*)malloc((strlen(vars)+1)*sizeof(char));
   if(result->vars==(char*)NULL)

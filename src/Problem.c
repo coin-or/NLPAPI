@@ -1,3 +1,9 @@
+/*
+    (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 11/11/1997.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory
+*/
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: %W% %D% %T% */
 /*      date:   November 11, 1997                     */
@@ -50,6 +56,8 @@ void NLVectorIncreaseLength(NLVector,int);
 void NLVectorDecreaseLength(NLVector,int);
 void NLPDeleteGroup(NLProblem,int);
 char *NLEGetExpr(NLElementFunction);
+
+int NLPtrunc(double);
 
 double NLPEvaluateGroup(NLProblem,int,NLVector);
 double NLPEvaluateElement(NLProblem,int,NLVector);
@@ -184,6 +192,8 @@ int NLEvaluateGroupNCalls=0;
 double NLEvaluateElementTime=0.;
 int NLEvaluateElementNCalls=0;
 
+int NLDontInitGradToZero=0;
+
 NLProblem NLCreateProblem(char *probName, int nV)
  {
   char RoutineName[]="NLCreateProblem";
@@ -195,6 +205,7 @@ NLProblem NLCreateProblem(char *probName, int nV)
 
   if(verbose){printf("%s(%s,%d)\n",RoutineName,probName,nV);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(nV<1)
    {
     sprintf(NLProblemErrorMsg,"Number of Variables %d (argument 2) must be positive",nV);
@@ -202,6 +213,7 @@ NLProblem NLCreateProblem(char *probName, int nV)
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return (NLProblem)NULL;
    }
+#endif
 
   this=(NLProblem)malloc(sizeof(struct NLGrpPart));
   if(this==(NLProblem)NULL)
@@ -224,10 +236,12 @@ NLProblem NLCreateProblem(char *probName, int nV)
      }
     strcpy(this->problemName,probName);
    }else{
+#ifndef NL_NOINPUTCHECKS
     sprintf(NLProblemErrorMsg,"Problem name (argument 1) is NULL");
     NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     if(verbose){printf("%s\n",NLProblemErrorMsg);fflush(stdout);}
     this->problemName=(char*)NULL;
+#endif
    }
 
   this->nVariables=nV;
@@ -303,6 +317,7 @@ NLProblem NLCreateProblem(char *probName, int nV)
   this->nElementTypes=0;
   this->mElementTypes=-1;
   this->elementTypeName=(char**)NULL;
+  this->elementRangeSet=(int*)NULL;
 
   this->nGroupsInObjective=0;
   this->mGroupsInObjective=-1;
@@ -371,14 +386,16 @@ void NLFreeProblem(NLProblem this)
 
   verbose=FALSE;
 
-  if(verbose)printf("NLFreeProblem()\n");
+  if(verbose)printf("NLFreeProblem(0x%8.8x)\n",(int)this);
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(verbose)printf("  delete problem name \n");
   if(this->problemName!=(char*)NULL)free(this->problemName);
@@ -397,13 +414,19 @@ void NLFreeProblem(NLProblem this)
     for(i=0;i<this->nGroups;i++)
      {
       if(verbose)printf("  delete group %d\n",i);
+      if(this->groupName!=(char**)NULL)free(this->groupName[i]);
       if(this->groupFunction!=(NLGroupFunction*)NULL && this->groupFunction[i]!=(NLGroupFunction)NULL)NLFreeGroupFunction(this->groupFunction[i]);
+      if(this->freeGroupFunctionData[i]!=(groupFunctionDataFreer)NULL
+       &&this->groupFunctionData[i]!=(void*)NULL)(this->freeGroupFunctionData[i])(this->groupFunctionData[i]);
       if(this->groupA!=(NLVector*)NULL && this->groupA[i]!=(NLVector)NULL)NLFreeVector(this->groupA[i]);
       if(this->elementWeight!=(double**)NULL&& this->elementWeight[i]!=(double*)NULL)free(this->elementWeight[i]);
       if(this->elementWeightSet!=(int**)NULL&& this->elementWeightSet[i]!=(int*)NULL)free(this->elementWeightSet[i]);
+      if(this->element[i]!=(int*)NULL)free(this->element[i]);
      }
     if(this->groupName!=(char**)NULL)free(this->groupName);
     if(this->groupFunction!=(NLGroupFunction*)NULL)free(this->groupFunction);
+    if(this->groupFunctionData!=(void**)NULL)free(this->groupFunctionData);
+    if(this->freeGroupFunctionData!=(groupFunctionDataFreer*)NULL)free(this->freeGroupFunctionData);
     if(this->groupA!=(NLVector*)NULL)free(this->groupA);
     if(this->groupB!=(double*)NULL)free(this->groupB);
     if(this->groupBSet!=(int*)NULL)free(this->groupBSet);
@@ -455,6 +478,7 @@ void NLFreeProblem(NLProblem this)
     if(verbose)printf("  delete element label list %d\n",i);
     if(this->elementTypeName!=(char**)NULL)free(this->elementTypeName);
    }
+  if(this->elementRangeSet!=(int*)NULL)free(this->elementRangeSet);
 
   if(verbose)printf("  delete Objective Lists\n");
   if(this->groupsInObjective!=(int*)NULL)free(this->groupsInObjective);
@@ -486,6 +510,7 @@ void NLFreeProblem(NLProblem this)
   if(this->inequalityConstraintLowerBound!=(double*)NULL)free(this->inequalityConstraintLowerBound);
   if(this->inequalityConstraintUpperBound!=(double*)NULL)free(this->inequalityConstraintUpperBound);
 
+  free(this);
   if(verbose)printf("done NLFreeProblem()\n");
   return;
  }
@@ -512,12 +537,14 @@ int NLPAddGroup(NLProblem this,char *name)
   double *tmpgroupGradient;
   double *tmpgroupHessian;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(this->nGroups>=this->mGroups)
    {
@@ -649,6 +676,8 @@ int NLPAddGroup(NLProblem this,char *name)
        {
         this->groupName[i]=(char*)NULL;
         this->groupFunction[i]=(NLGroupFunction)NULL;
+        this->groupFunctionData[i]=(void*)NULL;
+        this->freeGroupFunctionData[i]=(groupFunctionDataFreer)NULL;
         this->groupA[i]=(NLVector)NULL;
         this->groupB[i]=0.;
         this->groupBSet[i]=FALSE;
@@ -862,6 +891,7 @@ int NLPAddGroup(NLProblem this,char *name)
      }
    }
 
+#ifndef NL_NOINPUTCHECKS
   for(i=0;i<this->nGroups;i++)
    {
     if(!strcmp(this->groupName[i],name))
@@ -870,6 +900,7 @@ int NLPAddGroup(NLProblem this,char *name)
       NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
      }
    }
+#endif
 
   if(name!=(char*)NULL)
    {
@@ -912,12 +943,14 @@ int NLPAddGroupToObjective(NLProblem this,char *name)
   int i;
   int *tmpgroupsInObjective;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
   if(this->nGroupsInObjective>=this->mGroupsInObjective)
    {
     if(this->mGroupsInObjective==-1)
@@ -958,12 +991,14 @@ int NLPAddNonlinearEqualityConstraint(NLProblem this, char *name)
   int i;
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendIndirectArrays(&(this->nEqualityConstraints),
                                      &(this->mEqualityConstraints),
@@ -995,12 +1030,14 @@ int NLPAddNonlinearInequalityConstraint(NLProblem this, char *name)
   int i;
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendIndirectArrays(&(this->nInequalityConstraints),
                                      &(this->mInequalityConstraints),
@@ -1039,24 +1076,28 @@ int NLPSetGroupFunctionParm(NLProblem this,int group,NLGroupFunction g, void *da
   char RoutineName[]="NLPSetGroupFunction";
   int verbose=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(verbose)
    {
     printf("NLPSetGroupFunction(%d)\n",group);
     printf(" this->groupFunction = %d\n",this->groupFunction);
    }
+#ifndef NL_NOINPUTCHECKS
   if(!(group>-1&&group<this->nGroups))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroups-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefGroupFunction(g);
   if(this->groupFunction[group]!=(NLGroupFunction)NULL)NLFreeGroupFunction(this->groupFunction[group]);
@@ -1072,6 +1113,7 @@ int NLPSetGroupFunctionParm(NLProblem this,int group,NLGroupFunction g, void *da
 int NLPSetGroupA(NLProblem this,int group,NLVector a)
  {
   char RoutineName[]="NLPSetGroupA";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1085,6 +1127,7 @@ int NLPSetGroupA(NLProblem this,int group,NLVector a)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefVector(a);
   if(this->groupA[group]!=(NLVector)NULL)NLFreeVector(this->groupA[group]);
@@ -1096,6 +1139,7 @@ int NLPSetGroupA(NLProblem this,int group,NLVector a)
 int NLPSetGroupB(NLProblem this,int group,double b)
  {
   char RoutineName[]="NLPSetGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1109,6 +1153,7 @@ int NLPSetGroupB(NLProblem this,int group,double b)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->groupB[group]=b;
   this->groupBSet[group]=TRUE;
@@ -1125,6 +1170,9 @@ int NLPAddNonlinearElementToGroup(NLProblem this,int group,double weight,NLNonli
   int *tmpelementWeightSet;
   int *tmpelement;
 
+  verbose=FALSE;
+
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1132,14 +1180,13 @@ int NLPAddNonlinearElementToGroup(NLProblem this,int group,double weight,NLNonli
     return 0;
    }
 
-  verbose=FALSE;
-
   if(!(group>-1&&group<this->nGroups))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroups-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(verbose)printf("addNonlinearElementToGroup, next element is %d and there is space for %d\n",this->nElementsInGroup[group],this->mElementsInGroup[group]);
 
@@ -1226,7 +1273,6 @@ int NLPAddNonlinearElementToGroup(NLProblem this,int group,double weight,NLNonli
   (this->elementWeight[group])[this->nElementsInGroup[group]]=weight;
   (this->elementWeightSet[group])[this->nElementsInGroup[group]]=TRUE;
   (this->element[group])[this->nElementsInGroup[group]]=E;
-  NLRefNonlinearElement(this->nonlinearElement[E]);
 
   this->nElementsInGroup[group]++;
   if(verbose)printf(" done addNonlinearElementToGroup\n");
@@ -1236,6 +1282,7 @@ int NLPAddNonlinearElementToGroup(NLProblem this,int group,double weight,NLNonli
 int NLPSetLowerSimpleBound(NLProblem this,int variable,double l)
  {
   char RoutineName[]="NLPSetLowerSimpleBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1249,6 +1296,7 @@ int NLPSetLowerSimpleBound(NLProblem this,int variable,double l)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->simpleConstraintLowerBound[variable]=l; 
   if(0&&l>-DBL_MAX){printf("Set Lower Bound on variable %d to %lf\n",variable,l);fflush(stdout);}
@@ -1258,6 +1306,7 @@ int NLPSetLowerSimpleBound(NLProblem this,int variable,double l)
 int NLPSetUpperSimpleBound(NLProblem this,int variable,double r)
  {
   char RoutineName[]="NLPSetUpperSimpleBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1271,6 +1320,7 @@ int NLPSetUpperSimpleBound(NLProblem this,int variable,double r)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->simpleConstraintUpperBound[variable]=r; 
   if(0&&r<DBL_MAX)printf("Set Upper Bound on variable %d to %lf\n",variable,r);fflush(stdout);
@@ -1280,6 +1330,7 @@ int NLPSetUpperSimpleBound(NLProblem this,int variable,double r)
 int NLPSetSimpleBounds(NLProblem this,int variable,double l,double r)
  {
   char RoutineName[]="NLPSetSimpleBounds";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1293,6 +1344,7 @@ int NLPSetSimpleBounds(NLProblem this,int variable,double l,double r)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->simpleConstraintLowerBound[variable]=l; 
   this->simpleConstraintUpperBound[variable]=r; 
@@ -1330,12 +1382,14 @@ int NLPUnSetSimpleBounds(NLProblem this,int variable)
 int NLPGetNumberOfGroups(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfGroups";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nGroups);
  }
@@ -1343,12 +1397,14 @@ int NLPGetNumberOfGroups(NLProblem this)
 int NLPGetNumberOfGroupTypes(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfGroupTypes";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nGroupTypes);
  }
@@ -1356,6 +1412,7 @@ int NLPGetNumberOfGroupTypes(NLProblem this)
 char *NLPGetGroupType(NLProblem this,int type)
  {
   char RoutineName[]="NLPGetGroupType";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1369,6 +1426,7 @@ char *NLPGetGroupType(NLProblem this,int type)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return((char*)NULL);
    }
+#endif
 
   return(this->groupTypeName[type]);
  }
@@ -1376,6 +1434,7 @@ char *NLPGetGroupType(NLProblem this,int type)
 char *NLPGetGroupTypeName(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetGroupTypeName";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1389,6 +1448,7 @@ char *NLPGetGroupTypeName(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->groupTypeName[NLGGetType(this->groupFunction[group])]);
  }
@@ -1396,6 +1456,7 @@ char *NLPGetGroupTypeName(NLProblem this,int group)
 int NLPGetTypeOfGroup(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetTypeOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1409,6 +1470,7 @@ int NLPGetTypeOfGroup(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(this->groupFunction[group]!=(NLGroupFunction)NULL)
     return(NLGGetType(this->groupFunction[group]));
@@ -1419,6 +1481,7 @@ int NLPGetTypeOfGroup(NLProblem this,int group)
 int NLPGetNumberOfElementsInGroup(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetNumberOfElementsInGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1432,6 +1495,7 @@ int NLPGetNumberOfElementsInGroup(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nElementsInGroup[group]);
  }
@@ -1439,6 +1503,7 @@ int NLPGetNumberOfElementsInGroup(NLProblem this,int group)
 double NLPGetElementWeight(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPGetElementWeight";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1458,6 +1523,7 @@ double NLPGetElementWeight(NLProblem this,int group,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return((this->elementWeight[group])[element]);
  }
@@ -1465,6 +1531,7 @@ double NLPGetElementWeight(NLProblem this,int group,int element)
 NLElementFunction NLPGetElementFunctionOfGroup(NLProblem this,int group, int element)
  {
   char RoutineName[]="NLPGetElementFunctionOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1484,6 +1551,7 @@ NLElementFunction NLPGetElementFunctionOfGroup(NLProblem this,int group, int ele
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLElementFunction)NULL;
    }
+#endif
 
   return(NLNEGetElementFunction(this,(this->element[group])[element]));
  }
@@ -1493,6 +1561,7 @@ NLElementFunction NLPGetElementFunction(NLProblem this,int element)
   char RoutineName[]="NLPGetElementFunction";
   int group,n,m,telement;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1506,6 +1575,7 @@ NLElementFunction NLPGetElementFunction(NLProblem this,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLElementFunction)NULL;
    }
+#endif
 
 /* element is an element number, while xfrm is indexed on element type. */
 
@@ -1529,23 +1599,25 @@ NLGroupFunction NLPGetGroupFunction(NLProblem this,int group)
   char RoutineName[]="NLPGetGroupFunction";
   int verbose=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLGroupFunction)NULL;
    }
-
-  if(verbose)
-   {
-    printf("NLPGetGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %8.8x\n",this->groupFunction);
-   }
   if(!(group>-1&&group<this->nGroups))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroups-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLGroupFunction)NULL;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPGetGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %8.8x\n",this->groupFunction);
    }
 
   return(this->groupFunction[group]);
@@ -1554,6 +1626,7 @@ NLGroupFunction NLPGetGroupFunction(NLProblem this,int group)
 NLVector NLPGetGroupA(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetGroupA";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1567,6 +1640,7 @@ NLVector NLPGetGroupA(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLVector)NULL;
    }
+#endif
 
   return(this->groupA[group]);
  }
@@ -1574,6 +1648,7 @@ NLVector NLPGetGroupA(NLProblem this,int group)
 double NLPGetGroupB(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1587,6 +1662,7 @@ double NLPGetGroupB(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(this->groupB[group]);
  }
@@ -1597,12 +1673,14 @@ int NLPGetNumberOfElements(NLProblem this)
   int result;
   int i,n;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   result=0;
   n=NLPGetNumberOfGroups(this);
@@ -1617,12 +1695,14 @@ int NLPGetNumberOfElementsO(NLProblem this)
   int result;
   int i,n;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   result=0;
   n=NLPGetNumberOfGroupsInObjective(this);
@@ -1634,6 +1714,7 @@ int NLPGetNumberOfElementsO(NLProblem this)
 int NLPGetObjectiveGroupNumber(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetObjectiveGroupNumber";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1647,6 +1728,7 @@ int NLPGetObjectiveGroupNumber(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
   return(this->groupsInObjective[group]);
  }
 
@@ -1655,12 +1737,14 @@ int NLPGetNumberOfElementsE(NLProblem this)
   char RoutineName[]="NLPGetNumberOfElementsE";
   int i,result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   result=0;
   for(i=0;i<NLPGetNumberOfEqualityConstraints(this);i++)
@@ -1674,12 +1758,14 @@ int NLPGetNumberOfElementsI(NLProblem this)
   char RoutineName[]="NLPGetNumberOfElementsI";
   int i,result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   result=0;
   for(i=0;i<NLPGetNumberOfInequalityConstraints(this);i++)
@@ -1691,12 +1777,14 @@ int NLPGetNumberOfElementsI(NLProblem this)
 int NLPGetNumberOfElementTypes(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfElementType2";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nElementTypes);
  }
@@ -1704,6 +1792,7 @@ int NLPGetNumberOfElementTypes(NLProblem this)
 char *NLPGetElementType(NLProblem this,int element)
  {
   char RoutineName[]="NLPGetElementType";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1717,6 +1806,7 @@ char *NLPGetElementType(NLProblem this,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->elementTypeName[element]);
  }
@@ -1725,6 +1815,7 @@ char *NLPGetElementTypeName(NLProblem this,int group, int element)
  {
   char RoutineName[]="NLPGetElementTypeName";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1744,6 +1835,7 @@ char *NLPGetElementTypeName(NLProblem this,int group, int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->elementTypeName[NLEGetType(NLNEGetElementFunction(this,(this->element[group])[element]))]);
  }
@@ -1751,6 +1843,7 @@ char *NLPGetElementTypeName(NLProblem this,int group, int element)
 int NLPGetTypeOfElement(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPGetTypeOfElement";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1770,6 +1863,7 @@ int NLPGetTypeOfElement(NLProblem this,int group,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return NLEGetType(NLNEGetElementFunction(this,(this->element[group])[element]));
  }
@@ -1777,6 +1871,7 @@ int NLPGetTypeOfElement(NLProblem this,int group,int element)
 int NLPGetElementNumberOfUnknowns(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPGetElementNumberOfUnknowns";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1796,6 +1891,7 @@ int NLPGetElementNumberOfUnknowns(NLProblem this,int group,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(NLNEGetElementDimension(this,(this->element[group])[element]));
  }
@@ -1803,6 +1899,7 @@ int NLPGetElementNumberOfUnknowns(NLProblem this,int group,int element)
 int NLPGetElementIndexIntoWhole(NLProblem this,int group,int element, int i)
  {
   char RoutineName[]="NLPGetElementIndexIntoWhole";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1828,6 +1925,7 @@ int NLPGetElementIndexIntoWhole(NLProblem this,int group,int element, int i)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(NLNEGetIndex(this,(this->element[group])[element],i));
  }
@@ -1835,12 +1933,14 @@ int NLPGetElementIndexIntoWhole(NLProblem this,int group,int element, int i)
 int NLPGetNumberOfGroupsInObjective(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfGroupsInObjective";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->nGroupsInObjective);
  }
@@ -1848,12 +1948,14 @@ int NLPGetNumberOfGroupsInObjective(NLProblem this)
 int NLPGetNumberOfEqualityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfEqualityConstraints";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(!this->hideEqualityConstraints)return(this->nEqualityConstraints);
    else return 0;
@@ -1862,12 +1964,14 @@ int NLPGetNumberOfEqualityConstraints(NLProblem this)
 int NLPGetNumberOfInequalityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfInequalityConstraints";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(!this->hideInequalityConstraints)return(this->nInequalityConstraints);
    else return 0;
@@ -1876,6 +1980,7 @@ int NLPGetNumberOfInequalityConstraints(NLProblem this)
 double NLPGetLowerSimpleBound(NLProblem this,int variable)
  {
   char RoutineName[]="NLPGetLowerSimpleBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1889,12 +1994,14 @@ double NLPGetLowerSimpleBound(NLProblem this,int variable)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
   return(this->simpleConstraintLowerBound[variable]); 
  }
 
 double NLPGetUpperSimpleBound(NLProblem this,int variable)
  {
   char RoutineName[]="NLPGetUpperSimpleBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1908,12 +2015,14 @@ double NLPGetUpperSimpleBound(NLProblem this,int variable)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
   return(this->simpleConstraintUpperBound[variable]); 
  }
 
 int NLPSetInequalityConstraintLowerBound(NLProblem this,int constraint,double l)
  {
   char RoutineName[]="NLPSetInequalityConstraintLowerBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1927,6 +2036,7 @@ int NLPSetInequalityConstraintLowerBound(NLProblem this,int constraint,double l)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
   this->inequalityConstraintLowerBound[constraint]=l; 
   return 1;
  }
@@ -1934,6 +2044,7 @@ int NLPSetInequalityConstraintLowerBound(NLProblem this,int constraint,double l)
 int NLPSetInequalityConstraintUpperBound(NLProblem this,int constraint,double u)
  {
   char RoutineName[]="NLPSetInequalityConstraintUpperBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1947,6 +2058,7 @@ int NLPSetInequalityConstraintUpperBound(NLProblem this,int constraint,double u)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
   this->inequalityConstraintUpperBound[constraint]=u; 
   return 1;
  }
@@ -1954,6 +2066,7 @@ int NLPSetInequalityConstraintUpperBound(NLProblem this,int constraint,double u)
 int NLPSetInequalityConstraintBounds(NLProblem this,int constraint,double l,double u)
  {
   char RoutineName[]="NLPSetInequalityConstraintBounds";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1967,6 +2080,7 @@ int NLPSetInequalityConstraintBounds(NLProblem this,int constraint,double l,doub
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
   this->inequalityConstraintLowerBound[constraint]=l; 
   this->inequalityConstraintUpperBound[constraint]=u; 
   return 1;
@@ -1975,6 +2089,7 @@ int NLPSetInequalityConstraintBounds(NLProblem this,int constraint,double l,doub
 double NLPGetInequalityConstraintLowerBound(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetInequalityConstraintLowerBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -1988,12 +2103,14 @@ double NLPGetInequalityConstraintLowerBound(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
   return(this->inequalityConstraintLowerBound[constraint]); 
  }
 
 double NLPGetInequalityConstraintUpperBound(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetInequalityConstraintUpperBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2007,12 +2124,14 @@ double NLPGetInequalityConstraintUpperBound(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
   return(this->inequalityConstraintUpperBound[constraint]); 
  }
 
 int NLPGetInequalityConstraintGroupNumber(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetInequalityConstraintGroupNumber";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2026,6 +2145,7 @@ int NLPGetInequalityConstraintGroupNumber(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return((this->inequalityConstraintGroups[constraint])[0]);
  }
@@ -2033,6 +2153,7 @@ int NLPGetInequalityConstraintGroupNumber(NLProblem this,int constraint)
 int NLPGetEqualityConstraintGroupNumber(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetEqualityConstraintGroupNumber";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2046,6 +2167,7 @@ int NLPGetEqualityConstraintGroupNumber(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return((this->equalityConstraintGroups[constraint])[0]);
  }
@@ -2053,12 +2175,14 @@ int NLPGetEqualityConstraintGroupNumber(NLProblem this,int constraint)
 char *NLPGetProblemName(NLProblem this)
  {
   char RoutineName[]="NLPGetProblemName";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->problemName);
  }
@@ -2066,12 +2190,14 @@ char *NLPGetProblemName(NLProblem this)
 int NLPGetNumberOfVariables(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfVariables";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 1;
    }
+#endif
 
   return(this->nVariables);
  }
@@ -2085,12 +2211,14 @@ int NLPAddGroupType(NLProblem this,char *label)
 
   if(verbose){printf("%s(%s)\n",RoutineName,label);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(label==(char*)NULL)return(-1);
 
@@ -2150,12 +2278,14 @@ int NLPAddElementType(NLProblem this,char *label,int rangeSet)
   char **tmpelementTypeName;
   int *tmpelementRangeSet;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(label==(char*)NULL)return(-1);
 
@@ -2236,6 +2366,7 @@ int NLPAddElementType(NLProblem this,char *label,int rangeSet)
 int NLPSetVariableScale(NLProblem this,int i,double scale)
  {
   char RoutineName[]="NLPSetVariableScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2249,6 +2380,7 @@ int NLPSetVariableScale(NLProblem this,int i,double scale)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->variableScale[i]=scale;
 
@@ -2258,6 +2390,7 @@ int NLPSetVariableScale(NLProblem this,int i,double scale)
 double NLPGetVariableScale(NLProblem this,int i)
  {
   char RoutineName[]="NLPGetVariableScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2271,6 +2404,7 @@ double NLPGetVariableScale(NLProblem this,int i)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(this->variableScale[i]);
  }
@@ -2278,6 +2412,7 @@ double NLPGetVariableScale(NLProblem this,int i)
 int NLPSetVariableName(NLProblem this,int i,char *name)
  {
   char RoutineName[]="NLPSetVariableName";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2297,6 +2432,7 @@ int NLPSetVariableName(NLProblem this,int i,char *name)
     NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(this->variableName[i]!=(char*)NULL)free(this->variableName[i]);
   this->variableName[i]=(char*)malloc(sizeof(char)*(strlen(name)+1));
@@ -2313,6 +2449,7 @@ int NLPSetVariableName(NLProblem this,int i,char *name)
 char *NLPGetVariableName(NLProblem this,int i)
  {
   char RoutineName[]="NLPGetVariableName";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2326,6 +2463,7 @@ char *NLPGetVariableName(NLProblem this,int i)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->variableName[i]);
  }
@@ -2335,12 +2473,14 @@ char *NLPGetVariableName(NLProblem this,int i)
 int NLPSetObjectiveLowerBound(NLProblem this,double l)
  {
   char RoutineName[]="NLPSetObjectiveLowerBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->lowerBoundOnObjective=l;
   return 1;
@@ -2350,12 +2490,14 @@ int NLPSetObjectiveLowerBound(NLProblem this,double l)
 double NLPGetObjectiveLowerBound(NLProblem this)
  {
   char RoutineName[]="NLPGetObjectiveLowerBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(this->lowerBoundOnObjective);
  }
@@ -2365,12 +2507,14 @@ double NLPGetObjectiveLowerBound(NLProblem this)
 int NLPSetObjectiveUpperBound(NLProblem this,double r)
  {
   char RoutineName[]="NLPSetObjectiveUpperBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->upperBoundOnObjective=r;
 
@@ -2381,12 +2525,14 @@ int NLPSetObjectiveUpperBound(NLProblem this,double r)
 double NLPGetObjectiveUpperBound(NLProblem this)
  {
   char RoutineName[]="NLPGetObjectiveUpperBound";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(this->upperBoundOnObjective);
  }
@@ -2396,12 +2542,14 @@ double NLPGetObjectiveUpperBound(NLProblem this)
 int NLPSetObjectiveBounds(NLProblem this,double l,double r)
  {
   char RoutineName[]="NLPSetObjectiveBounds";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->lowerBoundOnObjective=l;
   this->upperBoundOnObjective=r;
@@ -2413,6 +2561,7 @@ int NLPSetObjectiveBounds(NLProblem this,double l,double r)
 int NLPSetGroupScale(NLProblem this,int group,double s)
  {
   char RoutineName[]="NLPSetGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2426,6 +2575,7 @@ int NLPSetGroupScale(NLProblem this,int group,double s)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->groupScale[group]=1./s;
   return 1;
@@ -2434,6 +2584,7 @@ int NLPSetGroupScale(NLProblem this,int group,double s)
 double NLPGetGroupScale(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2447,6 +2598,7 @@ double NLPGetGroupScale(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(1./this->groupScale[group]);
  }
@@ -2454,6 +2606,7 @@ double NLPGetGroupScale(NLProblem this,int group)
 int NLPIsGroupFunctionSet(NLProblem this,int group)
  {
   char RoutineName[]="NLPIsGroupFunctionSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2467,6 +2620,7 @@ int NLPIsGroupFunctionSet(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->groupFunction[group]!=(NLGroupFunction)NULL);
  }
@@ -2474,6 +2628,7 @@ int NLPIsGroupFunctionSet(NLProblem this,int group)
 int NLPIsGroupASet(NLProblem this,int group)
  {
   char RoutineName[]="NLPIsGroupASet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2487,6 +2642,7 @@ int NLPIsGroupASet(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->groupA[group]!=(NLVector)NULL);
  }
@@ -2494,6 +2650,7 @@ int NLPIsGroupASet(NLProblem this,int group)
 int NLPIsGroupBSet(NLProblem this,int group)
  {
   char RoutineName[]="NLPIsGroupBSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2507,6 +2664,7 @@ int NLPIsGroupBSet(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->groupBSet[group]);
  }
@@ -2514,6 +2672,7 @@ int NLPIsGroupBSet(NLProblem this,int group)
 int NLPIsElementFunctionSet(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPIsElementFunctionSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2533,6 +2692,7 @@ int NLPIsElementFunctionSet(NLProblem this,int group,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(NLNEGetElementFunction(this,(this->element[group])[element])!=(NLElementFunction)NULL);
  }
@@ -2540,6 +2700,7 @@ int NLPIsElementFunctionSet(NLProblem this,int group,int element)
 int NLPIsElementWeightSet(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPIsElementWeightSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2559,6 +2720,7 @@ int NLPIsElementWeightSet(NLProblem this,int group,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return((this->elementWeightSet[group])[element]);
  }
@@ -2566,6 +2728,7 @@ int NLPIsElementWeightSet(NLProblem this,int group,int element)
 int NLPIsUpperSimpleBoundSet(NLProblem this,int i)
  {
   char RoutineName[]="NLPIsUpperSimpleBoundSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2579,6 +2742,7 @@ int NLPIsUpperSimpleBoundSet(NLProblem this,int i)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->simpleConstraintUpperBound[i]!=DBL_MAX);
  }
@@ -2586,6 +2750,7 @@ int NLPIsUpperSimpleBoundSet(NLProblem this,int i)
 int NLPIsLowerSimpleBoundSet(NLProblem this,int i)
  {
   char RoutineName[]="NLPIsLowerSimpleBoundSet";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2599,6 +2764,7 @@ int NLPIsLowerSimpleBoundSet(NLProblem this,int i)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return(this->simpleConstraintLowerBound[i]!=-DBL_MAX);
  }
@@ -2607,6 +2773,7 @@ int NLPSetElementWeight(NLProblem this,int group,int element,double w)
  {
   char RoutineName[]="NLPSetElementWeight";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2626,6 +2793,7 @@ int NLPSetElementWeight(NLProblem this,int group,int element,double w)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   (this->elementWeight[group])[element]=w;
   (this->elementWeightSet[group])[element]=TRUE;
@@ -2636,6 +2804,7 @@ int NLPSetElementWeight(NLProblem this,int group,int element,double w)
 char *NLPGetGroupName(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetGroupName";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2649,6 +2818,7 @@ char *NLPGetGroupName(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (char*)NULL;
    }
+#endif
 
   return(this->groupName[group]);
  }
@@ -2659,6 +2829,7 @@ void NLPrintProblem(FILE *fid,NLProblem P)
   int i,I,j,J,k;
   double s;
 
+#ifndef NL_NOINPUTCHECKS
   if(fid==(FILE*)NULL)
    {
     sprintf(NLProblemErrorMsg,"File pointer (argument 1) is NULL");
@@ -2671,6 +2842,7 @@ void NLPrintProblem(FILE *fid,NLProblem P)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   fprintf(fid,"NAGroupPartialSeparableNonlinearOptimizationProblem %s\n",NLPGetProblemName(P));
   fprintf(fid,"\nVariables: %d\n\n",NLPGetNumberOfVariables(P));
@@ -2736,9 +2908,10 @@ void NLPrintProblem(FILE *fid,NLProblem P)
       i=NLPGetInequalityConstraintNumberOfGroup(P,I,J);
       fprintf(fid,"   Group: %d number %d\n",J,i);
       NLPrintGroup(fid,P,i);
-      s=1./NLPGetGroupScale(P,i);
       fprintf(fid,"\n");
      }
+    i=NLPGetInequalityConstraintNumberOfGroup(P,I,0); /* In LANCELOT only one group in constraint */
+    s=1./NLPGetGroupScale(P,i);
 
     fprintf(fid,"       Bounds: [");
     if(NLPIsInequalityConstraintLowerBoundSet(P,I))
@@ -2820,6 +2993,7 @@ NLMatrix NLPGetElementRangeTransformationOfGroup(NLProblem this,int group,int el
   char RoutineName[]="NLPGetElementRangeTransformationOfGroup";
   int i,n;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2838,6 +3012,7 @@ NLMatrix NLPGetElementRangeTransformationOfGroup(NLProblem this,int group,int el
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return NNLEGetRangeXForm(this,(this->element[group])[element]);
  }
@@ -2847,6 +3022,7 @@ NLMatrix NLPGetElementRangeTransformation(NLProblem this,int element)
   char RoutineName[]="NLPGetElementRangeTransformation";
   int group,n;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2860,6 +3036,7 @@ NLMatrix NLPGetElementRangeTransformation(NLProblem this,int element)
     NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLMatrix)NULL;
    }
+#endif
 
   return NNLEGetRangeXForm(this,element);
  }
@@ -2867,6 +3044,7 @@ NLMatrix NLPGetElementRangeTransformation(NLProblem this,int element)
 int NLPGetNumberOfInternalVariablesInElement(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPGetNumberOfInternalVariablesInElement";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -2886,6 +3064,7 @@ int NLPGetNumberOfInternalVariablesInElement(NLProblem this,int group,int elemen
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return NLNEGetInternalDimension(this,(this->element[group])[element]);
  }
@@ -2908,12 +3087,14 @@ int NLAddGroup(NLProblem this,char *name,char *type)
   int **tmpelement;
   int **tmpelementType;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(this->nGroups>=this->mGroups)
    {
@@ -3169,12 +3350,14 @@ int NLPAddMinMaxConstraint(NLProblem this,char *name)
   int i;
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendIndirectArrays(&(this->nMinMaxConstraints),
                                      &(this->mMinMaxConstraints),
@@ -3203,12 +3386,14 @@ int NLPAddMinMaxConstraint(NLProblem this,char *name)
 int NLPGetNumberOfMinMaxConstraints(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfMinMaxConstraints";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(!this->hideMinMaxConstraints)return(this->nMinMaxConstraints);
    else return 0;
@@ -3217,6 +3402,7 @@ int NLPGetNumberOfMinMaxConstraints(NLProblem this)
 int NLPGetMinMaxConstraintGroupNumber(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetMinMaxConstraintGroupNumber";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3230,6 +3416,7 @@ int NLPGetMinMaxConstraintGroupNumber(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return((this->minMaxConstraintGroups[constraint])[0]);
  }
@@ -3239,12 +3426,14 @@ int NLPGetNumberOfElementsM(NLProblem this)
   char RoutineName[]="NLPGetNumberOfElementsM";
   int i,result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   result=0;
   for(i=0;i<NLPGetNumberOfMinMaxConstraints(this);i++)
@@ -3257,12 +3446,14 @@ int NLPSetMinMaxBounds(NLProblem this,double l,double r)
  {
   char RoutineName[]="NLPSetMinMaxBounds";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->lowerBoundOnMinMaxVar=l;
   this->upperBoundOnMinMaxVar=r;
@@ -3273,12 +3464,14 @@ int NLPSetLowerMinMaxBound(NLProblem this,double l)
  {
   char RoutineName[]="NLPSetLowerMinMaxBound";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->lowerBoundOnMinMaxVar=l;
   return 1;
@@ -3288,12 +3481,14 @@ double NLPGetLowerMinMaxBound(NLProblem this)
  {
   char RoutineName[]="NLPGetLowerMinMaxBound";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->lowerBoundOnMinMaxVar;
  }
@@ -3302,12 +3497,14 @@ int NLPSetUpperMinMaxBound(NLProblem this,double r)
  {
   char RoutineName[]="NLPSetUpperMinMaxBound";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->upperBoundOnMinMaxVar=r;
   return 1;
@@ -3317,12 +3514,14 @@ double NLPGetUpperMinMaxBound(NLProblem this)
  {
   char RoutineName[]="NLPGetUpperMinMaxBound";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->upperBoundOnMinMaxVar;
  }
@@ -3331,12 +3530,14 @@ int NLPGetNumberOfNonlinearElements(NLProblem this)
  {
   char RoutineName[]="NLPGetNumberOfNonlinearElements";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->nNonlinearElements;
  }
@@ -3345,12 +3546,14 @@ NLNonlinearElementPtr NLPGetNonlinearElement(NLProblem this,int e)
  {
   char RoutineName[]="NLPGetNonlinearElement";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->nonlinearElement[e];
  }
@@ -3358,13 +3561,16 @@ NLNonlinearElementPtr NLPGetNonlinearElement(NLProblem this,int e)
 int NLPAddNonlinearElement(NLProblem this,NLNonlinearElementPtr E)
  {
   char RoutineName[]="NLPAddNonlinearElement";
+  int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(this->nNonlinearElements>=this->mNonlinearElements)
    {
@@ -3430,6 +3636,17 @@ int NLPAddNonlinearElement(NLProblem this,NLNonlinearElementPtr E)
       NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
       printf("%s",NLProblemErrorMsg);fflush(stdout);
       return -1;
+     }
+
+    for(i=this->nNonlinearElements;i<this->mNonlinearElements;i++)
+     {
+      this->nonlinearElement[i]=(NLNonlinearElementPtr)NULL;
+      this->elementCached[i]=0;
+      this->internalVariables[i]=(double*)NULL;
+      this->elementVariables[i]=(double*)NULL;
+      this->elementValue[i]=0.;
+      this->elementGradient[i]=(double*)NULL;
+      this->elementHessian[i]=(double*)NULL;
      }
 
    }
@@ -3541,6 +3758,7 @@ void NLPrintNonlinearElement(FILE *fid,NLProblem P,NLNonlinearElement i)
 NLNonlinearElementPtr NLPGetNonlinearElementPtrOfGroup(NLProblem this,int group, int element)
  {
   char RoutineName[]="NLPGetNonlinearElementPtrOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3560,6 +3778,7 @@ NLNonlinearElementPtr NLPGetNonlinearElementPtrOfGroup(NLProblem this,int group,
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLNonlinearElementPtr)NULL;
    }
+#endif
 
   return(NLPGetNonlinearElement(this,(this->element[group])[element]));
  }
@@ -3567,6 +3786,7 @@ NLNonlinearElementPtr NLPGetNonlinearElementPtrOfGroup(NLProblem this,int group,
 NLNonlinearElement NLPGetNonlinearElementOfGroup(NLProblem this,int group, int element)
  {
   char RoutineName[]="NLPGetNonlinearElementOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3586,6 +3806,7 @@ NLNonlinearElement NLPGetNonlinearElementOfGroup(NLProblem this,int group, int e
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   return((this->element[group])[element]);
  }
@@ -3593,6 +3814,7 @@ NLNonlinearElement NLPGetNonlinearElementOfGroup(NLProblem this,int group, int e
 NLNonlinearElement NLPGetGroupNonlinearElement(NLProblem this,int group,int element)
  {
   char RoutineName[]="NLPGetGroupNonlinearElement";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3612,6 +3834,7 @@ NLNonlinearElement NLPGetGroupNonlinearElement(NLProblem this,int group,int elem
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return((this->element[group])[element]);
  }
@@ -3620,6 +3843,7 @@ int NLPIsElementRangeSet(NLProblem this,int element)
  {
   char RoutineName[]="NLPIsElementRangeSet";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3633,6 +3857,7 @@ int NLPIsElementRangeSet(NLProblem this,int element)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return(this->elementRangeSet[element]);
  }
@@ -3642,12 +3867,14 @@ int NLPSetObjectiveGroupFunction(NLProblem this,int group,NLGroupFunction g)
   char RoutineName[]="NLPSetObjectiveGroupFunction";
   int verbose=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   if(verbose)
    {
@@ -3672,6 +3899,7 @@ int NLPSetObjectiveGroupFunction(NLProblem this,int group,NLGroupFunction g)
 int NLPSetObjectiveGroupA(NLProblem this,int group,NLVector a)
  {
   char RoutineName[]="NLPSetObjectiveGroupA";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3685,6 +3913,7 @@ int NLPSetObjectiveGroupA(NLProblem this,int group,NLVector a)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefVector(a);
   group=NLPGetObjectiveGroupNumber(this,group);
@@ -3699,6 +3928,7 @@ int NLPSetEqualityConstraintA(NLProblem this,int constraint,NLVector a)
   char RoutineName[]="NLPSetEqualityConstraint";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3712,6 +3942,7 @@ int NLPSetEqualityConstraintA(NLProblem this,int constraint,NLVector a)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefVector(a);
   group=NLPGetEqualityConstraintGroupNumber(this,constraint);
@@ -3726,6 +3957,7 @@ int NLPSetInequalityConstraintA(NLProblem this,int constraint,NLVector a)
   char RoutineName[]="NLPSetInequalityConstraint";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3739,6 +3971,7 @@ int NLPSetInequalityConstraintA(NLProblem this,int constraint,NLVector a)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefVector(a);
   group=NLPGetInequalityConstraintGroupNumber(this,constraint);
@@ -3753,6 +3986,7 @@ int NLPSetMinMaxConstraintA(NLProblem this,int constraint,NLVector a)
   char RoutineName[]="NLPSetMinMaxConstraint";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3766,6 +4000,7 @@ int NLPSetMinMaxConstraintA(NLProblem this,int constraint,NLVector a)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefVector(a);
   group=NLPGetMinMaxConstraintGroupNumber(this,constraint);
@@ -3778,6 +4013,7 @@ int NLPSetMinMaxConstraintA(NLProblem this,int constraint,NLVector a)
 int NLPSetObjectiveGroupB(NLProblem this,int group,double b)
  {
   char RoutineName[]="NLPSetObjectiveGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3791,6 +4027,7 @@ int NLPSetObjectiveGroupB(NLProblem this,int group,double b)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetObjectiveGroupNumber(this,group);
   this->groupB[group]=b;
@@ -3802,8 +4039,9 @@ int NLPSetObjectiveGroupB(NLProblem this,int group,double b)
 int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetEqualityConstraintB";
-  int group;
+  int group=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3813,10 +4051,11 @@ int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nEqualityConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nEqualityConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nEqualityConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetEqualityConstraintGroupNumber(this,constraint);
   this->groupB[group]=b;
@@ -3828,8 +4067,9 @@ int NLPSetEqualityConstraintB(NLProblem this,int constraint,double b)
 int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetInequalityConstraintB";
-  int group;
+  int group=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3839,10 +4079,11 @@ int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nInequalityConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nInequalityConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nInequalityConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetInequalityConstraintGroupNumber(this,constraint);
   this->groupB[group]=b;
@@ -3854,8 +4095,9 @@ int NLPSetInequalityConstraintB(NLProblem this,int constraint,double b)
 int NLPSetMinMaxConstraintB(NLProblem this,int constraint,double b)
  {
   char RoutineName[]="NLPSetMinMaxConstraintB";
-  int group;
+  int group=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3865,10 +4107,11 @@ int NLPSetMinMaxConstraintB(NLProblem this,int constraint,double b)
 
   if(!(constraint>-1&&constraint<this->nMinMaxConstraints))
    {
-    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",group,this->nMinMaxConstraints-1);
+    sprintf(NLProblemErrorMsg,"Constraint %d is illegal (argument 2). Must be in range 0 to %d",constraint,this->nMinMaxConstraints-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetMinMaxConstraintGroupNumber(this,constraint);
   this->groupB[group]=b;
@@ -3893,6 +4136,7 @@ void NLPrintGroup(FILE *fid,NLProblem P,int group)
 int NLPSetObjectiveGroupScale(NLProblem this,int group,double s)
  {
   char RoutineName[]="NLPSetObjectiveGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3911,12 +4155,14 @@ int NLPSetObjectiveGroupScale(NLProblem this,int group,double s)
   this->groupScale[group]=1./s;
   return 1;
  }
+#endif
 
 int NLPSetEqualityConstraintScale(NLProblem this,int constraint,double s)
  {
   char RoutineName[]="NLPSetEqualityConstraintScale";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3930,6 +4176,7 @@ int NLPSetEqualityConstraintScale(NLProblem this,int constraint,double s)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetEqualityConstraintGroupNumber(this,constraint);
   this->groupScale[group]=1./s;
@@ -3941,6 +4188,7 @@ int NLPSetInequalityConstraintScale(NLProblem this,int constraint,double s)
   char RoutineName[]="NLPSetInequalityConstraintScale";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3954,6 +4202,7 @@ int NLPSetInequalityConstraintScale(NLProblem this,int constraint,double s)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetInequalityConstraintGroupNumber(this,constraint);
   this->groupScale[group]=1./s;
@@ -3965,6 +4214,7 @@ int NLPSetMinMaxConstraintScale(NLProblem this,int constraint,double s)
   char RoutineName[]="NLPSetMinMaxConstraintScale";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -3978,6 +4228,7 @@ int NLPSetMinMaxConstraintScale(NLProblem this,int constraint,double s)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=NLPGetMinMaxConstraintGroupNumber(this,constraint);
   this->groupScale[group]=1./s;
@@ -4076,12 +4327,14 @@ int NLPAddLinearEqualityConstraint(NLProblem this,char *name,double *a, double b
   int i;
   int *tmpequalityConstraintGroup;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(this->nEqualityConstraints>=this->mEqualityConstraints)
    {
@@ -4132,12 +4385,14 @@ int NLPAddLinearInequalityConstraint(NLProblem this,char *name, double *a, doubl
   double *tmpinequalityConstraintLowerBound;
   double *tmpinequalityConstraintUpperBound;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(this->nInequalityConstraints>=this->mInequalityConstraints)
    {
@@ -4428,12 +4683,14 @@ void NLPAddVariables(NLProblem this,int n)
 
 /* Adds an additional n variables to the problem. Each linear part has to be resized. */
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   i0=this->nVariables;
   this->nVariables+=n;
@@ -4502,12 +4759,14 @@ void NLPRemoveVariables(NLProblem this,int n)
 /* Removes the last n variables from the problem. Each linear part has to be resized. 
    The assumption is made that none of the element variables include one which is dropped. */
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->nVariables-=n;
   for(i=0;i<this->nGroups;i++)
@@ -4524,12 +4783,14 @@ void NLPHideMinMaxConstraints(NLProblem this)
  {
   char RoutineName[]="NLPHideMinMaxConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideMinMaxConstraints=1;
   return;
@@ -4539,12 +4800,14 @@ void NLPUnHideMinMaxConstraints(NLProblem this)
  {
   char RoutineName[]="NLPUnHideMinMaxConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideMinMaxConstraints=0;
   return;
@@ -4554,12 +4817,14 @@ void NLPHideEqualityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPHideEqualityConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideEqualityConstraints=1;
   return;
@@ -4569,12 +4834,14 @@ void NLPUnHideEqualityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPUnHideEqualityConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideEqualityConstraints=0;
   return;
@@ -4584,12 +4851,14 @@ void NLPHideInequalityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPHideInequalityConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideInequalityConstraints=1;
   return;
@@ -4599,12 +4868,14 @@ void NLPUnHideInequalityConstraints(NLProblem this)
  {
   char RoutineName[]="NLPUnHideInequalityConstraints";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   this->hideInequalityConstraints=0;
   return;
@@ -4614,6 +4885,7 @@ int  NLPGetNumberOfGroupsInMinMaxConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetNumberOfGroupsInMinMaxConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4627,6 +4899,7 @@ int  NLPGetNumberOfGroupsInMinMaxConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->nMinMaxConstraintGroups[constraint];
  }
@@ -4635,6 +4908,7 @@ int  NLPGetNumberOfGroupsInInequalityConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetNumberOfGroupsInInequalityConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4648,6 +4922,7 @@ int  NLPGetNumberOfGroupsInInequalityConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->nInequalityConstraintGroups[constraint];
  }
@@ -4656,6 +4931,7 @@ int  NLPGetNumberOfGroupsInEqualityConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPGetNumberOfGroupsInEqualityConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4669,6 +4945,7 @@ int  NLPGetNumberOfGroupsInEqualityConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   return this->nEqualityConstraintGroups[constraint];
  }
@@ -4676,6 +4953,7 @@ int  NLPGetNumberOfGroupsInEqualityConstraint(NLProblem this,int constraint)
 int NLPSetInequalityConstraintGroupB(NLProblem this,int constraint,int group,double b)
  {
   char RoutineName[]="NLPSetInequalityConstraintGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4692,10 +4970,11 @@ int NLPSetInequalityConstraintGroupB(NLProblem this,int constraint,int group,dou
 
   if(!(group>-1&&group<this->nInequalityConstraintGroups[constraint]))
    {
-    sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nInequalityConstraintGroups[constraint]-1);
+    sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 3). Must be in range 0 to %d",group,this->nInequalityConstraintGroups[constraint]-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
   this->groupB[group]=b;
@@ -4707,6 +4986,7 @@ int NLPSetInequalityConstraintGroupB(NLProblem this,int constraint,int group,dou
 int NLPSetEqualityConstraintGroupB(NLProblem this,int constraint,int group,double b)
  {
   char RoutineName[]="NLPSetEqualityConstraintGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4727,6 +5007,7 @@ int NLPSetEqualityConstraintGroupB(NLProblem this,int constraint,int group,doubl
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
   this->groupB[group]=b;
@@ -4738,6 +5019,7 @@ int NLPSetEqualityConstraintGroupB(NLProblem this,int constraint,int group,doubl
 int NLPSetMinMaxConstraintGroupB(NLProblem this,int constraint,int group,double b)
  {
   char RoutineName[]="NLPSetMinMaxConstraintGroupB";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4758,6 +5040,7 @@ int NLPSetMinMaxConstraintGroupB(NLProblem this,int constraint,int group,double 
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
   this->groupB[group]=b;
@@ -4770,6 +5053,7 @@ int NLPSetInequalityConstraintGroupA(NLProblem this,int constraint,int group,NLV
  {
   char RoutineName[]="NLPSetInequalityConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4790,6 +5074,7 @@ int NLPSetInequalityConstraintGroupA(NLProblem this,int constraint,int group,NLV
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
 
@@ -4804,6 +5089,7 @@ int NLPSetEqualityConstraintGroupA(NLProblem this,int constraint,int group,NLVec
  {
   char RoutineName[]="NLPSetEqualityConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4824,6 +5110,7 @@ int NLPSetEqualityConstraintGroupA(NLProblem this,int constraint,int group,NLVec
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
 
@@ -4838,6 +5125,7 @@ int NLPSetMinMaxConstraintGroupA(NLProblem this,int constraint,int group,NLVecto
  {
   char RoutineName[]="NLPSetMinMaxConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4858,6 +5146,7 @@ int NLPSetMinMaxConstraintGroupA(NLProblem this,int constraint,int group,NLVecto
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
 
@@ -4872,6 +5161,7 @@ NLVector NLPGetMinMaxConstraintGroupA(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetMinMaxConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4892,6 +5182,7 @@ NLVector NLPGetMinMaxConstraintGroupA(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLVector)NULL;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
 
@@ -4902,6 +5193,7 @@ double NLPGetMinMaxConstraintGroupB(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetMinMaxConstraintGroupB";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4922,6 +5214,7 @@ double NLPGetMinMaxConstraintGroupB(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0.;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
 
@@ -4932,6 +5225,7 @@ NLVector NLPGetEqualityConstraintGroupA(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetEqualityConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4952,6 +5246,7 @@ NLVector NLPGetEqualityConstraintGroupA(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLVector)NULL;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
 
@@ -4962,6 +5257,7 @@ double NLPGetEqualityConstraintGroupB(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetEqualityConstraintGroupB";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -4982,6 +5278,7 @@ double NLPGetEqualityConstraintGroupB(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0.;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
 
@@ -4992,6 +5289,7 @@ NLVector NLPGetInequalityConstraintGroupA(NLProblem this,int constraint,int grou
  {
   char RoutineName[]="NLPGetInequalityConstraintGroupA";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5012,6 +5310,7 @@ NLVector NLPGetInequalityConstraintGroupA(NLProblem this,int constraint,int grou
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (NLVector)NULL;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
 
@@ -5022,6 +5321,7 @@ double NLPGetInequalityConstraintGroupB(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetInequalityConstraintGroupB";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5042,6 +5342,7 @@ double NLPGetInequalityConstraintGroupB(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0.;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
 
@@ -5053,6 +5354,7 @@ int NLPAddGroupToInequalityConstraint(NLProblem this,int constraint, char *name)
   char RoutineName[]="NLPAddGroupToInequalityConstraint";
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5066,6 +5368,7 @@ int NLPAddGroupToInequalityConstraint(NLProblem this,int constraint, char *name)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendArray(&(this->nInequalityConstraintGroups[constraint]),
                             &(this->mInequalityConstraintGroups[constraint]),
@@ -5089,6 +5392,7 @@ int NLPAddGroupToEqualityConstraint(NLProblem this,int constraint, char *name)
   char RoutineName[]="NLPAddGroupToEqualityConstraint";
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5102,6 +5406,7 @@ int NLPAddGroupToEqualityConstraint(NLProblem this,int constraint, char *name)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendArray(&(this->nEqualityConstraintGroups[constraint]),
                             &(this->mEqualityConstraintGroups[constraint]),
@@ -5125,6 +5430,7 @@ int NLPAddGroupToMinMaxConstraint(NLProblem this,int constraint, char *name)
   char RoutineName[]="NLPAddGroupToMinMaxConstraint";
   int result;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5138,6 +5444,7 @@ int NLPAddGroupToMinMaxConstraint(NLProblem this,int constraint, char *name)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return -1;
    }
+#endif
 
   if(NLPInternalExtendArray(&(this->nMinMaxConstraintGroups[constraint]),
                             &(this->mMinMaxConstraintGroups[constraint]),
@@ -5160,6 +5467,7 @@ void NLPDeleteEqualityConstraintGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPDeleteEqualityConstraintGroup";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5180,6 +5488,7 @@ void NLPDeleteEqualityConstraintGroup(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   NLPDeleteGroup(this,(this->equalityConstraintGroups[constraint])[group]);
   (this->equalityConstraintGroups[constraint])[group]=-1;
@@ -5192,6 +5501,7 @@ void NLPDeleteInequalityConstraintGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPDeleteInequalityConstraintGroup";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5212,6 +5522,7 @@ void NLPDeleteInequalityConstraintGroup(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   NLPDeleteGroup(this,(this->inequalityConstraintGroups[constraint])[group]);
   (this->inequalityConstraintGroups[constraint])[group]=-1;
@@ -5224,6 +5535,7 @@ void NLPDeleteMinMaxConstraintGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPDeleteMinMaxConstraintGroup";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5244,6 +5556,7 @@ void NLPDeleteMinMaxConstraintGroup(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   NLPDeleteGroup(this,(this->minMaxConstraintGroups[constraint])[group]);
   (this->minMaxConstraintGroups[constraint])[group]=-1;
@@ -5259,6 +5572,7 @@ void NLPDeleteObjectiveGroup(NLProblem this,int group)
 
   if(verbose){printf("%s(%d)\n",RoutineName,group);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5272,6 +5586,7 @@ void NLPDeleteObjectiveGroup(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   NLPDeleteGroup(this,this->groupsInObjective[group]);
   this->groupsInObjective[group]=-1;
@@ -5285,6 +5600,7 @@ void NLPDeleteEqualityConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPDeleteEqualityConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5298,6 +5614,7 @@ void NLPDeleteEqualityConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   while(this->nEqualityConstraintGroups[constraint]>0)
    {
@@ -5320,6 +5637,7 @@ void NLPDeleteInequalityConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPDeleteInequalityConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5333,6 +5651,7 @@ void NLPDeleteInequalityConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   while(this->nInequalityConstraintGroups[constraint]>0)
     NLPDeleteInequalityConstraintGroup(this,constraint,this->nInequalityConstraintGroups[constraint]-1);
@@ -5353,6 +5672,7 @@ void NLPDeleteMinMaxConstraint(NLProblem this,int constraint)
  {
   char RoutineName[]="NLPDeleteMinMaxConstraint";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5366,6 +5686,7 @@ void NLPDeleteMinMaxConstraint(NLProblem this,int constraint)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   while(this->nMinMaxConstraintGroups[constraint]>0)
     NLPDeleteMinMaxConstraintGroup(this,constraint,this->nMinMaxConstraintGroups[constraint]-1);
@@ -5392,6 +5713,7 @@ void NLPDeleteGroup(NLProblem this,int group)
 
   if(verbose){printf("%s(%d)\n",RoutineName,group);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5405,6 +5727,7 @@ void NLPDeleteGroup(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   if(this->groupName[group]!=(char*)NULL)free(this->groupName[group]);
   this->groupName[group]=DELETEDGROUP;
@@ -5418,12 +5741,7 @@ void NLPDeleteGroup(NLProblem this,int group)
   for(i=0;i<this->nElementsInGroup[group];i++)
    {
     element=(this->element[group])[i];
-    if(NLFreeNonlinearElement(this,element))
-     {
-      this->nonlinearElement[element]=(NLNonlinearElementPtr)NULL;
-      while(this->nNonlinearElements>-1 && this->nonlinearElement[this->nNonlinearElements-1]==(NLNonlinearElementPtr)NULL)
-           this->nNonlinearElements--;
-     }
+    (this->element[group])[i]=-1;
     (this->elementWeight[group])[i]=1.;
     (this->elementWeightSet[group])[i]=0;
    }
@@ -5447,19 +5765,21 @@ int NLPGetNumberOfMinMaxConstraintGroups(NLProblem this,int constraint)
   char RoutineName[]="NLPGetNumberOfMinMaxConstraintGroups";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nMinMaxConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nMinMaxConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return this->nMinMaxConstraintGroups[constraint];
  }
@@ -5469,19 +5789,21 @@ int NLPGetNumberOfEqualityConstraintGroups(NLProblem this,int constraint)
   char RoutineName[]="NLPGetNumberOfEqualityConstraintGroups";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nEqualityConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nEqualityConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return this->nEqualityConstraintGroups[constraint];
  }
@@ -5491,19 +5813,21 @@ int NLPGetNumberOfInequalityConstraintGroups(NLProblem this,int constraint)
   char RoutineName[]="NLPGetNumberOfInequalityConstraintGroups";
   int group;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
 
   if(constraint<0 || constraint>=this->nInequalityConstraints)
    {
     sprintf(NLProblemErrorMsg,"Constraint %d (argument 2) is Invalid, must be in [0,%d).",constraint,this->nInequalityConstraints);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return this->nInequalityConstraintGroups[constraint];
  }
@@ -5515,6 +5839,7 @@ int NLPSetEqualityConstraintGroupFunction(NLProblem this,int constraint,int grou
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5534,6 +5859,7 @@ int NLPSetEqualityConstraintGroupFunction(NLProblem this,int constraint,int grou
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefGroupFunction(g);
   group=(this->equalityConstraintGroups[constraint])[group];
@@ -5550,6 +5876,7 @@ int NLPSetInequalityConstraintGroupFunction(NLProblem this,int constraint,int gr
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5569,6 +5896,7 @@ int NLPSetInequalityConstraintGroupFunction(NLProblem this,int constraint,int gr
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefGroupFunction(g);
   group=(this->inequalityConstraintGroups[constraint])[group];
@@ -5585,6 +5913,7 @@ int NLPSetMinMaxConstraintGroupFunction(NLProblem this,int constraint,int group,
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5604,6 +5933,7 @@ int NLPSetMinMaxConstraintGroupFunction(NLProblem this,int constraint,int group,
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   NLRefGroupFunction(g);
   group=(this->minMaxConstraintGroups[constraint])[group];
@@ -5620,6 +5950,7 @@ int NLPSetEqualityConstraintGroupScale(NLProblem this,int constraint,int group,d
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5639,6 +5970,7 @@ int NLPSetEqualityConstraintGroupScale(NLProblem this,int constraint,int group,d
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
   NLPSetGroupScale(this,group,s);
@@ -5653,6 +5985,7 @@ int NLPSetInequalityConstraintGroupScale(NLProblem this,int constraint,int group
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5660,17 +5993,18 @@ int NLPSetInequalityConstraintGroupScale(NLProblem this,int constraint,int group
     return 0;
    }
 
-  if(verbose)
-   {
-    printf("NLPSetInequalityConstraintGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %d\n",this->groupFunction);
-   }
-
   if(!(constraint>-1&&constraint<this->nInequalityConstraints))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroupsInObjective-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPSetInequalityConstraintGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %d\n",this->groupFunction);
    }
 
   group=(this->inequalityConstraintGroups[constraint])[group];
@@ -5686,6 +6020,7 @@ int NLPSetMinMaxConstraintGroupScale(NLProblem this,int constraint,int group,dou
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5693,17 +6028,18 @@ int NLPSetMinMaxConstraintGroupScale(NLProblem this,int constraint,int group,dou
     return 0;
    }
 
-  if(verbose)
-   {
-    printf("NLPSetMinMaxConstraintGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %d\n",this->groupFunction);
-   }
-
   if(!(constraint>-1&&constraint<this->nMinMaxConstraints))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroupsInObjective-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPSetMinMaxConstraintGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %d\n",this->groupFunction);
    }
 
   group=(this->minMaxConstraintGroups[constraint])[group];
@@ -5719,6 +6055,7 @@ int NLPAddNonlinearElementToEqualityConstraintGroup(NLProblem this,int constrain
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5726,17 +6063,18 @@ int NLPAddNonlinearElementToEqualityConstraintGroup(NLProblem this,int constrain
     return 0;
    }
 
-  if(verbose)
-   {
-    printf("NLPSetEqualityConstraintGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %d\n",this->groupFunction);
-   }
-
   if(!(constraint>-1&&constraint<this->nEqualityConstraints))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroupsInObjective-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPSetEqualityConstraintGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %d\n",this->groupFunction);
    }
 
   group=(this->equalityConstraintGroups[constraint])[group];
@@ -5752,6 +6090,7 @@ int NLPAddNonlinearElementToInequalityConstraintGroup(NLProblem this,int constra
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5759,17 +6098,18 @@ int NLPAddNonlinearElementToInequalityConstraintGroup(NLProblem this,int constra
     return 0;
    }
 
-  if(verbose)
-   {
-    printf("NLPSetInequalityConstraintGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %d\n",this->groupFunction);
-   }
-
   if(!(constraint>-1&&constraint<this->nInequalityConstraints))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroupsInObjective-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPSetInequalityConstraintGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %d\n",this->groupFunction);
    }
 
   group=(this->inequalityConstraintGroups[constraint])[group];
@@ -5785,6 +6125,7 @@ int NLPAddNonlinearElementToMinMaxConstraintGroup(NLProblem this,int constraint,
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5792,17 +6133,18 @@ int NLPAddNonlinearElementToMinMaxConstraintGroup(NLProblem this,int constraint,
     return 0;
    }
 
-  if(verbose)
-   {
-    printf("NLPSetMinMaxConstraintGroupFunction(%d)\n",group);
-    printf(" this->groupFunction = %d\n",this->groupFunction);
-   }
-
   if(!(constraint>-1&&constraint<this->nMinMaxConstraints))
    {
     sprintf(NLProblemErrorMsg,"Group %d is illegal (argument 2). Must be in range 0 to %d",group,this->nGroupsInObjective-1);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
+   }
+#endif
+
+  if(verbose)
+   {
+    printf("NLPSetMinMaxConstraintGroupFunction(%d)\n",group);
+    printf(" this->groupFunction = %d\n",this->groupFunction);
    }
 
   group=(this->equalityConstraintGroups[constraint])[group];
@@ -5814,6 +6156,7 @@ int NLPAddNonlinearElementToMinMaxConstraintGroup(NLProblem this,int constraint,
 int NLPGetInequalityConstraintNumberOfGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetInequalityConstraintNumberOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5832,8 +6175,9 @@ int NLPGetInequalityConstraintNumberOfGroup(NLProblem this,int constraint,int gr
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nInequalityConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return((this->inequalityConstraintGroups[constraint])[group]);
  }
@@ -5841,6 +6185,7 @@ int NLPGetInequalityConstraintNumberOfGroup(NLProblem this,int constraint,int gr
 int NLPGetEqualityConstraintNumberOfGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetEqualityConstraintNumberOfGroup";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5859,8 +6204,9 @@ int NLPGetEqualityConstraintNumberOfGroup(NLProblem this,int constraint,int grou
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nEqualityConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return((this->equalityConstraintGroups[constraint])[group]);
  }
@@ -5869,6 +6215,7 @@ int NLPGetMinMaxConstraintNumberOfGroup(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetMinMaxConstraintNumberOfGroup";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5887,8 +6234,9 @@ int NLPGetMinMaxConstraintNumberOfGroup(NLProblem this,int constraint,int group)
    {
     sprintf(NLProblemErrorMsg,"Group %d (argument 3) is Invalid, must be in [0,%d).",group,this->nMinMaxConstraintGroups[constraint]);
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
-    return;
+    return -1;
    }
+#endif
 
   return((this->minMaxConstraintGroups[constraint])[group]);
  }
@@ -5910,6 +6258,7 @@ int NLPQueryPolynomialOrderOfVariablesInObjective(NLProblem this,int *order)
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -5923,6 +6272,7 @@ int NLPQueryPolynomialOrderOfVariablesInObjective(NLProblem this,int *order)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
   n=NLPGetNumberOfVariables(this);
   for(i=0;i<n;i++)order[i]=0;
@@ -6004,6 +6354,7 @@ double NLPEvaluateObjective(NLProblem this,NLVector x)
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6017,6 +6368,7 @@ double NLPEvaluateObjective(NLProblem this,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   o=0.;
   for(i=0;i<this->nGroupsInObjective;i++)
@@ -6051,6 +6403,7 @@ int NLPEvaluateGradientOfObjective(NLProblem this,NLVector x,NLVector g)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6071,11 +6424,12 @@ int NLPEvaluateGradientOfObjective(NLProblem this,NLVector x,NLVector g)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
 /* sum g' * ( sum w f' R + a ) */
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nGroupsInObjective;i++)
    {
     group=this->groupsInObjective[i];
@@ -6172,6 +6526,7 @@ int NLPEvaluateHessianOfObjective(NLProblem this,NLVector x,NLMatrix H)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6192,6 +6547,7 @@ int NLPEvaluateHessianOfObjective(NLProblem this,NLVector x,NLMatrix H)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
 /* sum ( sum w g' * R^T f'' R + w g'' * [ (f'R)^T f'R + (f'R)^T a + a^T f' R ] ) + g'' a^T a */
 
@@ -6325,6 +6681,7 @@ double NLPEvaluateEqualityConstraint(NLProblem this,int constraint,NLVector x)
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6345,6 +6702,7 @@ double NLPEvaluateEqualityConstraint(NLProblem this,int constraint,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   c=0.;
   for(i=0;i<this->nEqualityConstraintGroups[constraint];i++)
@@ -6363,6 +6721,12 @@ double NLPEvaluateEqualityConstraint(NLProblem this,int constraint,NLVector x)
   return c;
  }
 
+/* AW: I added this to switch to setting of gradient vector to zero at every call */
+void NLSetDontInitGradToZero(int i)
+ {
+  NLDontInitGradToZero=i;
+ }
+
 int NLPEvaluateGradientOfEqualityConstraint(NLProblem this,int constraint,NLVector x,NLVector g)
  {
   char RoutineName[]="NLPEvaluateGradientOfEqualityConstraint";
@@ -6378,6 +6742,7 @@ int NLPEvaluateGradientOfEqualityConstraint(NLProblem this,int constraint,NLVect
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6405,8 +6770,9 @@ int NLPEvaluateGradientOfEqualityConstraint(NLProblem this,int constraint,NLVect
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nEqualityConstraintGroups[constraint];i++)
    {
     group=(this->equalityConstraintGroups[constraint])[i];
@@ -6495,6 +6861,7 @@ int NLPEvaluateHessianOfEqualityConstraint(NLProblem this,int constraint,NLVecto
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6522,6 +6889,7 @@ int NLPEvaluateHessianOfEqualityConstraint(NLProblem this,int constraint,NLVecto
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
 /* sum ( sum g' * R^T f'' R + g'' * [ (f'R)^T f'R + (f'R)^T a + a^T f' R ] ) + g'' a^T a */
 
@@ -6640,6 +7008,7 @@ double NLPEvaluateInequalityConstraint(NLProblem this,int constraint,NLVector x)
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6660,6 +7029,7 @@ double NLPEvaluateInequalityConstraint(NLProblem this,int constraint,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   c=0.;
   for(i=0;i<this->nInequalityConstraintGroups[constraint];i++)
@@ -6697,6 +7067,7 @@ int NLPEvaluateGradientOfInequalityConstraint(NLProblem this,int constraint,NLVe
 
   if(verbose){printf("%s\n",RoutineName);fflush(stdout);}
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6724,8 +7095,9 @@ int NLPEvaluateGradientOfInequalityConstraint(NLProblem this,int constraint,NLVe
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
-  NLVSetToZero(g);
+  if(!NLDontInitGradToZero) NLVSetToZero(g);
   for(i=0;i<this->nInequalityConstraintGroups[constraint];i++)
    {
     group=(this->inequalityConstraintGroups[constraint])[i];
@@ -6814,6 +7186,7 @@ int NLPEvaluateHessianOfInequalityConstraint(NLProblem this,int constraint,NLVec
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6841,6 +7214,7 @@ int NLPEvaluateHessianOfInequalityConstraint(NLProblem this,int constraint,NLVec
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
 /* sum ( sum g' * R^T f'' R + g'' * [ (f'R)^T f'R + (f'R)^T a + a^T f' R ] ) + g'' a^T a */
 
@@ -6955,6 +7329,7 @@ double NLPEvaluateMinMaxConstraint(NLProblem this,int constraint,NLVector x)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -6975,6 +7350,7 @@ double NLPEvaluateMinMaxConstraint(NLProblem this,int constraint,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   c=0.;
   for(i=0;i<this->nMinMaxConstraintGroups[constraint];i++)
@@ -7003,6 +7379,7 @@ int NLPEvaluateGradientOfMinMaxConstraint(NLProblem this,int constraint,NLVector
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -7030,6 +7407,7 @@ int NLPEvaluateGradientOfMinMaxConstraint(NLProblem this,int constraint,NLVector
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   NLVSetToZero(g);
   for(i=0;i<this->nMinMaxConstraintGroups[constraint];i++)
@@ -7116,6 +7494,7 @@ int NLPEvaluateHessianOfMinMaxConstraint(NLProblem this,int constraint,NLVector 
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -7143,6 +7522,7 @@ int NLPEvaluateHessianOfMinMaxConstraint(NLProblem this,int constraint,NLVector 
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
 /* sum ( sum g' * R^T f'' R + g'' * [ (f'R)^T f'R + (f'R)^T a + a^T f' R ] ) + g'' a^T a */
 
@@ -7253,12 +7633,14 @@ int NLPInvalidateGroupAndElementCaches(NLProblem this)
   char RoutineName[]="NLPInvalidateGroupAndElementCaches";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
 /*if(this->cache==0)this->cache=1;
    else this->cache=0;*/
@@ -7282,12 +7664,14 @@ int *NLPGetCacheFlag(NLProblem this)
   char RoutineName[]="NLPGetCacheFlag";
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return (int*)NULL;
    }
+#endif
 
   return &(this->cache);
  }
@@ -7302,6 +7686,7 @@ double NLPEvaluateGroup(NLProblem this,int group,NLVector x)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -7315,6 +7700,7 @@ double NLPEvaluateGroup(NLProblem this,int group,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0.;
    }
+#endif
   if(verbose)
    {
    printf("%s(%d,",RoutineName,group);
@@ -7404,6 +7790,7 @@ double NLPEvaluateElement(NLProblem this,NLNonlinearElement element,NLVector x)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -7417,6 +7804,7 @@ double NLPEvaluateElement(NLProblem this,NLNonlinearElement element,NLVector x)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0.;
    }
+#endif
 
   if(verbose)
    {
@@ -7665,9 +8053,9 @@ void NLPPrintVector(FILE *fid,int *j, NLProblem P,NLVector a)
         (*j)++;
        }else{
         if((*j)>0&&v>0)fprintf(fid,"+");
-        if(itrunc(v)==v)fprintf(fid,"%d",itrunc(v));
-         else if(itrunc(v*10)==10*v)fprintf(fid,"%.1lf",v);
-         else if(itrunc(v*100)==100*v)fprintf(fid,"%.2lf",v);
+        if(NLPtrunc(v)==v)fprintf(fid,"%d",NLPtrunc(v));
+         else if(NLPtrunc(v*10)==10*v)fprintf(fid,"%.1lf",v);
+         else if(NLPtrunc(v*100)==100*v)fprintf(fid,"%.2lf",v);
          else fprintf(fid,"%lf",v);
         fprintf(fid,"*(%s)",NLPGetVariableName(P,i));
         (*j)++;
@@ -7696,9 +8084,9 @@ void NLPrintElement(FILE *fid,NLProblem P,int i)
       if(k>0&&w>0)fprintf(fid,"+");
       if(fabs(fabs(w)-1)>1.e-14)
        {
-        if(itrunc(w)==w)fprintf(fid,"%d*",itrunc(w));
-         else if(itrunc(w*10)==10*w)fprintf(fid,"%.1lf*",w);
-         else if(itrunc(w*100)==100*w)fprintf(fid,"%.2lf*",w);
+        if(NLPtrunc(w)==w)fprintf(fid,"%d*",NLPtrunc(w));
+         else if(NLPtrunc(w*10)==10*w)fprintf(fid,"%.1lf*",w);
+         else if(NLPtrunc(w*100)==100*w)fprintf(fid,"%.2lf*",w);
          else fprintf(fid,"%21.14le*",w);
        }else{
         if(w<0)fprintf(fid,"-");
@@ -7724,9 +8112,9 @@ void NLPrintElement(FILE *fid,NLProblem P,int i)
    {
     if(NLPGetGroupB(P,i)<0&&k>0)fprintf(fid,"+",-NLPGetGroupB(P,i));
     b=-NLPGetGroupB(P,i);
-    if(itrunc(b)==b)fprintf(fid,"%d",itrunc(b));
-     else if(itrunc(b*10)==10*b)fprintf(fid,"%.1lf",b);
-     else if(itrunc(b*100)==100*b)fprintf(fid,"%.2lf",b);
+    if(NLPtrunc(b)==b)fprintf(fid,"%d",NLPtrunc(b));
+     else if(NLPtrunc(b*10)==10*b)fprintf(fid,"%.1lf",b);
+     else if(NLPtrunc(b*100)==100*b)fprintf(fid,"%.2lf",b);
      else fprintf(fid,"%lf",b);
    }
 
@@ -7738,6 +8126,7 @@ void NLPrintProblemShort(FILE *fid,NLProblem P)
   char RoutineName[]="NLPrintProblem";
   int i,I,j,J,k;
 
+#ifndef NL_NOINPUTCHECKS
   if(fid==(FILE*)NULL)
    {
     sprintf(NLProblemErrorMsg,"File pointer (argument 1) is NULL");
@@ -7750,6 +8139,7 @@ void NLPrintProblemShort(FILE *fid,NLProblem P)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   fprintf(fid,"%s\n",NLPGetProblemName(P));
   fprintf(fid,"\nSimple Bounds:\n\n",NLPGetNumberOfVariables(P));
@@ -7840,9 +8230,9 @@ void NLPrintGroupShort(FILE *fid,NLProblem P,int group,int first)
 
   if(fabs(s-1)>1.e-14)
    {
-    if(itrunc(s)==s)fprintf(fid,"%d*",itrunc(s));
-     else if(itrunc(s*10)==10*s)fprintf(fid,"%.1lf*",s);
-     else if(itrunc(s*100)==100*s)fprintf(fid,"%.2lf*",s);
+    if(NLPtrunc(s)==s)fprintf(fid,"%d*",NLPtrunc(s));
+     else if(NLPtrunc(s*10)==10*s)fprintf(fid,"%.1lf*",s);
+     else if(NLPtrunc(s*100)==100*s)fprintf(fid,"%.2lf*",s);
      else fprintf(fid,"%lf*(",s);
    }
 
@@ -7870,6 +8260,7 @@ void NLPrintProblemOld(FILE *fid,NLProblem P)
   char RoutineName[]="NLPrintProblemOld";
   int i,I,j,k;
 
+#ifndef NL_NOINPUTCHECKS
   if(fid==(FILE*)NULL)
    {
     sprintf(NLProblemErrorMsg,"File pointer (argument 1) is NULL");
@@ -7882,6 +8273,7 @@ void NLPrintProblemOld(FILE *fid,NLProblem P)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   fprintf(fid,"NAGroupPartialSeparableNonlinearOptimizationProblem %s\n",NLPGetProblemName(P));
   fprintf(fid,"\nVariables: %d\n\n",NLPGetNumberOfVariables(P));
@@ -8228,12 +8620,14 @@ void NLPConvertToEqualityAndBoundsOnly(NLProblem P)
   int rc;
   int verbose=0;
 
+#ifndef NL_NOINPUTCHECKS
   if(P==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 2) is NULL");
     NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return;
    }
+#endif
 
   n=NLPGetNumberOfVariables(P);
   nEq=NLPGetNumberOfEqualityConstraints(P);
@@ -8278,20 +8672,24 @@ void NLPConvertToEqualityAndBoundsOnly(NLProblem P)
      {
       c=NLPAddNonlinearInequalityConstraint(P,(char*)NULL);
       m=NLPGetNumberOfGroupsInMinMaxConstraint(P,i);
+#ifndef NL_NOINPUTCHECKS
       if(m>1)
        {
         sprintf(NLProblemErrorMsg,"MinMax Constraint %d has %d groups,only one is allowed currently and it must be the trivial group function",i,m);
         NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
         return;
        }
+#endif
 
       cgroup=NLPGetMinMaxConstraintNumberOfGroup(P,i,0);
+#ifndef NL_NOINPUTCHECKS
       if(NLPIsGroupFunctionSet(P,cgroup))
        {
         sprintf(NLProblemErrorMsg,"MinMax Constraint %d group must currently have the trivial group function",i);
         NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
         return;
        }
+#endif
 
       for(j=0;j<m;j++)
        {
@@ -8339,12 +8737,14 @@ void NLPConvertToEqualityAndBoundsOnly(NLProblem P)
 /* If constraint is a single trivial group, just change a. */
 
     m=NLPGetNumberOfGroupsInInequalityConstraint(P,i);
+#ifndef NL_NOINPUTCHECKS
     if(m>1)
      {
       sprintf(NLProblemErrorMsg,"Inequality Constraint %d has %d groups, only one is allowed currently and it must be the trivial group function",i,m);
       NLSetError(4,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
       return;
      }
+#endif
 
     if(i<nInEq)
      {
@@ -8367,12 +8767,14 @@ void NLPConvertToEqualityAndBoundsOnly(NLProblem P)
       NLPSetVariableScale(P,n+i,1.);
      }
 
+#ifndef NL_NOINPUTCHECKS
     if(NLPIsGroupFunctionSet(P,cgroup))
      {
       sprintf(NLProblemErrorMsg,"Inequality Constraint %d group must currently have the trivial group function",i);
       NLSetError(0,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
       return;
      }
+#endif
     g=0;
     if(NLPGetGroupA(P,cgroup)==(NLVector)NULL)
      {
@@ -8441,6 +8843,7 @@ void NLPConvertToEqualityAndBoundsOnly(NLProblem P)
 int NLPSetInvGroupScale(NLProblem this,int group,double s)
  {
   char RoutineName[]="NLPSetInvGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8454,6 +8857,7 @@ int NLPSetInvGroupScale(NLProblem this,int group,double s)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   this->groupScale[group]=s;
   return 1;
@@ -8462,6 +8866,7 @@ int NLPSetInvGroupScale(NLProblem this,int group,double s)
 double NLPGetInvGroupScale(NLProblem this,int group)
  {
   char RoutineName[]="NLPGetInvGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8475,6 +8880,7 @@ double NLPGetInvGroupScale(NLProblem this,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return DBL_QNAN;
    }
+#endif
 
   return(this->groupScale[group]);
  }
@@ -8482,6 +8888,7 @@ double NLPGetInvGroupScale(NLProblem this,int group)
 double NLPGetInequalityConstraintGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetInequalityConstraintGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8502,6 +8909,7 @@ double NLPGetInequalityConstraintGroupScale(NLProblem this,int constraint,int gr
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
 
@@ -8511,6 +8919,7 @@ double NLPGetInequalityConstraintGroupScale(NLProblem this,int constraint,int gr
 double NLPGetEqualityConstraintGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetEqualityConstraintGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8531,6 +8940,7 @@ double NLPGetEqualityConstraintGroupScale(NLProblem this,int constraint,int grou
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
 
@@ -8540,6 +8950,7 @@ double NLPGetEqualityConstraintGroupScale(NLProblem this,int constraint,int grou
 double NLPGetMinMaxConstraintGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetMinMaxConstraintGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8560,6 +8971,7 @@ double NLPGetMinMaxConstraintGroupScale(NLProblem this,int constraint,int group)
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
 
@@ -8569,6 +8981,7 @@ double NLPGetMinMaxConstraintGroupScale(NLProblem this,int constraint,int group)
 double NLPGetInequalityConstraintInvGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetInequalityConstraintInvGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8589,6 +9002,7 @@ double NLPGetInequalityConstraintInvGroupScale(NLProblem this,int constraint,int
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->inequalityConstraintGroups[constraint])[group];
 
@@ -8598,6 +9012,7 @@ double NLPGetInequalityConstraintInvGroupScale(NLProblem this,int constraint,int
 double NLPGetEqualityConstraintInvGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetEqualityConstraintInvGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8618,6 +9033,7 @@ double NLPGetEqualityConstraintInvGroupScale(NLProblem this,int constraint,int g
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->equalityConstraintGroups[constraint])[group];
 
@@ -8627,6 +9043,7 @@ double NLPGetEqualityConstraintInvGroupScale(NLProblem this,int constraint,int g
 double NLPGetMinMaxConstraintInvGroupScale(NLProblem this,int constraint,int group)
  {
   char RoutineName[]="NLPGetMinMaxConstraintInvGroupScale";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (argument 1) is NULL");
@@ -8647,6 +9064,7 @@ double NLPGetMinMaxConstraintInvGroupScale(NLProblem this,int constraint,int gro
     NLSetError(12,RoutineName,NLProblemErrorMsg,__LINE__,__FILE__);
     return 0;
    }
+#endif
 
   group=(this->minMaxConstraintGroups[constraint])[group];
 
@@ -8768,6 +9186,10 @@ NLProblem NLCopyProblem(NLProblem P)
         return (NLProblem)NULL;
        }
       strcpy(this->groupName[i],P->groupName[i]);
+     }
+    for(i=this->nGroups;i<this->mGroups;i++)this->groupName[i]=(char*)NULL;
+    for(i=0;i<this->mGroups;i++)
+     {
       this->groupFunction[i]=P->groupFunction[i];if(P->groupFunction[i]!=(NLGroupFunction)NULL)NLRefGroupFunction(P->groupFunction[i]);
       this->groupFunctionData[i]=P->groupFunctionData[i];
       this->freeGroupFunctionData[i]=P->freeGroupFunctionData[i];
@@ -8780,9 +9202,16 @@ NLProblem NLCopyProblem(NLProblem P)
       this->groupScale[i]=P->groupScale[i];
       this->nElementsInGroup[i]=P->nElementsInGroup[i];
       this->mElementsInGroup[i]=P->mElementsInGroup[i];
-      this->elementWeight[i]=(double*)malloc((this->mElementsInGroup[i])*sizeof(double));
-      this->elementWeightSet[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));
-      this->element[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));
+      if(this->mElementsInGroup[i]>0)
+       {
+        this->elementWeight[i]=(double*)malloc((this->mElementsInGroup[i])*sizeof(double));
+        this->elementWeightSet[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));    
+	this->element[i]=(int*)malloc((this->mElementsInGroup[i])*sizeof(int));
+       }else{
+        this->elementWeight[i]=(double*)NULL;
+        this->elementWeightSet[i]=(int*)NULL;
+        this->element[i]=(int*)NULL;
+       }
       for(j=0;j<this->nElementsInGroup[i];j++)
        {
         (this->element[i])[j]=(P->element[i])[j];
@@ -8815,6 +9244,7 @@ NLProblem NLCopyProblem(NLProblem P)
        }
       strcpy(this->groupTypeName[i],P->groupTypeName[i]);
      }
+    for(i=this->nGroupTypes;i<this->mGroupTypes;i++)this->groupTypeName[i]=(char*)NULL;
    }else{
     this->groupTypeName=(char**)NULL;
    }
@@ -8880,9 +9310,10 @@ NLProblem NLCopyProblem(NLProblem P)
       return (NLProblem)NULL;
      }
   
-    for(i=0;i<this->nNonlinearElements;i++)
+    for(i=0;i<this->mNonlinearElements;i++)
      {
-      this->nonlinearElement[i]=P->nonlinearElement[i];NLRefNonlinearElement(P->nonlinearElement[i]);
+      this->nonlinearElement[i]=P->nonlinearElement[i];
+      if(this->nonlinearElement[i]!=(NLNonlinearElementPtr)NULL)NLRefNonlinearElement(P->nonlinearElement[i]);
       this->elementCached[i]=P->elementCached[i];
       this->internalVariables[i]=(double*)NULL;
       this->elementValue[i]=P->elementValue[i];
@@ -8905,6 +9336,7 @@ NLProblem NLCopyProblem(NLProblem P)
   if(this->mElementTypes>0)
    {
     this->elementTypeName=(char**)malloc((this->mElementTypes)*sizeof(char*));
+    this->elementRangeSet=(int*)malloc((this->mElementTypes)*sizeof(int));
     for(i=0;i<this->nElementTypes;i++)
      {
       this->elementTypeName[i]=(char*)malloc((strlen(P->elementTypeName[i])+1)*sizeof(char));
@@ -8916,9 +9348,16 @@ NLProblem NLCopyProblem(NLProblem P)
         return (NLProblem)NULL;
        }
       strcpy(this->elementTypeName[i],P->elementTypeName[i]);
+      this->elementRangeSet[i]=P->elementRangeSet[i];
+     }
+    for(i=this->nElementTypes;i<this->mElementTypes;i++)
+     {
+      this->elementTypeName[i]=(char*)NULL;
+      this->elementRangeSet[i]=0;
      }
    }else{
     this->elementTypeName=(char**)NULL;
+    this->elementRangeSet=(int*)NULL;
    }
 
   this->nGroupsInObjective=P->nGroupsInObjective;
@@ -9006,6 +9445,12 @@ NLProblem NLCopyProblem(NLProblem P)
       for(j=0;j<this->nEqualityConstraintGroups[i];j++)
        (this->equalityConstraintGroups[i])[j]=(P->equalityConstraintGroups[i])[j];
      }
+    for(i=this->nEqualityConstraints;i<this->mEqualityConstraints;i++)
+     {
+      (this->nEqualityConstraintGroups)[i]=0;
+      (this->mEqualityConstraintGroups)[i]=0;
+      this->equalityConstraintGroups[i]=(int*)NULL;
+     }
    }else{
     this->nEqualityConstraintGroups=(int*)NULL;
     this->mEqualityConstraintGroups=(int*)NULL;
@@ -9056,6 +9501,12 @@ NLProblem NLCopyProblem(NLProblem P)
        }
       for(j=0;j<this->nMinMaxConstraintGroups[i];j++)
        (this->minMaxConstraintGroups[i])[j]=(P->minMaxConstraintGroups[i])[j];
+     }
+    for(i=this->nMinMaxConstraints;i<this->mMinMaxConstraints;i++)
+     {
+      (this->nMinMaxConstraintGroups[i])=0;
+      (this->mMinMaxConstraintGroups[i])=0;
+      this->minMaxConstraintGroups[i]=(int*)NULL;
      }
    }else{
     this->nMinMaxConstraintGroups=(int*)NULL;
@@ -9127,6 +9578,12 @@ NLProblem NLCopyProblem(NLProblem P)
       this->inequalityConstraintLowerBound[i]=P->inequalityConstraintLowerBound[i];
       this->inequalityConstraintUpperBound[i]=P->inequalityConstraintUpperBound[i];
      }
+    for(i=this->nInequalityConstraints;i<this->mInequalityConstraints;i++)
+     {
+      (this->nInequalityConstraintGroups[i])=0;
+      (this->mInequalityConstraintGroups[i])=0;
+      this->inequalityConstraintGroups[i]=(int*)NULL;
+     }
    }else{
     this->nInequalityConstraintGroups=(int*)NULL;
     this->mInequalityConstraintGroups=(int*)NULL;
@@ -9149,6 +9606,7 @@ int NLPAddEqualityConstraint(NLProblem this, char *name, int nvars, int *vars, d
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9164,6 +9622,7 @@ int NLPAddEqualityConstraint(NLProblem this, char *name, int nvars, int *vars, d
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   tname=tmpname;
   if(strlen(name)+9>1024)tname=(char*)malloc((strlen(name)+9)*sizeof(char));
@@ -9183,7 +9642,9 @@ int NLPAddEqualityConstraint(NLProblem this, char *name, int nvars, int *vars, d
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9201,6 +9662,7 @@ int NLPAddInequalityConstraint(NLProblem this, char *name, double l, double u, i
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9216,6 +9678,7 @@ int NLPAddInequalityConstraint(NLProblem this, char *name, double l, double u, i
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   tname=tmpname;
   if(strlen(name)+9>1024)tname=(char*)malloc((strlen(name)+9)*sizeof(char));
@@ -9235,7 +9698,9 @@ int NLPAddInequalityConstraint(NLProblem this, char *name, double l, double u, i
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   NLPSetInequalityConstraintUpperBound(this,constraint,u);
   NLPSetInequalityConstraintLowerBound(this,constraint,l);
@@ -9256,6 +9721,7 @@ int NLPSetObjective(NLProblem this, char *name, int nvars, int *vars, double (*F
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9279,6 +9745,7 @@ int NLPSetObjective(NLProblem this, char *name, int nvars, int *vars, double (*F
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   tname=tmpname;
   if(strlen(name)+9>1024)tname=(char*)malloc((strlen(name)+9)*sizeof(char));
@@ -9298,7 +9765,9 @@ int NLPSetObjective(NLProblem this, char *name, int nvars, int *vars, double (*F
   ef=NLCreateElementFunction(this,tname,nvars,(NLMatrix)NULL,F,dF,ddF,data,freedata);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9316,6 +9785,7 @@ int NLPAddEqualityConstraintByString(NLProblem this, char *name, int nvars, int 
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9331,6 +9801,7 @@ int NLPAddEqualityConstraintByString(NLProblem this, char *name, int nvars, int 
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   tname=tmpname;
   if(strlen(name)+9>1024)tname=(char*)malloc((strlen(name)+9)*sizeof(char));
@@ -9350,7 +9821,9 @@ int NLPAddEqualityConstraintByString(NLProblem this, char *name, int nvars, int 
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToEqualityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
@@ -9368,6 +9841,7 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9383,6 +9857,7 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   tname=tmpname;
   if(strlen(name)+9>1024)tname=(char*)malloc((strlen(name)+9)*sizeof(char));
@@ -9402,10 +9877,14 @@ int NLPAddInequalityConstraintByString(NLProblem this, char *name, double l, dou
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToInequalityConstraintGroup(this,constraint,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(u<1.e19)NLPSetInequalityConstraintUpperBound(this,constraint,u);
+   else NLPUnSetInequalityConstraintUpperBound(this,constraint);
   if(l>-1.e19)NLPSetInequalityConstraintLowerBound(this,constraint,l);
+   else  NLPUnSetInequalityConstraintLowerBound(this,constraint);
 
   if(tname!=tmpname)free(tname);
 
@@ -9423,6 +9902,7 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
   char tmpname[1024];
   int i;
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLProblem)NULL)
    {
     sprintf(NLProblemErrorMsg,"Problem (first arg.) is NULL, you must supply a problem.");
@@ -9438,6 +9918,7 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
     printf("%s",NLProblemErrorMsg);fflush(stdout);
     return -12;
    }
+#endif
 
   if(NLPGetNumberOfGroupsInObjective(this)>0)
    {
@@ -9465,9 +9946,16 @@ int NLPSetObjectiveByString(NLProblem this, char *name, int nvars, int *vars, ch
   ef=NLCreateElementFunctionByString(this,tname,nvars,(NLMatrix)NULL,varlist,expr);
   sprintf(tname,"%sNE",name);
   ne=NLCreateNonlinearElement(this,tname,ef,vars);
+  NLFreeElementFunction(ef);
   NLPAddNonlinearElementToObjectiveGroup(this,group,1.,ne);
+  NLFreeNonlinearElement(this,ne); /*@@*/
 
   if(tname!=tmpname)free(tname);
 
   return 0;
+ }
+
+int NLPtrunc(double a)
+ {
+  return (int)floor(a);
  }

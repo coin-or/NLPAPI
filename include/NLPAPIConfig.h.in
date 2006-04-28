@@ -1,1 +1,17 @@
 #undef F77_FUNC
+#undef F77_FUNC_
+
+#undef HAVE_MC29A
+#undef HAVE_MC29AD
+#undef HAVE_MA27A
+#undef HAVE_MA27AD
+#undef HAVE_MA27B
+#undef HAVE_MA27BD
+#undef HAVE_MA27C
+#undef HAVE_MA27CD
+#undef HAVE_MA31D
+#undef HAVE_MA31DD
+
+#undef HAVE_LANCELOT
+#undef VANILLALANCELOT
+#undef HAVE_IPOPT

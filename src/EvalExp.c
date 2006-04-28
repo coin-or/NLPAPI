@@ -40,7 +40,7 @@ double ECEvaluateExpression(struct ECObjectCode *object,int *rc)
   static struct ECExecutableCode *instruction;
   static ECConstanttype type;
 
-  if(errno>0){printf("ECEvaluateExpression %s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
+  if(0&&errno>0){printf("ECEvaluateExpression %s line %d: %s\n",__FILE__,__LINE__,strerror(errno));fflush(stdout);}
 
 /* Check input */
 
@@ -88,7 +88,7 @@ double ECEvaluateExpression(struct ECObjectCode *object,int *rc)
    Destination=instruction->Destination;
    Operand1=instruction->Operand1;
    Operand2=instruction->Operand2;
-   if(errno>0)
+   if(0&&errno>0)
     {
      printf("ECEvaluateExpression %s line %d: %s, statment %d\n",__FILE__,__LINE__,strerror(errno),i);
      ECPrintSymbolTable(object);fflush(stdout);

@@ -2,6 +2,11 @@
 /*       version: %W% %D% %T% */
 /*       Date: January 7, 2003, modified EqSBProblem.c */
 
+/*   (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES      */
+/*   CORPORATION January 7, 2003.  ALL RIGHTS RESERVED.   */
+
+/*  Please refer to the LICENSE file in the top directory*/
+
 #include <NLPAPI.h>
 
 static double NLgSq(double x,void *d){return(x*x);}
@@ -29,6 +34,13 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
   int trace=0;
   int rc;
 
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
+    return 4;
+   }
+
   n=NLPGetNumberOfVariables(P);
   nc=NLPGetNumberOfEqualityConstraints(P);
 
@@ -54,7 +66,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
                            is the sum of the groups from the constraint. The
                            element variables are the non-zero's from the a's,
                            and the element variables from the NE's. */
-      sprintf(NLErrorMsg,"!!!!Equality Constraint %d has %d groups. This is not supported yet.\n",i,NLPGetNumberOfEqualityConstraintGroups(P,i));
+      sprintf(NLErrorMsg,"Equality Constraint %d has %d groups. This is not supported yet.\n",i,NLPGetNumberOfEqualityConstraintGroups(P,i));
       NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
       printf("%s",NLErrorMsg);fflush(stdout);
       rc=12;
@@ -66,7 +78,7 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
 /*   if constraint is a single, nontrivial group, add an objective group which
                                                is g(x)^2 with the NE's from the 
                                                constraint */
-      sprintf(NLErrorMsg,"!!!!Equality Constraint %d has a nontrivial group function. This is not supported yet.\n",i);fflush(stderr);
+      sprintf(NLErrorMsg,"Equality Constraint %d has a nontrivial group function. This is not supported yet.\n",i);fflush(stderr);
       NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
       printf("%s",NLErrorMsg);fflush(stdout);
       rc=12;
@@ -99,14 +111,23 @@ int NLCreateAugmentedLagrangian(NLProblem P, double mu, double *lambda, int *obj
     NLPSetGroupScale(P,group,2*mu*constraintS[i]*constraintS[i]);
    }
 
+  rc=0;
 FreeAndReturn:
   return rc;
  }
 
 int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double *lambda, int *objGroup, double *constraintB, double *constraintS)
  {
+  char RoutineName[]="NLSetLambaAndMuInAugmentedLagrangian";
   int i;
   int group;
+
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
+    return 4;
+   }
 
   for(i=0;i<nc;i++)
    {
@@ -120,10 +141,18 @@ int NLSetLambaAndMuInAugmentedLagrangian(NLProblem P, int nc, double mu, double 
 
 void NLEliminateFixedVariables(NLProblem P)
  {
+  char RoutineName[]="NLEliminateFixedVariables";
   int i,nf,n;
   char type[128];
   double ui,li;
   NLVector a;
+
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLErrorMsg,"Problem (argument 2) is NULL");
+    NLSetError(4,RoutineName,NLErrorMsg,__LINE__,__FILE__);
+    return;
+   }
    
   n=NLPGetNumberOfVariables(P);
   nf=0;

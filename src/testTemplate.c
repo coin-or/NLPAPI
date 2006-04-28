@@ -1,3 +1,9 @@
+/*
+    (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 12/1/2002.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory
+*/
 #include <NLPAPI.h>
 #include <CUTE.h>
 #include <stdio.h>
@@ -8,19 +14,30 @@ int main(int argc,char *argv[])
   double *x=(double*)NULL;
   double *x0=(double*)NULL;
   double *l0=(double*)NULL;
+  NLIpopt Ip;
   NLLancelot Lan;
   double ui,li;
   int i,n;
   int rc;
   int option;
   int lancelot;
+  int ipopt;
   int printproblem;
   int nc;
 
+  lancelot=0;
+  ipopt=0;
+#ifdef HAVE_LANCELOT
   lancelot=1;
+  ipopt=0;
+#endif
+#ifdef HAVE_IPOPT
+  lancelot=0;
+  ipopt=1;
+#endif
   printproblem=0;
 
-  while((option=getopt(argc,argv,"pL"))!=EOF)
+  while((option=getopt(argc,argv,"pLI"))!=EOF)
    {
     switch(option)
      {
@@ -29,12 +46,18 @@ int main(int argc,char *argv[])
        break;
       case 'L':
        lancelot=1;
+       ipopt=0;
+       break;
+      case 'I':
+       lancelot=0;
+       ipopt=1;
        break;
       default:
-       printf("\nusage: \n\n%s -gpL\n",argv[0]);
+       printf("\nusage: \n\n%s -pLI\n",argv[0]);
        printf("\noptions:\n\n");
-       printf("-g \n        Animate the solution.\n");
        printf("-p \n        Print the problem\n");
+       printf("-I \n        Solve Problem using Ipopt\n");
+       printf("-L \n        Solve Problem using Lancelot\n");
        return 0;
        break;
      }
@@ -90,8 +113,17 @@ int main(int argc,char *argv[])
     fflush(stdout);
    }
 
-  if(lancelot)
+  if(ipopt)
    {
+#ifdef HAVE_IPOPT
+    Ip=NLCreateIpopt();
+    IPAddOption(Ip,"ioutput",1.);
+    rc=IPMinimize(Ip,P,x0,(double*)NULL,(double*)NULL,x);
+#endif
+   }
+  else if(lancelot)
+   {
+#ifdef HAVE_LANCELOT
     Lan=NLCreateLancelot();
     LNSetPrintLevel(Lan,1);
     LNSetUseExactFirstDerivatives(Lan,1);
@@ -102,6 +134,7 @@ int main(int argc,char *argv[])
     LNSetMaximumNumberOfIterations(Lan,100000);
     LNSetPrintStop(Lan,100000);
     rc=LNMinimize(Lan,P,x0,(double*)NULL,(double*)NULL,x);
+#endif
    }
 
   if(rc==0)
@@ -132,7 +165,9 @@ int main(int argc,char *argv[])
 /* Clean up                                                   */
 
   NLClearErrors();
-  if(lancelot)
+  if(ipopt)
+    NLFreeIpopt(Ip);
+  else if(lancelot)
     NLFreeLancelot(Lan);
   NLFreeProblem(P);
   free(x);

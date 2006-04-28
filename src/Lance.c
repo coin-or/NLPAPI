@@ -1,3 +1,8 @@
+/*  (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 11/11/1997.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory */
+
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: %W% %D% %T% */
 /*      date:   Nov. 11, 1997                         */
@@ -16,6 +21,9 @@
 #include <string.h>
 #include <ctype.h>
 
+void NLSetError(int,char*,char*,int,char*);
+static char LNLanceErrorMsg[256]="";
+
 void F77_FUNC(elfuns,ELFUNS)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*);
 void F77_FUNC(groups,GROUPS)(F77DOUBLEPRECISION*,F77INTEGER*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77INTEGER*,F77LOGICAL*);
 void F77_FUNC(ranges,RANGES)(F77INTEGER*,F77LOGICAL*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77INTEGER*,F77INTEGER*);
@@ -23,8 +31,6 @@ void F77_FUNC(gminma,GMINMA)(F77INTEGER*,F77DOUBLEPRECISION*);
 void F77_FUNC(settyp,SETTYP)(F77INTEGER*,F77INTEGER*);
 
 void LNDumpSpecFile(NLLancelot);
-void NLSetError(int,char*,char*,int,char*);
-static char LNLanceErrorMsg[256]="";
 double NLPGetObjectiveLowerBound(NLProblem);
 double NLPGetObjectiveUpperBound(NLProblem);
 void LNSetMaxMin(NLLancelot,int);
@@ -385,7 +391,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
 /* Second Line */
 
   fprintf(outsdif,"%2d",ialgor);
-  for(i=0;i<strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
+  for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
   for(i=strlen(pname);i<8;i++)fprintf(outsdif," ");
   if(DOUBLE)fprintf(outsdif,"D");
    else fprintf(outsdif," ");
@@ -394,7 +400,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
   if(verbose)
    {
     fprintf(stdout,"%2d",ialgor);
-    for(i=0;i<strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
+    for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
     for(i=strlen(pname);i<8;i++)fprintf(stdout," ");
     fprintf(stdout,"\n");
    }
@@ -1335,11 +1341,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetGroupName(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1368,20 +1374,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
        }
       sprintf(string,"X%d",i+1);
       if((c=strstr(buffer,"E"))!=(char*)NULL)c[0]='D';
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1411,20 +1417,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
         return(0);
        }
       sprintf(string,"C%d",i);
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1446,20 +1452,20 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
         return(0);
        }
       sprintf(string,"J%d",i);
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
       free(string);
      }else{
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
       if(verbose)
        {
-        for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+        for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
         for(j=strlen(string);j<10;j++)fprintf(stdout," ");
        }
      }
@@ -1478,11 +1484,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetElementType(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1499,11 +1505,11 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     if(l%8==0&&l!=0)fprintf(outsdif,"\n");
     if(verbose)if(l%8==0&&l!=0)fprintf(stdout,"\n");
     string=NLPGetGroupType(P,i);
-    for(j=0;j<strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
+    for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(outsdif,"%c",string[j]);
     for(j=strlen(string);j<10;j++)fprintf(outsdif," ");
     if(verbose)
      {
-      for(j=0;j<strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
+      for(j=0;j<(int)strlen(string)&&j<10;j++)fprintf(stdout,"%c",string[j]);
       for(j=strlen(string);j<10;j++)fprintf(stdout," ");
      }
     l++;
@@ -1612,7 +1618,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
   if(verbose)fprintf(stdout,"\n");
 #endif
 
-  for(i=0;i<strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
+  for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(outsdif,"%c",pname[i]);
   for(i=strlen(pname);i<8;i++)fprintf(outsdif," ");
   if(NFREE>bigint)fprintf(outsdif," ");
   fprintf(outsdif,intfmt,NFREE);
@@ -1671,7 +1677,7 @@ int LNDumpOUTSDIF_D(NLLancelot this,NLProblem P,double *initialGuess,double *mul
     fprintf(stdout,"%s","NNLNIN");
 #endif
     fprintf(stdout,"\n");
-    for(i=0;i<strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
+    for(i=0;i<(int)strlen(pname)&&i<8;i++)fprintf(stdout,"%c",pname[i]);
     for(i=strlen(pname);i<8;i++)fprintf(stdout," ");
     if(NFREE>bigint)fprintf(stdout," ");
     fprintf(stdout,intfmt,NFREE);
@@ -3300,6 +3306,11 @@ int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
  {
   char RoutineName[]="LNMinimize";
 
+#ifndef HAVE_LANCELOT
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+#else
   int i,j,k;
   int verbose;
   int rc;
@@ -3458,12 +3469,18 @@ int LNMinimize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
    }
 
   return rc;
+#endif
  }
 
 int LNMaximize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,double *x)
  {
   char RoutineName[]="LNMaximize";
 
+#ifdef NLPAPI_NO_LANCELOT
+  sprintf(LNLanceErrorMsg,"LANCELOT is not installed on this system (or wasn't when NLPAPI was configured)");
+  NLSetError(12,RoutineName,LNLanceErrorMsg,__LINE__,__FILE__);
+  return 12;
+#else
   int i,j,k;
   int rc;
   char *aliveFile;
@@ -3621,6 +3638,7 @@ int LNMaximize(NLLancelot this,NLProblem P,double *x0,double *z0,double *l0,doub
    }
 
   return rc;
+#endif
  }
 
 void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *fuvals,F77INTEGER *nElements,F77INTEGER *istaev,F77INTEGER *ielvar,
@@ -3634,7 +3652,7 @@ void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *f
   double *Hessian;
   int i,j,k,m;
   int jk;
-  NLElementFunction elementFunction;
+  NLElementFunction elementFunction=(NLElementFunction)NULL;
   int nx,nl;
   double *X,*L,*F;
   int verbose;
@@ -3654,6 +3672,7 @@ void F77_FUNC(iniths,INITHS)(F77DOUBLEPRECISION *variables,F77DOUBLEPRECISION *f
   for(i=0;i<*nElements;i++)
    {
     element=elementList[i]-1;
+    elementFunction=NLNEGetElementFunction(LANSOLProblem,element);
 
 /* element is a nonlinear element */
 

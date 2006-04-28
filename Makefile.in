@@ -11,7 +11,7 @@ exdir    = Examples
 bindir    = bin
 CC        = @CC@
 CFLAGS    = @CFLAGS@
-DEFINES=@DEFS@ -DVANILLALANCELOT
+DEFINES = @DEFS@
 F77       = @F77@
 FSFX      = @FSFX@
 FFLAGS    = @FFLAGS@
@@ -19,7 +19,7 @@ FLIBS    = @FLIBS@
 INSTALL = @INSTALL@
 installdir = @INSTDIR@
 LD        = @CC@
-LIBS = @LIBS@
+LIBS = @LIBS@ $(FLIBS) -lm
 LDFLAGS = @LDFLAGS@
 RM        = @RM@
 RANLIB    = @RANLIB@
@@ -37,7 +37,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 LANOBJ=@LANDIR@/lancelot/objects/double
 LANSRC=@LANDIR@/lancelot/sources/optimizers
 
-all: lib SIFS APILIBRARY LANLIBRARY LIBRARYEC $(bindir)/decodeSIF $(bindir)/Newer
+all: lib SIFS @LAN_TARGS@ APILIBRARY LIBRARYEC $(bindir)/decodeSIF
 
 lib:
 	mkdir lib
@@ -62,6 +62,7 @@ $(FSFX).a:
 	$(RANLIB) $@
 
 APILIBRARY: $(APILIBRARY)($(srcdir)/Lance.o)
+APILIBRARY: $(APILIBRARY)($(srcdir)/Ipopt.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Error.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/ElementFunction.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/NonlinearElement.o)
@@ -69,10 +70,10 @@ APILIBRARY: $(APILIBRARY)($(srcdir)/Matrix.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Problem.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/GroupFunction.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/Vector.o)
-APILIBRARY: $(APILIBRARY)($(srcdir)/drunlan.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/ReportTimes.o)
 APILIBRARY: $(APILIBRARY)($(srcdir)/AugLg.o)
 
+LANLIBRARY: $(APILIBRARY)($(srcdir)/drunlan.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/lance.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/sbmin.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/auglg.o)
@@ -98,7 +99,7 @@ LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/bndsl.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/scaln.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/initw.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/local.o)
-LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/dumhsl.o)
+LANLIBRARY: $(LANLIBRARY)($(srcdir)/dummy_hsl.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/speci.o)
 LANLIBRARY: $(LANLIBRARY)($(LANOBJ)/linpac.o)
 
@@ -168,38 +169,29 @@ $(srcdir)/drunlan.f: $(LANSRC)/runlan.f
 	$(AR) $(APILIBRARY) src/drunlan.o
 	$(RM) src/drunlan.o src/temp_drunlan.f
 	$(RANLIB) $(APILIBRARY)
-	
-$(bindir)/HS65: APILIBRARY LANLIBRARY LIBRARYEC $(exdir)/HS65.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS65.c -Llib -lNLPAPI -lLancelot $(FLIBS) -lm -o$(bindir)/HS65
-	
-$(bindir)/HS32: APILIBRARY LANLIBRARY $(exdir)/HS32.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(exdir)/HS32.c -Llib -lNLPAPI -lLancelot $(FLIBS) -lm -o$(bindir)/HS32
 
-$(bindir)/decodeSIF: $(srcdir)/ParseSIFFile.c
-	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) $(FLIBS) -L./lib -lNLPAPI -lLancelot -o$(bindir)/decodeSIF
-
-$(bindir)/Newer: $(srcdir)/Newer.c
-	$(CC) $(CFLAGS) $(srcdir)/Newer.c -lld -o$(bindir)/Newer
+$(bindir)/HS65: @LAN_TARGS@ APILIBRARY LIBRARYEC $(exdir)/HS65.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS65.c $(LIBS) -o$(bindir)/HS65
 	
+$(bindir)/HS32: @LAN_TARGS@ APILIBRARY $(exdir)/HS32.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(exdir)/HS32.c $(LIBS) -o$(bindir)/HS32
+
 .PRECIOUS: $(APILIBRARY) $(LANLIBRARY) $(LIBRARYEC)
 
 .SILENT: check
 
 check: $(bindir)/HS65 $(bindir)/HS32
 	$(bindir)/HS65 > Examples/HS65.out
-	echo "HS65:  "`grep "Solution is" Examples/HS65.out`\
-	`grep "There were [0-9]* errors" Examples/HS65.out`
-	echo "Solution should be (3.650460,3.650460,4.620420) with       0 errors"
+	echo "HS65:  "
+	grep "Solution from" Examples/HS65.out
+	echo "Solution from Ipopt should be (-5.000000,5.000000,0.000000)"
+	echo "Solution from LANCELOT should be (3.650462,3.650462,4.620418)"
 	echo ""
 	$(bindir)/HS32 > Examples/HS32.out
-	echo "HS32:  "`grep "Solution is" Examples/HS32.out` \
-	`grep "There were [0-9]* errors" Examples/HS32.out`
-	echo "Solution should be (-0.000000,2.225070,0.999992) with       0 errors"
-
-install:$(installdir)/lib/libLancelot.a
-install:$(installdir)/lib/libNLPAPI.a
-install:$(installdir)/include/NLPAPI.h
-install:$(installdir)/include/NLPAPIConfig.h
+	echo "HS32:  "
+	grep "Solution from" Examples/HS32.out
+	echo "Solution from Ipopt should be (0.100000,0.700000,0.200000)"
+	echo "Solution from LANCELOT should be (0.000000,0.000000,1.000000)"
 
 $(installdir)/lib/libLancelot.a: lib/libLancelot.a
 	$(INSTALL) lib/libLancelot.a $(installdir)/lib
@@ -243,11 +235,11 @@ uninstall:
 .SUFFIXES: .SIF
 
 CUTEINCS = -I./include
-CUTELIBS=-L./lib -lCUTE -lNLPAPI -lLancelot -lExpCmp $(FLIBS) -lm
+CUTELIBS=-L./lib -lCUTE $(LIBS) 
 CUTELIB=lib/libCUTE.a
 
 bin/decodeSIF: src/ParseSIFFile.c
-	$(CC) ${CFLAGS} ${CUTEINCS} ${CUTELIBS} src/ParseSIFFile.c -obin/decodeSIF
+	$(CC) $(CFLAGS) $(srcdir)/ParseSIFFile.c $(CFLAGS) $(INCLUDES) $(LIBS) -o$(bindir)/decodeSIF
 
 ${CUTELIB}(${NAME}C.o): src/${NAME}C.c
 	$(CC) ${CFLAGS} ${CUTEINCS} -c src/${NAME}C.c -o ${NAME}C.o
@@ -280,12 +272,11 @@ src/${NAME}Fort.f: bin/decodeSIF SIFS/${NAME}.SIF
 	mv include/junk include/CUTE.h
 	rm -f SIFS/${NAME}H.h
 
-bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) APILIBRARY LANLIBRARY LIBRARYEC
-	$(CC) ${CFLAGS} ${CUTEINCS} ${CUTELIBS} src/test${NAME}.c -o bin/test${NAME}
-#	rm -f src/test${NAME}.c src/${NAME}C.c src/${NAME}Fort.f
+bin/test${NAME}: src/test${NAME}.c ${CUTELIB}(${NAME}C.o) ${CUTELIB}(${NAME}Fort.o) @LAN_TARGS@ APILIBRARY LIBRARYEC
+	$(CC) ${CFLAGS} ${CUTEINCS} $(DEFINES) src/test${NAME}.c ${CUTELIBS} -o bin/test${NAME}
 
 CUTE: SIFS
 	./makeCUTE
 
-SIFS:
-	mkdir SIFS
+install: @LAN_IARGS@ $(installdir)/lib/libNLPAPI.a $(installdir)/include/NLPAPI.h $(installdir)/include/NLPAPIConfig.h
+installLANDIR: $(installdir)/lib/libLancelot.a

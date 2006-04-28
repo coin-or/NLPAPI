@@ -16,15 +16,7 @@
 \newtheorem{Corollary}[Lemma]{Corollary}
 \newtheorem{Conjecture}[Lemma]{Conjecture}
 
-\newif\iftechexplorer \techexplorerfalse
-
-\iftechexplorer
-\pagecolor{silver}
-\else
-\def\docLink#1#2{{#2}}
-\fi
-
-\title{NLPAPI: An API to Nonlinear Programming Problems}
+\title{NLPAPI: An API to Nonlinear Programming Problems. {\bf User's Guide}}
 \author{
   Michael E. Henderson\\[.5\baselineskip]
   IBM Research Division\\
@@ -43,13 +35,12 @@
     form 
     \begin{displaymath}
      \begin{array}{ll}
-      {\rm minimize}~O({\bf v})& \qquad\qquad \rm Objective~Function\\
+      {\rm minimize}~O({\bf x})& \qquad\qquad \rm Objective~Function\\
       {\rm subject~to:}\\
-      \qquad l_i \leq v_i \leq u_i& \qquad\qquad  \rm Simple~Bounds\\
-      \qquad c_i({\bf v}) = 0& \qquad\qquad \rm Nonlinear~Equality
+      \qquad l_i \leq x_i \leq u_i& \qquad\qquad  \rm Simple~Bounds\\
+      \qquad c_i({\bf x}) = 0& \qquad\qquad \rm Equality
                                                       ~Constraints\\
-      \qquad L_i \leq c_i({\bf v}) \leq U_i& \qquad\qquad \rm Nonlinear
-                                                      ~Inequality~Constraints\\
+      \qquad L_i \leq c_i({\bf x}) \leq U_i& \qquad\qquad \rm Inequality~Constraints\\
      \end{array}
     \end{displaymath}
 
@@ -88,43 +79,193 @@
     ACM Transactions on Mathematical Software, Vol. 21, No. 1, March 1995, Pages 123--160.
     A web page on a follow-on called "CUTEr" is available at {\tt http://hsl.rl.ac.uk/cuter-www/}.
 
-   \section{Defining a Problem}
+   \section{Overview}
 
    The API deals with minimization (or maximization) problems of the form
    \begin{displaymath}
-     \begin{array}{ll}
-      {\rm minimize}~O({\bf v})& \qquad\qquad \rm Objective~Function\\
+     \begin{array}{l}
+      {\rm minimize}~O({\bf x})
       {\rm subject~to:}\\
-      \qquad l_i \leq v_i \leq u_i& \qquad\qquad  \rm Simple~Bounds\\
-      \qquad c_i({\bf v}) = 0& \qquad\qquad \rm Nonlinear~Equality
-                                                      ~Constraints\\
-      \qquad L_i \leq c_i({\bf v}) \leq U_i& \qquad\qquad \rm Nonlinear
-                                                      ~Inequality~Constraints\\
+      \qquad l_i \leq x_i \leq u_i
+      \qquad c_i({\bf x}) = 0
+      \qquad L_i \leq c_i({\bf x}) \leq U_i
      \end{array}
    \end{displaymath}
 
      To define the problem the user creates an {\tt NLProblem} that
     holds all of the information defining the problem. The problem is initially
-    empty, and the user must set the objective, and add equality and inequality constraints.
-    This can be done either by specifying an expression, supplying subroutines to evaluate the
-    objective/constraints, or building them as a list of groups (i.e. LANCELOT's form). For example
+    empty, and the user provides a function for the objective,
+    and adds equality and inequality constraints. Each of these, the objective and the
+    constraints involve scalar valued functions of the problem variables ${\bf x}$.
+
+   \subsection{Functions}
+
+    The NLPAPI provides three methods of defining these functions. They may be defined by an expression 
+    in a string (easy for small problems, but slow and cumbersome for large problems), by subroutines
+    which evaluate the function (good for medium sized problems), and finally in LANCELOT's group partially
+    separable form (designed for handling large problems, but needlessly complicated for small problems).
+
+    \subsection{Defining functions by means of an expression in a string}
+
+     The user can define a function by means of a string containing an expression. For example
+     \begin{verbatim}
+       "(x1-x2)**2+(x1+x2-10)**2/9+(x3-5)**2"
+     \end{verbatim}
+     Since unknowns (in this case {\tt x1}, {\tt x2} and {\tt x3}) may appear in any order, a second string is
+     used which declares what the argument of the function is. That is,
+     \begin{verbatim}
+       F("[x1,x2,x3]") = "(x1-x2)**2+(x1+x2-10)**2/9+(x3-5)**2"
+     \end{verbatim}
+     This list of variable names is a comma separated list of identifiers, delimited by square brackets.
+     Finally, since typically not all problem variables will appear in the expression, there must be a mapping 
+     from the problem variables to the identifiers. This is done with an array of integers,
+     {\tt v} which lists the {\tt nv} variables whose values are substituted for the variables
+     {\tt "[x1,x2,x3]"}. For example
+     \begin{verbatim}
+      nv=3;v[0]=0;v[1]=10;v[2]=9;
+     \end{verbatim}
+     would indicate that to evaluate this function the idenitifier {\tt x1} is assigned to the value of the
+     first problem variable (note that we start counting at zero), {\tt x2} the value of the $x_{10}$,
+     and {\tt x2} to $x_9$. The problem variables may appear in any order, and may even appear more than once.
+
+     To set the objective to this function would require code looking somthing like:
+    \begin{verbatim}
+     int v[3];
+
+     P=NLCreateProblem(...);
+
+     v[0]=0;v[1]=10;v[2]=9;
+     NLPSetObjectiveByString(P,"Obj",3,v,
+         "[x1,x2,x3]","(x1-x2)**2+(x1+x2-10)**2/9+(x3-5)**2");
+    \end{verbatim}
+     (The {\tt NLP\-Set\-Objective\-ByString} is described more completely below.)
+
+    \subsection{Defining functions by means of subroutines}
+
+     Functions may also be defined by providing subroutines which evaluate the functions and optionaly it's
+     fist and second derivatives. (Some solvers provide differencing or updates for estimating derivatives.)
+     The subroutines (e.g. {\tt F}, {\tt dF} and {\tt ddF}) are called back when the objective is evaluated. The
+     arguments the the subroutines are:
+     \begin{verbatim}
+   double F(int nv, double *x, void *data)
+      int nv     The number of entries in x, as provided by
+                        the user in the SetObjective call.
+      double *x  An array with the values of the coordinates
+                        of x.
+      void *data The data pointer provided by the user in the
+                        SetObjective call.
+
+   double dF(int i, int nv, double *x, void *data);
+
+   double ddF(int i, int j, int nv, double *x, void *data);
+     \end{verbatim}
+     and all return a scalar result. {\tt dF} evaluates the partial derivative $\partial F/\partial x_i$, 
+     and {\tt ddF} evaluates the second partial derivatives $\partial^2 F/\partial x_i\partial x_j$.
+
+     The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the
+     functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
+     the data block can be released. The array {\tt v} lists the {\tt nv} problem variables on which the objective
+     (or constraint, since the same form is used for those) depends.This allows
+     a simple form of sparsity).
+
+     The correspondance between the arguments of {\tt F} and the problem variable is handled in the same
+     way as for the expression. So to set the objective this way would require code:
+     \begin{verbatim}
+      v[0]=0;v[1]=10;v[2]=9;
+      rc=NLPSetObjective(P,name,3,v,F,dF,ddF,data,freedata);
+     \end{verbatim}
+
+    \subsection{Defining functions in group partially separable form}
+
+    And the last option for defining a function is in group partially separable form. This represents the
+    function as the sum of a number of {\it groups} --
     \begin{displaymath}
-     O({\bf v}) = \sum_{i=1}^{ng} {1\over s_i}g_i( \sum_{j=1}^{ne_i} w_{ij} f_{ij}(R {\bf ev}_{ij}) 
-             + <a_i,{\bf v}> - b_i)
+     f({\bf x}) = \sum_{i=1}^{ng} {1\over s_i}g_i( \sum_{j=1}^{ne_i} w_{ij} f_{ij}(R {\bf e}_{ij}) 
+             + <a_i,{\bf x}> - b_i)
     \end{displaymath}
-    The $g_i:\R\into\R$ are caled groups functions, the $f_{ij}:\R^{nev_{ij}}\into\R$ are called nonlinear
-    elements, $<a_i,{\bf v}>$ is called the linear element of the group and $b_i$ is called 
-    the constant element.
+    The $g_i:\R\into\R$ are called group functions, $s_i$ the group scale, and the argument of the
+    group function is called the {\it group element}. The group element consists of three parts. 
+    The $f_{ij}:\R^{e_{ij}}\into\R$ are called nonlinear elements, $<a_i,{\bf x}>$ is the linear element,
+    and $b_i$ is called the constant element. Note that the constant element appears with a minus sign.
+
+    The objective function is created when the problem is created. Constraint functions are created 
+    by routines like {NLPAddNonlinearEqualityConstraint}. When the function is first created it consists
+    of a single {\it trivial} group (i.e. the group function is the identity, the group scale is 1, 
+    there are no nonlinear elements, and the linear and constant elements are zero). 
+
+    The group functions $g_i$ and element functions $f_{ij}$ may be defined by string or subroutine
+    in the same way as an entire function. (The secret is that those routines define a trivial group
+    with a single nonlinear element!) This is done with the {\tt NLP\-Create\-Group\-Function},
+    {\tt NLP\-Create\-Group\-Function\-ByString}, and {\tt NLP\-Create\-Element\-Function}, and
+    {\tt NLP\-Create\-Element\-Function\-ByString} routines. A nonlinear element associates a 
+    {\it range transformation} $R$ and selection of element variables $e$ from the problem variables
+    with an element function.
+
+    The basic procedure for defining a function this way is add the required number of groups,
+    then to set the group scales and group functions, 
+    the linear and constant elements, and finally to add a set of nonloinear elements (though the order 
+    isn't important). The groups are referred to by the order in which they were added to the function.
+
+    The code for the example is a little more complicated using this method
+\begin{verbatim}
+  P=NLCreateProblem(...);
+  g=NLCreateGroupFunction(P,"L2",gSq,dgSq,ddgSq,NULL,NULL);
+  f=NLCreateElementFunction(P,"fSq",1,NULL,fSq,dfSq,ddfSq,NULL,NULL);
+
+\end{verbatim}
+
+  The objective function $(x_1-x_2)^2+(x_1+x_2-10)^2+(x_3-5)^2$, consists
+  of three groups, all with the same group function, but different linear
+  parts. $(x_1-x_2)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ1","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,1.);
+  rc=NLVSetC(a,10,-1.);
+  rc=NLVSetC(a,9,0.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  NLFreeVector(a);
+\end{verbatim}
+  $(x_1+x_2-10)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ2","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,1.);
+  rc=NLVSetC(a,10,1.);
+  rc=NLVSetC(a,9,0.);
+  rc=NLPSetObjectiveGroupScale(P,group,9.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  rc=NLPSetObjectiveGroupB(P,group,10.);
+  NLFreeVector(a);
+\end{verbatim}
+  $(x_3-5)^2$:
+\begin{verbatim}
+  group=NLPAddGroupToObjective(P,"OBJ3","L2");
+  rc=NLPSetObjectiveGroupFunction(P,group,g);
+  a=NLCreateVector(3);
+  rc=NLVSetC(a,0,0.);
+  rc=NLVSetC(a,10,0.);
+  rc=NLVSetC(a,9,1.);
+  rc=NLPSetObjectiveGroupA(P,group,a);
+  rc=NLPSetObjectiveGroupB(P,group,5.);
+  NLFreeVector(a);
+\end{verbatim}
+
+   \subsection{Solving a Problem}
 
      To invoke a solver the user creates a solver, e.g. an {\tt NLLancelot} data structure.
     This has a set of parameters and a routines for invoking the solver.
     Default values are assigned to the parameters controlling the solver, and the user 
     can set parameters as needed.
 
-    Below we describe the "C" interface. A discussion of how to call the routines from Fortran 
-    is deferred to a later section.
+   \section{The API}
 
-   \subsection{The Nonlinear Optimization Problem}
+   The API consists of two main pieces: routines for defining the problem, and routines for setting up
+   a solver and solving a problem.
+
+   \subsection{Defining The Nonlinear Optimization Problem}
 
      To begin the user creates a problem --
      \begin{verbatim}
@@ -156,21 +297,39 @@
      \begin{verbatim}
       NLProblem P;
       char name[]="Obj";
-      int nv;
-      int *v;
+      int v[];
       double (*F)(int,double*,void*);
       double (*dF)(int,int,double*,void*);
       double (*ddF)(int,int,int,double*,void*);
       void *data;
-      void (*freedata)(void*));
+      void (*freedata)(void*);
 
-      nv=3;v[0]=0;v[1]=45;v[2]=9;
-      rc=NLPSetObjective(P,name,nv,v,F,dF,ddF,data,freedata);
+      v[0]=0;v[1]=45;v[2]=9;
+      rc=NLPSetObjective(P,name,3,v,F,dF,ddF,data,freedata);
+     \end{verbatim}
+
+     The subroutines {\tt F}, {\tt dF} and {\tt ddF} are called back when the objective is evaluated. The
+     arguments to {\tt F} are:
+     \begin{verbatim}
+   double F(int nv, double *x, void *data)
+      int nv     The number of entries in x, as provided by
+                        the user in the SetObjective call.
+      double *x  An array with the values of the coordinates
+                        of x.
+      void *data The data pointer provided by the user in the
+                        SetObjective call.
      \end{verbatim}
      The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the 
      functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
      the data block can be released. The array {\tt v} lists the {\tt nv} problem variables on which the objective
-     depends (a simple form of sparsity).
+     (or constraint, since the same form is used for those) depends.This allows
+     a simple form of sparsity).
+      
+     {\tt dF} evaluates the partial derivatives of {\tt f}, and has an
+     additional integer argument (the first argument), which
+     indicates which partial derivative to return. {\tt ddF} evaluates the
+     second partial derivatives, and has two additional integer arguments
+     (the first two).
 
      Alternatively, the user can define the objective by means of a string containing an expression:
      \begin{verbatim}
@@ -183,12 +342,13 @@
      value of the 46th problem variable, and so on.
 
      Finally, the objective may be defined via LANCELOT's Group Partial Separable form. When the problem is 
-     first created the objective has a single, empty group. Additional groups are added using the
+     first created the objective has a single group with trivial group function, no nonlinearelements, and
+     linear and constant elements both zero. Additional groups ban be added using the
      {\tt NLPAdd\-Group\-To\-Objective} routine. Each group has a group function $g_i$, a group scale $s_i$,
-     a linear element, ${\bf a}_i.{\bf v}$, a constant element $b_i$, and a nonlinear element $N_i({\bf v})$.
+     a linear element, ${\bf a}_i.{\bf x}$, a constant element $b_i$, and a nonlinear element $N_i({\bf x})$.
      (See the sections below on ``Groups''). 
      \begin{displaymath}
-       O({\bf v}) = \sum {1\over{s_i}}g_i(N_i({\bf v})+ {\bf a}_i.{\bf v}-b_i)
+       O({\bf x}) = \sum {1\over{s_i}}g_i(N_i({\bf x})+ {\bf a}_i.{\bf x}-b_i)
      \end{displaymath}
      The various pieces are added or set with the routines
      \begin{verbatim}
@@ -200,7 +360,7 @@
      \end{verbatim}
      The nonlinear element is itself composed of a sum of element functions:
      \begin{displaymath}
-       N({\bf v}) = \sum w_i ef_i( \sum R_{ij} ev_j )
+       N({\bf x}) = \sum w_i f_i( \sum R_{ij} e_j )
      \end{displaymath}
      for a more complete description see the section below on nonlinear elements.
 
@@ -238,25 +398,25 @@
       char name[]="InEq0";
       double l,u;
       int nv;
-      int *v;
+      int v[3];
       double (*F)(int,double*,void*);
       double (*dF)(int,int,double*,void*);
       double (*ddF)(int,int,int,double*,void*);
       void *data;
-      void (*freedata)(void*));
+      void (*freedata)(void*);
 
       nv=3;v[0]=3;v[1]=10;v[2]=9;
       l=1.;u=10.;
       rc=NLPAddInequalityConstraint(P,name,l,u,nv,v,F,dF,ddF,
                                               data,freedata);
      \end{verbatim}
-     The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the
+     The {\tt data} variable allows the user to associate a data block with the constraint, that is passed to the
      functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
      the data block can be released. The array {\tt v} lists the {\tt nv} variables on which the function depends.
 
-     Alternatively, the user can define the objective by means of a string containing an expression:
+     Alternatively, the user can define the constraint by means of a string containing an expression:
      \begin{verbatim}
-        rc=NLPAddInequalityConstraintByString(P,name,nv,v,l,u,
+        rc=NLPAddInequalityConstraintByString(P,name,l,u,nv,v,
             "[x1,x2,x3]","48-x1**2-x2**2-x3**2");
      \end{verbatim}
      The array {\tt v} lists the {\tt nv} variables whose values are substituted for the variables
@@ -311,21 +471,21 @@
       double (*dF)(int,int,double*,void*);
       double (*ddF)(int,int,int,double*,void*);
       void *data;
-      void (*freedata)(void*));
+      void (*freedata)(void*);
 
       nv=3;v[0]=3;v[1]=10;v[2]=9;
       l=1.;u=10.;
-      rc=NLPAddEqualityConstraint(P,name,l,u,nv,v,F,dF,ddF,
+      rc=NLPAddEqualityConstraint(P,name,nv,v,F,dF,ddF,
                                               data,freedata);
 
      \end{verbatim}
-     The {\tt data} variable allows the user to associate a data block with the objective, that is passed to the
+     The {\tt data} variable allows the user to associate a data block with the constraint, that is passed to the
      functions when they are evaluated. The {\tt freedata} routine is called when the problem is free'd, so that
      the data block can be released. The array {\tt v} lists the {\tt nv} variables on which the function depends.
 
-     Alternatively, the user can define the objective by means of a string containing an expression:
+     Alternatively, the user can define the constraint by means of a string containing an expression:
      \begin{verbatim}
-        rc=NLPAddEqualityConstraintByString(P,name,nv,v,l,u,
+        rc=NLPAddEqualityConstraintByString(P,name,nv,v,
             "[x1,x2,x3]",
             "48-x1**2-x2**2-x3**2");
      \end{verbatim}
@@ -380,19 +540,19 @@
     identical, and adds a linear equality constraint which requires that the variable take that value, 
     and removes the simple bounds.
     \begin{verbatim}
-     NLEliminateFixedVariables
+     NLEliminateFixedVariables(P);
     \end{verbatim}
     This is useful for interior point techniques, which replace simple bounds by log barriers, and have
     problems dealing with identical bounds.
 
     Inequalities are sometimes dealt with by introducing extra variables called slacks. That is,
     \begin{displaymath}
-      l\leq f({\bf v})\leq u
+      l\leq f({\bf x})\leq u
     \end{displaymath}
     is replaced by an equality constraint and simple bounds on the slack --
     \begin{displaymath}
     \begin{array}{l}
-      \displaystyle f({\bf v})-s =0 \\
+      \displaystyle f({\bf x})-s =0 \\
       \displaystyle 0\leq s \leq u-l\\
     \end{array}
     \end{displaymath}
@@ -406,20 +566,20 @@
     That is, 
     \begin{displaymath}
     \begin{array}{lr}
-      \displaystyle {\rm minimize}&\displaystyle\quad O({\bf v}) \\
-      \displaystyle {\rm subject to}& \displaystyle\quad f({\bf v})=0\\
+      \displaystyle {\rm minimize}&\displaystyle\quad O({\bf x}) \\
+      \displaystyle {\rm subject to}& \displaystyle\quad f({\bf x})=0\\
     \end{array}
     \end{displaymath}
     becomes
     \begin{displaymath}
-      {\rm minimize}\quad O({\bf v}) + {1\over{2\mu}}f^2({\bf v})-\lambda f({\bf v})
+      {\rm minimize}\quad O({\bf x}) + {1\over{2\mu}}f^2({\bf x})-\lambda f({\bf x})
     \end{displaymath}
-    In the limit of small penalty parameter $\mu$, and minimizing w.r.t. both ${\bf v}$ and $\lambda$, the
+    In the limit of small penalty parameter $\mu$, and minimizing w.r.t. both ${\bf x}$ and $\lambda$, the
     solution of this problem is the same as the solution of the original problem.
 
     This is a little complicated, because of the group structure. In fact, the terms added to the objective are
     \begin{displaymath}
-      {\rm minimize}\quad O({\bf v}) + {1\over{2\mu}}\sum_i \left( f_i({\bf v})-\mu\lambda_i\right)^2
+      {\rm minimize}\quad O({\bf x}) + {1\over{2\mu}}\sum_i \left( f_i({\bf x})-\mu\lambda_i\right)^2
     \end{displaymath}
     Notice that this perserves the group structure (see the floowing sections) {\it if} the constraint has
     only one group and the trivial group function. This is required to use this transformation. If this is
@@ -448,10 +608,10 @@
      In LANCELOT, functions are made of a sum of {\it groups}. Each group is a scaled scalar function of a nonlinear
      function of the problem variables. A group is of the form
      \begin{displaymath}
-      \sum {1\over{s_i}}g_i(N_i({\bf v})+ {\bf a}_i.{\bf v}-b_i)
+      \sum {1\over{s_i}}g_i(N_i({\bf x})+ {\bf a}_i.{\bf x}-b_i)
      \end{displaymath}
-     When a is created the group function $g_i$ is the identity, and the group scale is 1. In addition, there are no
-     nonlinear elements (the $N_i({\bf v})$), and the linear element ${\bf a}_i.{\bf v}$ and the constant element
+     When a group is created the group function $g_i$ is the identity, and the group scale is 1. In addition, there are no
+     nonlinear elements (the $N_i({\bf x})$), and the linear element ${\bf a}_i.{\bf x}$ and the constant element
      $b_i$ are zero. 
 
      The user creates a group when he adds a constraint, or when he adds a group to the objective or constraint.
@@ -517,10 +677,10 @@
       elements whose values are summed, then added to the value of the linear and constant elements to give the argument
       to the group function. Each nonlinear element is of the form:
      \begin{displaymath}
-          N({\bf v}) = \sum_i w_i f_i( \sum_j R_{ij} ev_j )
+          N({\bf x}) = \sum_i w_i f_i( \sum_j R_{ij} e_j )
      \end{displaymath}
      The element weight $w_i$ is a scalar (default is $w_i=1$). The element function $f_i$ is a scalar valued function
-     of a set of {\it internal variables}, which are a linear combination of the element variables $ev_j$ (a subset of
+     of a set of {\it internal variables}, which are a linear combination of the element variables $e_j$ (a subset of
      the problem variables). The range transformation $R_{ij}$ relates element variables to internal variables.
 
      An element function is created with one of the routines:
@@ -981,435 +1141,4 @@ The program produced the following output --
 Solution is (3.650460,3.650460,4.620420)
 There were 0 errors
 \end{verbatim}
-
-\section{Reference}
-
-\subsection{Nonlinear Optimization Problems}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateProblem&\pageref{Subroutine:NLCreateProblem}\\
-\tt NLRefProblem&\pageref{Subroutine:NLRefProblem}\\
-\tt NLFreeProblem&\pageref{Subroutine:NLFreeProblem}\\
-\\
-\tt NLPrintProblem&\pageref{Subroutine:NLPrintProblem}\\
-\tt NLPrintProblemShort&\pageref{Subroutine:NLPrintProblemShort}\\
-\\
-\tt NLPGetProblemName&\pageref{Subroutine:NLPGetProblemName}\\
-\tt NLPGetNumberOfVariables&\pageref{Subroutine:NLPGetNumberOfVariables}\\
-\tt NLPSetVariableScale&\pageref{Subroutine:NLPSetVariableScale}\\
-\tt NLPGetVariableScale&\pageref{Subroutine:NLPGetVariableScale}\\
-\tt NLPSetVariableName&\pageref{Subroutine:NLPSetVariableName}\\
-\tt NLPGetVariableName&\pageref{Subroutine:NLPGetVariableName}\\
-\tt NLPSetSimpleBounds&\pageref{Subroutine:NLPSetSimpleBounds}\\
-\tt NLPSetLowerSimpleBound&\pageref{Subroutine:NLPSetLowerSimpleBound}\\
-\tt NLPGetLowerSimpleBound&\pageref{Subroutine:NLPGetLowerSimpleBound}\\
-\tt NLPIsLowerSimpleBoundSet&\pageref{Subroutine:NLPIsLowerSimpleBoundSet}\\
-\tt NLPSetUpperSimpleBound&\pageref{Subroutine:NLPSetUpperSimpleBound}\\
-\tt NLPGetUpperSimpleBound&\pageref{Subroutine:NLPGetUpperSimpleBound}\\
-\tt NLPIsUpperSimpleBoundSet&\pageref{Subroutine:NLPIsUpperSimpleBoundSet}\\
-\\
-\tt NLPConvertToEqualityAndBoundsOnly&\pageref{Subroutine:NLPConvertToEqualityAndBoundsOnly}\\
-\tt NLCopyProblem&\pageref{Subroutine:NLCopyProblem}\\
-\tt NLCreateAugmentedLagrangian&\pageref{Subroutine:NLCreateAugmentedLagrangian}\\
-\tt NLSetLambaAndMuInAugmentedLagrangian&\pageref{Subroutine:NLSetLambaAndMuInAugmentedLagrangian}\\
-\tt NLEliminateFixedVariables&\pageref{Subroutine:NLEliminateFixedVariables}\\
-\end{tabular}
-\end{center}
-\newpage
-
-\subsubsection{The Objective}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPSetObjective&\pageref{Subroutine:NLPSetObjective}\\
-\tt NLPSetObjectiveByString&\pageref{Subroutine:NLPSetObjectiveByString}\\
-\\
-\tt NLPAddGroupToObjective&\pageref{Subroutine:NLPAddGroupToObjective}\\
-\tt NLPAddNonlinearElementToObjectiveGroup&\pageref{Subroutine:NLPAddNonlinearElementToObjectiveGroup}\\
-\tt NLPSetObjectiveGroupA&\pageref{Subroutine:NLPSetObjectiveGroupA}\\
-\tt NLPSetObjectiveGroupB&\pageref{Subroutine:NLPSetObjectiveGroupB}\\
-\tt NLPSetObjectiveGroupFunction&\pageref{Subroutine:NLPSetObjectiveGroupFunction}\\
-\tt NLPSetObjectiveGroupScale&\pageref{Subroutine:NLPSetObjectiveGroupScale}\\
-\\
-\tt NLPGetNumberOfGroupsInObjective&\pageref{Subroutine:NLPGetNumberOfGroupsInObjective}\\
-\tt NLPGetObjectiveGroupNumber&\pageref{Subroutine:NLPGetObjectiveGroupNumber}\\
-\\
-\tt NLPEvaluateObjective&\pageref{Subroutine:NLPEvaluateObjective}\\
-\tt NLPEvaluateGradientOfObjective&\pageref{Subroutine:NLPEvaluateGradientOfObjective}\\
-\tt NLPEvaluateHessianOfObjective&\pageref{Subroutine:NLPEvaluateHessianOfObjective}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{Equality Constraints}
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPAddEqualityConstraint&\pageref{Subroutine:NLPAddEqualityConstraint}\\
-\tt NLPAddEqualityConstraintByString&\pageref{Subroutine:NLPAddEqualityConstraintByString}\\
-\\
-\tt NLPAddNonlinearEqualityConstraint&\pageref{Subroutine:NLPAddNonlinearEqualityConstraint}\\
-\tt NLPAddLinearEqualityConstraint&\pageref{Subroutine:NLPAddLinearEqualityConstraint}\\
-\\
-\tt NLPAddNonlinearElementToEqualityConstraint&\pageref{Subroutine:NLPAddNonlinearElementToEqualityConstraint}\\
-\tt NLPSetEqualityConstraintA&\pageref{Subroutine:NLPSetEqualityConstraintA}\\
-\tt NLPSetEqualityConstraintB&\pageref{Subroutine:NLPSetEqualityConstraintB}\\
-\\
-\tt NLPGetNumberOfEqualityConstraints&\pageref{Subroutine:NLPGetNumberOfEqualityConstraints}\\
-\tt NLPGetEqualityConstraintGroupNumber&\pageref{Subroutine:NLPGetEqualityConstraintGroupNumber}\\
-\\
-\tt NLPEvaluateEqualityConstraint&\pageref{Subroutine:NLPEvaluateEqualityConstraint}\\
-\tt NLPEvaluateGradientOfEqualityConstraint&\pageref{Subroutine:NLPEvaluateGradientOfEqualityConstraint}\\
-\tt NLPEvaluateHessianOfEqualityConstraint&\pageref{Subroutine:NLPEvaluateHessianOfEqualityConstraint}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{Inequality Constraints}
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPAddInequalityConstraint&\pageref{Subroutine:NLPAddInequalityConstraint}\\
-\tt NLPAddInequalityConstraintByString&\pageref{Subroutine:NLPAddInequalityConstraintByString}\\
-\\
-\tt NLPAddNonlinearInequalityConstraint&\pageref{Subroutine:NLPAddNonlinearInequalityConstraint}\\
-\tt NLPAddLinearInequalityConstraint&\pageref{Subroutine:NLPAddLinearInequalityConstraint}\\
-\\
-\tt NLPAddNonlinearElementToInequalityConstraint&\pageref{Subroutine:NLPAddNonlinearElementToInequalityConstraint}\\
-\tt NLPSetInequalityConstraintA&\pageref{Subroutine:NLPSetInequalityConstraintA}\\
-\tt NLPSetInequalityConstraintB&\pageref{Subroutine:NLPSetInequalityConstraintB}\\
-\tt NLPGetInequalityConstraintLowerBound&\pageref{Subroutine:NLPGetInequalityConstraintLowerBound}\\
-\tt NLPSetInequalityConstraintLowerBound&\pageref{Subroutine:NLPSetInequalityConstraintLowerBound}\\
-\tt NLPGetInequalityConstraintUpperBound&\pageref{Subroutine:NLPGetInequalityConstraintUpperBound}\\
-\tt NLPSetInequalityConstraintUpperBound&\pageref{Subroutine:NLPSetInequalityConstraintUpperBound}\\
-\tt NLPSetInequalityConstraintBounds&\pageref{Subroutine:NLPSetInequalityConstraintBounds}\\
-\\
-\tt NLPGetNumberOfInequalityConstraints&\pageref{Subroutine:NLPGetNumberOfInequalityConstraints}\\
-\tt NLPGetInequalityConstraintGroupNumber&\pageref{Subroutine:NLPGetInequalityConstraintGroupNumber}\\
-\\
-\tt NLPEvaluateInequalityConstraint&\pageref{Subroutine:NLPEvaluateInequalityConstraint}\\
-\tt NLPEvaluateGradientOfInequalityConstraint&\pageref{Subroutine:NLPEvaluateGradientOfInequalityConstraint}\\
-\tt NLPEvaluateHessianOfInequalityConstraint&\pageref{Subroutine:NLPEvaluateHessianOfInequalityConstraint}\\
-\end{tabular}
-\end{center}
-%% \subsubsection{MinMax Constraints}
-%% \begin{center}
-%% \begin{tabular}{ll}
-%% \tt NLPAddMinMaxConstraint&\pageref{Subroutine:NLPAddMinMaxConstraint}\\
-%% \tt NLPAddNonlinearElementToMinMaxConstraint&\pageref{Subroutine:NLPAddNonlinearElementToMinMaxConstraint}\\
-%% \tt NLPSetMinMaxConstraintA&\pageref{Subroutine:NLPSetMinMaxConstraintA}\\
-%% \tt NLPSetMinMaxConstraintB&\pageref{Subroutine:NLPSetMinMaxConstraintB}\\
-%% \tt NLPGetNumberOfMinMaxConstraints&\pageref{Subroutine:NLPGetNumberOfMinMaxConstraints}\\
-%% \tt NLPGetMinMaxConstraintGroupNumber&\pageref{Subroutine:NLPGetMinMaxConstraintGroupNumber}\\
-%% \tt NLPGetNumberOfElementsM&\pageref{Subroutine:NLPGetNumberOfElementsM}\\
-%% \tt NLPSetMinMaxBounds&\pageref{Subroutine:NLPSetMinMaxBounds}\\
-%% \tt NLPSetLowerMinMaxBound&\pageref{Subroutine:NLPSetLowerMinMaxBound}\\
-%% \tt NLPGetLowerMinMaxBound&\pageref{Subroutine:NLPGetLowerMinMaxBound}\\
-%% \tt NLPSetUpperMinMaxBound&\pageref{Subroutine:NLPSetUpperMinMaxBound}\\
-%% \tt NLPGetUpperMinMaxBound&\pageref{Subroutine:NLPGetUpperMinMaxBound}\\
-%% \end{tabular}
-%% \end{center}
-
-%%\subsubsection{Evaluation}
-
-%%\begin{center}
-%%\begin{tabular}{ll}
-%%\tt NLPEvaluateMinMaxConstraint&\pageref{Subroutine:NLPEvaluateMinMaxConstraint}\\
-%%\tt NLPEvaluateGradientOfMinMaxConstraint&\pageref{Subroutine:NLPEvaluateGradientOfMinMaxConstraint}\\
-%%\tt NLPEvaluateHessianOfMinMaxConstraint&\pageref{Subroutine:NLPEvaluateHessianOfMinMaxConstraint}\\
-%%\tt NLPInvalidateGroupAndElementCaches&\pageref{Subroutine:NLPInvalidateGroupAndElementCaches}\\
-%%\end{tabular}
-%%\end{center}
-
-\subsection{Error Handling}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLError&\pageref{Subroutine:NLError}\\
-\tt NLGetNErrors&\pageref{Subroutine:NLGetNErrors}\\
-\tt NLGetErrorSev&\pageref{Subroutine:NLGetErrorSev}\\
-\tt NLGetErrorRoutine&\pageref{Subroutine:NLGetErrorRoutine}\\
-\tt NLGetErrorMsg&\pageref{Subroutine:NLGetErrorMsg}\\
-\tt NLGetErrorLine&\pageref{Subroutine:NLGetErrorLine}\\
-\tt NLGetErrorFile&\pageref{Subroutine:NLGetErrorFile}\\
-\tt NLClearErrors&\pageref{Subroutine:NLClearErrors}\\
-\end{tabular}
-\end{center}
-
-\subsection{Vectors}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateVector&\pageref{Subroutine:NLCreateVector}\\
-\tt NLCreateVectorWithSparseData&\pageref{Subroutine:NLCreateVectorWithSparseData}\\
-\tt NLCreateVectorWithFullData&\pageref{Subroutine:NLCreateVectorWithFullData}\\
-\tt NLCreateDenseWrappedVector&\pageref{Subroutine:NLCreateDenseWrappedVector}\\
-\\
-\tt NLFreeVector&\pageref{Subroutine:NLFreeVector}\\
-\tt NLRefVector&\pageref{Subroutine:NLRefVector}\\
-\\
-\tt NLPrintVector&\pageref{Subroutine:NLPrintVector}\\
-\\
-\tt NLVGetNC&\pageref{Subroutine:NLVGetNC}\\
-\tt NLVGetC&\pageref{Subroutine:NLVGetC}\\
-\tt NLVSetC&\pageref{Subroutine:NLVSetC}\\
-\\
-\tt NLCopyVector&\pageref{Subroutine:NLCopyVector}\\
-\tt NLVSetToZero&\pageref{Subroutine:NLVSetToZero}\\
-\tt NLVIncrementC&\pageref{Subroutine:NLVIncrementC}\\
-\tt NLVInnerProd&\pageref{Subroutine:NLVInnerProd}\\
-\tt NLVPlusV&\pageref{Subroutine:NLVPlusV}\\
-\tt NLNegateVector&\pageref{Subroutine:NLNegateVector}\\
-\\
-\tt NLVSparse&\pageref{Subroutine:NLVSparse}\\
-\tt NLVnNonZeros&\pageref{Subroutine:NLVnNonZeros}\\
-\tt NLVnonZero&\pageref{Subroutine:NLVnonZero}\\
-\tt NLVGetNumberOfNonZeros&\pageref{Subroutine:NLVGetNumberOfNonZeros}\\
-\tt NLVGetNonZeroCoord&\pageref{Subroutine:NLVGetNonZeroCoord}\\
-\tt NLVGetNonZero&\pageref{Subroutine:NLVGetNonZero}\\
-\\
-\tt NLVWrapped&\pageref{Subroutine:NLVWrapped}\\
-\tt NLVData&\pageref{Subroutine:NLVData}\\
-\end{tabular}
-\end{center}
-
-\subsection{Matrices}
-
-\begin{center}
-\begin{tabular}{ll}
-
-\tt NLCreateMatrix&\pageref{Subroutine:NLCreateMatrix}\\
-\tt NLCreateMatrixWithData&\pageref{Subroutine:NLCreateMatrixWithData}\\
-\tt NLCreateSparseMatrix&\pageref{Subroutine:NLCreateSparseMatrix}\\
-\tt NLCreateWSMPSparseMatrix&\pageref{Subroutine:NLCreateWSMPSparseMatrix}\\
-\tt NLCreateDenseWrappedMatrix&\pageref{Subroutine:NLCreateDenseWrappedMatrix}\\
-\\
-\tt NLRefMatrix&\pageref{Subroutine:NLRefMatrix}\\
-\tt NLFreeMatrix&\pageref{Subroutine:NLFreeMatrix}\\
-\\
-\tt NLMGetNumberOfRows&\pageref{Subroutine:NLMGetNumberOfRows}\\
-\tt NLMGetNumberOfCols&\pageref{Subroutine:NLMGetNumberOfCols}\\
-\tt NLMGetElement&\pageref{Subroutine:NLMGetElement}\\
-\tt NLMSetElement&\pageref{Subroutine:NLMSetElement}\\
-\tt NLMIncrementElement&\pageref{Subroutine:NLMIncrementElement}\\
-\tt NLMatrixDoubleProduct&\pageref{Subroutine:NLMatrixDoubleProduct}\\
-\tt NLMVMult&\pageref{Subroutine:NLMVMult}\\
-\tt NLMVMultT&\pageref{Subroutine:NLMVMultT}\\
-\tt NLMSetToZero&\pageref{Subroutine:NLMSetToZero}\\
-\tt NLMatrixClone&\pageref{Subroutine:NLMatrixClone}\\
-\tt NLGetGershgorinBounds&\pageref{Subroutine:NLGetGershgorinBounds}\\
-\tt NLMatrixOneNorm&\pageref{Subroutine:NLMatrixOneNorm}\\
-\tt NLMSumSubMatrixInto&\pageref{Subroutine:NLMSumSubMatrixInto}\\
-\tt NLMSumRankOneInto&\pageref{Subroutine:NLMSumRankOneInto}\\
-\tt NLMMMMProd&\pageref{Subroutine:NLMMMMProd}\\
-\\
-\tt NLMSparse&\pageref{Subroutine:NLMSparse}\\
-\tt NLMDetermineHessianSparsityStructure&\pageref{Subroutine:NLMDetermineHessianSparsityStructure}\\
-\tt NLMPrintSparsityStructure&\pageref{Subroutine:NLMPrintSparsityStructure}\\
-\tt NLMData&\pageref{Subroutine:NLMData}\\
-\tt NLMnE&\pageref{Subroutine:NLMnE}\\
-\tt NLMRow&\pageref{Subroutine:NLMRow}\\
-\tt NLMCol&\pageref{Subroutine:NLMCol}\\
-\\
-\tt NLPrintMatrix&\pageref{Subroutine:NLPrintMatrix}\\
-\end{tabular}
-\end{center}
-
-\subsection{Group Functions}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateGroupFunctionByString&\pageref{Subroutine:NLCreateGroupFunctionByString}\\
-\tt NLCreateGroupFunction&\pageref{Subroutine:NLCreateGroupFunction}\\
-\tt NLRefGroupFunction&\pageref{Subroutine:NLRefGroupFunction}\\
-\tt NLFreeGroupFunction&\pageref{Subroutine:NLFreeGroupFunction}\\
-\\
-\tt NLGEval&\pageref{Subroutine:NLGEval}\\
-\tt NLGEvalDer&\pageref{Subroutine:NLGEvalDer}\\
-\tt NLGEvalSecDer&\pageref{Subroutine:NLGEvalSecDer}\\
-\end{tabular}
-\end{center}
-
-\subsection{Element Functions}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateElementFunctionByString&\pageref{Subroutine:NLCreateElementFunctionByString}\\
-\tt NLCreateElementFunction&\pageref{Subroutine:NLCreateElementFunction}\\
-\tt NLRefElementFunction&\pageref{Subroutine:NLRefElementFunction}\\
-\tt NLFreeElementFunction&\pageref{Subroutine:NLFreeElementFunction}\\
-\\
-\tt NLEGetDimension&\pageref{Subroutine:NLEGetDimension}\\
-\tt NLEEval&\pageref{Subroutine:NLEEval}\\
-\tt NLEEvalDer&\pageref{Subroutine:NLEEvalDer}\\
-\tt NLEEvalSecDer&\pageref{Subroutine:NLEEvalSecDer}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{Nonlinear Elements}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateNonlinearElement&\pageref{Subroutine:NLCreateNonlinearElement}\\
-\tt NLRefNonlinearElement&\pageref{Subroutine:NLRefNonlinearElement}\\
-\tt NLFreeNonlinearElement&\pageref{Subroutine:NLFreeNonlinearElement}\\
-\\
-\tt NLNEGetName&\pageref{Subroutine:NLNEGetName}\\
-\tt NLNEGetElementDimension&\pageref{Subroutine:NLFreeNonlinearElement}\\
-\tt NLNEGetInternalDimension&\pageref{Subroutine:NLNEGetInternalDimension}\\
-\tt NLNEGetElementFunction&\pageref{Subroutine:NLNEGetElementFunction}\\
-\tt NLNEGetIndex&\pageref{Subroutine:NLNEGetIndex}\\
-\tt NNLEGetRangeXForm&\pageref{Subroutine:NNLEGetRangeXForm}\\
-\\
-\tt NLPGetNumberOfNonlinearElements&\pageref{Subroutine:NLPGetNumberOfNonlinearElements}\\
-%\tt NLPGetNonlinearElement&\pageref{Subroutine:NLPGetNonlinearElement}\\
-\\
-\tt NLPrintNonlinearElement&\pageref{Subroutine:NLPrintNonlinearElement}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{The list of groups}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPGetNumberOfGroups&\pageref{Subroutine:NLPGetNumberOfGroups}\\
-\tt NLPGetTypeOfGroup&\pageref{Subroutine:NLPGetTypeOfGroup}\\
-\tt NLPGetGroupTypeName&\pageref{Subroutine:NLPGetGroupTypeName}\\
-\tt NLPGetGroupName&\pageref{Subroutine:NLPGetGroupName}\\
-\tt NLPSetGroupFunction&\pageref{Subroutine:NLPSetGroupFunction}\\
-\tt NLPGetGroupFunction&\pageref{Subroutine:NLPGetGroupFunction}\\
-\tt NLPIsGroupFunctionSet&\pageref{Subroutine:NLPIsGroupFunctionSet}\\
-\tt NLPSetGroupA&\pageref{Subroutine:NLPSetGroupA}\\
-\tt NLPGetGroupA&\pageref{Subroutine:NLPGetGroupA}\\
-\tt NLPIsGroupASet&\pageref{Subroutine:NLPIsGroupASet}\\
-\tt NLPSetGroupB&\pageref{Subroutine:NLPSetGroupB}\\
-\tt NLPGetGroupB&\pageref{Subroutine:NLPGetGroupB}\\
-\tt NLPIsGroupBSet&\pageref{Subroutine:NLPIsGroupBSet}\\
-\tt NLPSetGroupScale&\pageref{Subroutine:NLPSetGroupScale}\\
-\tt NLPGetGroupScale&\pageref{Subroutine:NLPGetGroupScale}\\
-\\
-\tt NLPrintGroup&\pageref{Subroutine:NLPrintGroup}\\
-\tt NLPrintGroupShort&\pageref{Subroutine:NLPrintGroupShort}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{The nonlinear elements (of each group)}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPAddNonlinearElementToGroup&\pageref{Subroutine:NLPAddNonlinearElementToGroup}\\
-\tt NLPGetElementWeight&\pageref{Subroutine:NLPGetElementWeight}\\
-\tt NLPSetElementWeight&\pageref{Subroutine:NLPSetElementWeight}\\
-\tt NLPIsElementWeightSet&\pageref{Subroutine:NLPIsElementWeightSet}\\
-\tt NLPGetElementFunctionOfGroup&\pageref{Subroutine:NLPGetElementFunctionOfGroup}\\
-\tt NLPGetGroupNonlinearElement&\pageref{Subroutine:NLPGetGroupNonlinearElement}\\
-\tt NLPGetElementFunction&\pageref{Subroutine:NLPGetElementFunction}\\
-\tt NLPSetElementFunction&\pageref{Subroutine:NLPSetElementFunction}\\
-\tt NLPSetElementFunctionWithRange&\pageref{Subroutine:NLPSetElementFunctionWithRange}\\
-\tt NLPIsElementFunctionSet&\pageref{Subroutine:NLPIsElementFunctionSet}\\
-\tt NLPGetElementRangeTransformationOfGroup&\pageref{Subroutine:NLPGetElementRangeTransformationOfGroup}\\
-\tt NLPGetElementRangeTransformation&\pageref{Subroutine:NLPGetElementRangeTransformation}\\
-\tt NLPGetNumberOfInternalVariablesInElement&\pageref{Subroutine:NLPGetNumberOfInternalVariablesInElement}\\
-\tt NLPGetElementIndexIntoWhole&\pageref{Subroutine:NLPGetElementIndexIntoWhole}\\
-\tt NLPGetElementNumberOfUnknowns&\pageref{Subroutine:NLPGetElementNumberOfUnknowns}\\
-\tt NLPGetNumberOfElementsInGroup&\pageref{Subroutine:NLPGetNumberOfElementsInGroup}\\
-\tt NLPGetNumberOfElements&\pageref{Subroutine:NLPGetNumberOfElements}\\
-\tt NLPGetNumberOfElementsO&\pageref{Subroutine:NLPGetNumberOfElementsO}\\
-\tt NLPGetNumberOfElementsE&\pageref{Subroutine:NLPGetNumberOfElementsE}\\
-\tt NLPGetNumberOfElementsI&\pageref{Subroutine:NLPGetNumberOfElementsI}\\
-\tt NLPGetNumberOfElementsM&\pageref{Subroutine:NLPGetNumberOfElementsM}\\
-\tt NLPGetElementTypeName&\pageref{Subroutine:NLPGetElementTypeName}\\
-\tt NLPGetTypeOfElement&\pageref{Subroutine:NLPGetTypeOfElement}\\
-\\
-\tt NLPrintElement&\pageref{Subroutine:NLPrintElement}\\
-\end{tabular}
-\end{center}
-\newpage
-
-\subsubsection{The list of Types}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt NLPGetNumberOfElementTypes&\pageref{Subroutine:NLPGetNumberOfElementTypes}\\
-\tt NLPGetElementType&\pageref{Subroutine:NLPGetElementType}\\
-\tt NLPGetNumberOfGroupTypes&\pageref{Subroutine:NLPGetNumberOfGroupTypes}\\
-\tt NLPGetGroupType&\pageref{Subroutine:NLPGetGroupType}\\
-\end{tabular}
-\end{center}
-
-\subsection{Lancelot}
-
-\subsubsection{Construction}
-\begin{center}
-\begin{tabular}{ll}
-\tt NLCreateLancelot&\pageref{Subroutine:NLCreateLancelot}\\
-\tt NLFreeLancelot&\pageref{Subroutine:NLFreeLancelot}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{Solving Problems}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt LNMinimize&\pageref{Subroutine:LNMinimize}\\
-\tt LNMaximize&\pageref{Subroutine:LNMaximize}\\
-\end{tabular}
-\end{center}
-
-\subsubsection{Setting LANCELOT Parameters}
-
-\begin{center}
-\begin{tabular}{ll}
-\tt LNSetCheckDerivatives&\pageref{Subroutine:LNSetCheckDerivatives}\\
-\tt LNGetCheckDerivatives&\pageref{Subroutine:LNGetCheckDerivatives}\\
-\tt LNSetConstraintAccuracy&\pageref{Subroutine:LNSetConstraintAccuracy}\\
-\tt LNGetConstraintAccuracy&\pageref{Subroutine:LNGetConstraintAccuracy}\\
-\tt LNSetFirstConstraintAccuracy&\pageref{Subroutine:LNSetFirstConstraintAccuracy}\\
-\tt LNGetFirstConstraintAccuracy&\pageref{Subroutine:LNGetFirstConstraintAccuracy}\\
-\tt LNSetFirstGradientAccuracy&\pageref{Subroutine:LNSetFirstGradientAccuracy}\\
-\tt LNGetFirstGradientAccuracy&\pageref{Subroutine:LNGetFirstGradientAccuracy}\\
-\tt LNSetGradientAccuracy&\pageref{Subroutine:LNSetGradientAccuracy}\\
-\tt LNGetGradientAccuracy&\pageref{Subroutine:LNGetGradientAccuracy}\\
-\tt LNSetInitialPenalty&\pageref{Subroutine:LNSetInitialPenalty}\\
-\tt LNGetInitialPenalty&\pageref{Subroutine:LNGetInitialPenalty}\\
-\tt LNSetMaximumNumberOfIterations&\pageref{Subroutine:LNSetMaximumNumberOfIterations}\\
-\tt LNGetMaximumNumberOfIterations&\pageref{Subroutine:LNGetMaximumNumberOfIterations}\\
-\tt LNSetPenaltyBound&\pageref{Subroutine:LNSetPenaltyBound}\\
-\tt LNGetPenaltyBound&\pageref{Subroutine:LNGetPenaltyBound}\\
-\tt LNSetPrintEvery&\pageref{Subroutine:LNSetPrintEvery}\\
-\tt LNGetPrintEvery&\pageref{Subroutine:LNGetPrintEvery}\\
-\tt LNSetPrintLevel&\pageref{Subroutine:LNSetPrintLevel}\\
-\tt LNGetPrintLevel&\pageref{Subroutine:LNGetPrintLevel}\\
-\tt LNSetPrintStart&\pageref{Subroutine:LNSetPrintStart}\\
-\tt LNGetPrintStart&\pageref{Subroutine:LNGetPrintStart}\\
-\tt LNSetPrintStop&\pageref{Subroutine:LNSetPrintStop}\\
-\tt LNGetPrintStop&\pageref{Subroutine:LNGetPrintStop}\\
-\tt LNSetRequireExactCauchyPoint&\pageref{Subroutine:LNSetRequireExactCauchyPoint}\\
-\tt LNGetRequireExactCauchyPoint&\pageref{Subroutine:LNGetRequireExactCauchyPoint}\\
-\tt LNSetSaveDataEvery&\pageref{Subroutine:LNSetSaveDataEvery}\\
-\tt LNGetSaveDataEvery&\pageref{Subroutine:LNGetSaveDataEvery}\\
-\end{tabular}
-\end{center}
-\newpage
-\begin{center}
-\begin{tabular}{ll}
-\tt LNSetScalings&\pageref{Subroutine:LNSetScalings}\\
-\tt LNGetScalings&\pageref{Subroutine:LNGetScalings}\\
-\tt LNSetSolveBQPAccurately&\pageref{Subroutine:LNSetSolveBQPAccurately}\\
-\tt LNGetSolveBQPAccurately&\pageref{Subroutine:LNGetSolveBQPAccurately}\\
-\tt LNSetLinearSolverMethod&\pageref{Subroutine:LNSetLinearSolverMethod}\\
-\tt LNGetLinearSolverMethod&\pageref{Subroutine:LNGetLinearSolverMethod}\\
-\tt LNGetLinearSolverBandwidth&\pageref{Subroutine:LNGetLinearSolverBandwidth}\\
-\tt LNSetStopOnBadDerivatives&\pageref{Subroutine:LNSetStopOnBadDerivatives}\\
-\tt LNGetStopOnBadDerivatives&\pageref{Subroutine:LNGetStopOnBadDerivatives}\\
-\tt LNSetTrustRegionRadius&\pageref{Subroutine:LNSetTrustRegionRadius}\\
-\tt LNGetTrustRegionRadius&\pageref{Subroutine:LNGetTrustRegionRadius}\\
-\tt LNSetTrustRegionType&\pageref{Subroutine:LNSetTrustRegionType}\\
-\tt LNGetTrustRegionType&\pageref{Subroutine:LNGetTrustRegionType}\\
-\tt LNSetUseExactFirstDerivatives&\pageref{Subroutine:LNSetUseExactFirstDerivatives}\\
-\tt LNGetUseExactFirstDerivatives&\pageref{Subroutine:LNGetUseExactFirstDerivatives}\\
-\tt LNSetUseExactSecondDerivatives&\pageref{Subroutine:LNSetUseExactSecondDerivatives}\\
-\tt LNGetUseExactSecondDerivatives&\pageref{Subroutine:LNGetUseExactSecondDerivatives}\\
-\end{tabular}
-\end{center}
-%%---------------------------------------------------------------------------
-
-\input{reference.tex}
 \end{document}

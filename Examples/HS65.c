@@ -19,6 +19,7 @@ int main(int argc,char *argv[])
   NLVector a;
   double x0[3];
   NLLancelot Lan;
+  NLIpopt Ip;
   double x[3];
   int constraint;
   int element;
@@ -118,25 +119,7 @@ int main(int argc,char *argv[])
   x0[1]=5.;
   x0[2]=0.;
 
-/*x0[0]=3.65046;
-  x0[1]=3.65046;
-  x0[2]=4.62042;*/
-
-  Lan=NLCreateLancelot();
-  rc=LNSetPrintLevel(Lan,1);
-/*rc=LNSetInitialPenalty(Lan,1.e-4);
-  rc=LNSetPenaltyBound(Lan,1.e-4);*/
-
-  rc=LNMinimize(Lan,P,x0,(double*)NULL,(double*)NULL,x);
-
-  printf("Solution is (");
-  for(i=0;i<3;i++)
-   {
-    if(i>0)printf(",");
-    printf("%lf",x[i]);
-   }
-  printf(")\n");
-  printf("There were %d errors\n",NLGetNErrors());
+  printf("There were %d errors defining the problem\n",NLGetNErrors());
   if(NLError())
    {
     for(i=0;i<NLGetNErrors();i++)
@@ -147,12 +130,75 @@ int main(int argc,char *argv[])
      }
    }
 
+/*x0[0]=3.65046;
+  x0[1]=3.65046;
+  x0[2]=4.62042;*/
+
+#ifdef HAVE_IPOPT
+  Ip=NLCreateIpopt();
+  IPAddOption(Ip,"ioutput",1.);
+/*IPAddOption(Ip,"dtol",1e-12);*/
+
+  NLClearErrors();
+  rc=IPMinimize(Ip,P,x0,(double*)NULL,(double*)NULL,x);
+
+  printf("Solution from IPOPT is (");
+  for(i=0;i<3;i++)
+   {
+    if(i>0)printf(",");
+    printf("%lf",x[i]);
+   }
+  printf(")\n");
+  printf("There were %d errors in IPOPT\n",NLGetNErrors());
+  if(NLError())
+   {
+    for(i=0;i<NLGetNErrors();i++)
+     {
+      printf(" %d line %d, file %s, Sev: %d\n",i,NLGetErrorLine(i),NLGetErrorFile(i),NLGetErrorSev(i));fflush(stdout);
+      printf("    Routine: \"%s\"\n",NLGetErrorRoutine(i));fflush(stdout);
+      printf("    Msg: \"%s\"\n",NLGetErrorMsg(i));fflush(stdout);
+     }
+   }
+#endif
+
+#ifdef HAVE_LANCELOT
+  Lan=NLCreateLancelot();
+  rc=LNSetPrintLevel(Lan,1);
+/*rc=LNSetInitialPenalty(Lan,1.e-4);
+  rc=LNSetPenaltyBound(Lan,1.e-4);*/
+
+  NLClearErrors();
+  rc=LNMinimize(Lan,P,x0,(double*)NULL,(double*)NULL,x);
+
+  printf("Solution from LANCELOT is (");
+  for(i=0;i<3;i++)
+   {
+    if(i>0)printf(",");
+    printf("%lf",x[i]);
+   }
+  printf(")\n");
+  printf("There were %d errors in IPOPT\n",NLGetNErrors());
+  if(NLError())
+   {
+    for(i=0;i<NLGetNErrors();i++)
+     {
+      printf(" %d line %d, file %s, Sev: %d\n",i,NLGetErrorLine(i),NLGetErrorFile(i),NLGetErrorSev(i));fflush(stdout);
+      printf("    Routine: \"%s\"\n",NLGetErrorRoutine(i));fflush(stdout);
+      printf("    Msg: \"%s\"\n",NLGetErrorMsg(i));fflush(stdout);
+     }
+   }
+#endif
+
 /* Clean up                                                   */
 
   NLClearErrors();
   NLFreeGroupFunction(g);
   NLFreeElementFunction(f);
+#ifdef HAVE_IPOPT
+  NLFreeIpopt(Ip);
+#else
   NLFreeLancelot(Lan);
+#endif
   NLFreeProblem(P);
   return(0);
  }

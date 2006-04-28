@@ -1,3 +1,9 @@
+/*
+    (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 12/1/2002.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory
+*/
 #include <NLPAPI.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -299,7 +305,7 @@ NLProblem LNReadSIF(char *SIFfile, double **x0, double **l0)
   int nc;
 
   strcpy(inname,SIFfile);
-  if(strlen(SIFfile)<4 || strcmp(SIFfile+strlen(SIFfile)-4,".SIF"))strcat(inname,".SIF");
+  if((int)strlen(SIFfile)<4 || strcmp(SIFfile+(int)strlen(SIFfile)-4,".SIF"))strcat(inname,".SIF");
 
   if((fin=fopen(inname,"r"))==(FILE*)NULL)
    {
@@ -308,7 +314,7 @@ NLProblem LNReadSIF(char *SIFfile, double **x0, double **l0)
    }
 
   strcpy(foutname,inname);
-  foutname[strlen(inname)-4]=0x0;
+  foutname[(int)strlen(inname)-4]=0x0;
   strcat(foutname,"Fort.f");
   if((FOUT=fopen(foutname,"w"))==(FILE*)NULL)
    {
@@ -317,7 +323,7 @@ NLProblem LNReadSIF(char *SIFfile, double **x0, double **l0)
    }
 
   strcpy(ioutname,inname);
-  ioutname[strlen(inname)-4]=0x0;
+  ioutname[(int)strlen(inname)-4]=0x0;
   strcat(ioutname,"H.h");
   if((finc=fopen(ioutname,"w"))==(FILE*)NULL)
    {
@@ -326,7 +332,7 @@ NLProblem LNReadSIF(char *SIFfile, double **x0, double **l0)
    }
 
   strcpy(coutname,inname);
-  coutname[strlen(inname)-4]=0x0;
+  coutname[(int)strlen(inname)-4]=0x0;
   strcat(coutname,"C.c");
   if((COUT=fopen(coutname,"w"))==(FILE*)NULL)
    {
@@ -606,7 +612,7 @@ NextLine:
        line[i]=fgetc(fin);i++;
       }while(!iscntrl(line[i-1]) && !feof(fin));
     line[i-1]=0x0;
-    while(strlen(line)>0&&line[strlen(line)-1]==' ')line[strlen(line)-1]=0x0;
+    while((int)strlen(line)>0&&line[(int)strlen(line)-1]==' ')line[(int)strlen(line)-1]=0x0;
     if(verbose){printf("got line -->%s<-- from file\n",line);fflush(stdout);}
     fromfile=1;
     lineno++;
@@ -617,8 +623,8 @@ NextLine:
     parseFields(line,code,name1,name2,&val1Set,&val1,name3,&val2Set,&val2);
     if(!val1Set)val1=findParmValue(name2);
     if(!val2Set)val2=findParmValue(name3);
-    iv1=val1;
-    iv2=val2;
+    iv1=(int)val1;
+    iv2=(int)val2;
     addDo(name1,iv1,iv2);
     if(fromfile)addToStack(line);
     setDoStart(nDos-1,cInStack);
@@ -628,7 +634,7 @@ NextLine:
    {
     parseFields(line,code,name1,name2,&val1Set,&val1,name3,&val2Set,&val2);
     if(!val1Set)val1=findParmValue(name2);
-    iv=val1;
+    iv=(int)val1;
     setDoIncr(name1,iv);
     if(fromfile)addToStack(line);
     setDoStart(nDos-1,cInStack);
@@ -708,7 +714,7 @@ void parseFields(char *line, char *code, char *name1, char *name2,int *val1Set,d
   static char temp[20];
   int verbose=0;
 
-  n=strlen(line);
+  n=(int)strlen(line);
 
   code[0]=' ';
   code[1]=' ';
@@ -1066,67 +1072,67 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
      switch(code[1])
       {
        case 'E':
-        iv=val1;
+        iv=(int)val1;
         if(verbose){printf("Code IE, set variable %s to %d\n",name1,iv);}
         setParameter(name1,iv*1.0);
         break;
        case 'R':
-        iv=val1;
-        iv=findParmValue(name2);
+        iv=(int)val1;
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("Code IR, set variable %s to %d=int(%lf)\n",name1,iv,findParmValue(name2));}
         setParameter(name1,parval);
         break;
        case 'A':
-        iv=val1+findParmValue(name2);
+        iv=(int)(val1+findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IA, set variable %s to %f=int(%lf+%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'S':
-        iv=val1-findParmValue(name2);
+        iv=(int)(val1-findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IS, set variable %s to %f=int(%lf-%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'M':
-        iv=val1*findParmValue(name2);
+        iv=(int)(val1*findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IM, set variable %s to %f=int(%lf*%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case 'D':
-        iv=val1/findParmValue(name2);
+        iv=(int)(val1/findParmValue(name2));
         parval=iv;
         if(verbose){printf("Code IM, set variable %s to %f=int(%lf/%lf)\n",name1,parval,val1,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '=':
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("Code I=, set variable %s to %f=int(%lf)\n",name1,parval,findParmValue(name2));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '+':
-        iv=findParmValue(name2)+findParmValue(name3);
+        iv=(int)(findParmValue(name2)+findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I+, set variable %s to %f=int(%lf+%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '-':
-        iv=findParmValue(name2)-findParmValue(name3);
+        iv=(int)(findParmValue(name2)-findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I-, set variable %s to %f=int(%lf-%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '*':
-        iv=findParmValue(name2)*findParmValue(name3);
+        iv=(int)(findParmValue(name2)*findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I*, set variable %s to %f=int(%lf*%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
         break;
        case '/':
-        iv=findParmValue(name2)/findParmValue(name3);
+        iv=(int)(findParmValue(name2)/findParmValue(name3));
         parval=iv;
         if(verbose){printf("Code I*, set variable %s to %f=int(%lf/%lf)\n",name1,parval,findParmValue(name2),findParmValue(name3));fflush(stdout);}
         setParameter(name1,parval);
@@ -1143,7 +1149,7 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         setParameter(name1,val1);
         break;
        case 'I':
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         setParameter(name1,parval);
         break;
@@ -1178,6 +1184,10 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         else if(!strcmp(name2,"HYPSIN"))parval=sinh(val1);
         else if(!strcmp(name2,"HYPCOS"))parval=cosh(val1);
         else if(!strcmp(name2,"HYPTAN"))parval=tanh(val1);
+        else {
+          fprintf(stderr,"Problem parsing, function \"%s\" is not allowed\n",name2);
+          parval=0.;
+         }
         setParameter(name1,parval);
         break;
        case '=':
@@ -1216,6 +1226,10 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         else if(!strcmp(name2,"HYPSIN"))parval=sinh(val1);
         else if(!strcmp(name2,"HYPCOS"))parval=cosh(val1);
         else if(!strcmp(name2,"HYPTAN"))parval=tanh(val1);
+        else {
+          fprintf(stderr,"Problem parsing, function \"%s\" is not allowed\n",name2);
+          parval=0.;
+         }
         setParameter(name1,parval);
         break;
        default:
@@ -1235,7 +1249,7 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
        case 'I':
         expandName(name1,tmpname1);expandName(name2,tmpname2);
         if(verbose){printf("  expanded name1=->%s<-, name2=->%s<-\n",tmpname1,tmpname2);fflush(stdout);}
-        iv=findParmValue(name2);
+        iv=(int)findParmValue(name2);
         parval=iv;
         if(verbose){printf("  set %s to %f\n",tmpname1,parval);fflush(stdout);}
         setParameter(tmpname1,parval);
@@ -1285,6 +1299,10 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         else if(!strcmp(name2,"HYPSIN"))parval=sinh(val1);
         else if(!strcmp(name2,"HYPCOS"))parval=cosh(val1);
         else if(!strcmp(name2,"HYPTAN"))parval=tanh(val1);
+        else {
+          fprintf(stderr,"Problem parsing, function \"%s\" is not allowed\n",name2);
+          parval=0.;
+         }
         if(verbose){printf("  set %s to %f\n",tmpname1,parval);fflush(stdout);}
         setParameter(tmpname1,parval);
         break;
@@ -1341,6 +1359,10 @@ void handlePARMS(char *code,char *name1,char *name2,int val1Set,double val1,char
         else if(!strcmp(name2,"HYPSIN"))parval=sinh(val1);
         else if(!strcmp(name2,"HYPCOS"))parval=cosh(val1);
         else if(!strcmp(name2,"HYPTAN"))parval=tanh(val1);
+        else {
+          fprintf(stderr,"Problem parsing, function \"%s\" is not allowed\n",name2);
+          parval=0.;
+         }
         if(verbose){printf("  set %s to %f\n",tmpname1,parval);fflush(stdout);}
         setParameter(name1,parval);
         break;
@@ -2605,13 +2627,13 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      if(verbose){printf(" case ' '\n");fflush(stdout);}
      ig=findGroupNumber(name2);c=getGroupConstraint(ig);
      if(verbose){printf(" group[%d], type %c, value=%lf\n",ig,getGroupGType(ig),val1);fflush(stdout);}
-     if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val1);
-      else                     NLPSetInequalityConstraintLowerBound(P,c,val1);
+     if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintUpperBound(P,c,val1);printf("SetLowerBound\n");fflush(stdout);}
+      else                     {NLPSetInequalityConstraintLowerBound(P,c,-val1);printf("SetUpperBound\n");fflush(stdout);}
      if(name3[0]!=0x0)
       {
        ig=findGroupNumber(name3);c=getGroupConstraint(ig);
-       if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val2);
-        else                    NLPSetInequalityConstraintLowerBound(P,c,val2);
+       if(getGroupGType(ig)=='G'){NLPSetInequalityConstraintUpperBound(P,c,val2);printf("SetLowerBound\n");fflush(stdout);}
+        else                    {NLPSetInequalityConstraintLowerBound(P,c,-val2);printf("SetUpperBound\n");fflush(stdout);}
       }
      break;
     case 'X':
@@ -2620,12 +2642,12 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      ig=findGroupNumber(tmpname2);c=getGroupConstraint(ig);
      if(verbose){printf(" group[%d], type %c\n",ig,getGroupGType(ig));fflush(stdout);}
      if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val1);
-      else                    NLPSetInequalityConstraintLowerBound(P,c,val1);
+      else                    NLPSetInequalityConstraintLowerBound(P,c,-val1);
      if(name3[0]!=0x0)
       {
        ig=findGroupNumber(tmpname3);c=getGroupConstraint(ig);
        if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val2);
-        else                    NLPSetInequalityConstraintLowerBound(P,c,val2);
+        else                    NLPSetInequalityConstraintLowerBound(P,c,-val2);
       }
      break;
     case 'Z':
@@ -2635,7 +2657,7 @@ void handleINEQUALITYBOUNDS(char *code,char *name1,char *name2,int val1Set,doubl
      if(verbose){printf(" group[%d], type %c\n",ig,getGroupGType(ig));fflush(stdout);}
      val1=findParmValue(tmpname3);
      if(getGroupGType(ig)=='G')NLPSetInequalityConstraintUpperBound(P,c,val1);
-      else                    NLPSetInequalityConstraintLowerBound(P,c,val1);
+      else                    NLPSetInequalityConstraintLowerBound(P,c,-val1);
      NLPSetGroupB(P,ig,val1);
      break;
     default:
@@ -5177,12 +5199,12 @@ void expandName(char *in,char *out)
     while(in[i]!=0x0 && in[i]!=',' && in[i]!=')'){parm[k]=in[i];i++;k++;}
     parm[k]=0x0;
     if(verbose){printf("   next parm: -->%s<--\n",parm);fflush(stdout);}
-    iv=findParmValue(parm);
+    iv=(int)findParmValue(parm);
     if(verbose){printf("        value: %lf->%d\n",findParmValue(parm),iv);fflush(stdout);}
     sprintf(val,"%d",iv);
-    if(verbose){printf("        value: -->%s<-- len %d\n",val,strlen(val));fflush(stdout);}
+    if(verbose){printf("        value: -->%s<-- len %d\n",val,(int)strlen(val));fflush(stdout);}
     if(!first){out[j]=',';j++;}
-    for(k=0;k<strlen(val);k++){out[j]=val[k];j++;}
+    for(k=0;k<(int)strlen(val);k++){out[j]=val[k];j++;}
     out[j]=0x0;
     i++;
     if(verbose){printf("   so far: -->%s<--\n",out);fflush(stdout);}
@@ -5299,10 +5321,10 @@ void DumpProblemToCSource(FILE *fid)
     strcpy(tmp,rectproblemName);
     strcat(tmp,(elementtypes[i]).name);
     rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"void F77_FUNC(ff%s,FF%s)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*);\n",
                       lower,upper);
     fprintf(fid,"void F77_FUNC(fg%s,FG%s)(F77INTEGER*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*);\n"
@@ -5317,10 +5339,10 @@ void DumpProblemToCSource(FILE *fid)
     strcpy(tmp,rectproblemName);
     strcat(tmp,(grouptypes[i]).name);
     rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"void F77_FUNC(gf%s,GF%s)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*);\n",
                       lower,upper);
     fprintf(fid,"void F77_FUNC(gg%s,GG%s)(F77DOUBLEPRECISION*,F77DOUBLEPRECISION*,F77DOUBLEPRECISION*);\n"
@@ -5548,10 +5570,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(elementtypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(ff%s,FF%s)(x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5573,10 +5595,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(elementtypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(fg%s,FG%s)(&i,x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5598,10 +5620,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(elementtypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(fh%s,FH%s)(&i,&j,x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5628,10 +5650,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(grouptypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(gf%s,GF%s)(&x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5654,10 +5676,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(grouptypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(gg%s,GG%s)(&x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5681,10 +5703,10 @@ void DumpProblemToCSource(FILE *fid)
 
     strcpy(tmp,rectproblemName);
     strcat(tmp,(grouptypes[i]).name);rectString(tmp);
-    for(j=0;j<strlen(tmp);j++)upper[j]=toupper(tmp[j]);
-    upper[strlen(tmp)]=0x0;
-    for(j=0;j<strlen(tmp);j++)lower[j]=tolower(tmp[j]);
-    lower[strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)upper[j]=toupper(tmp[j]);
+    upper[(int)strlen(tmp)]=0x0;
+    for(j=0;j<(int)strlen(tmp);j++)lower[j]=tolower(tmp[j]);
+    lower[(int)strlen(tmp)]=0x0;
     fprintf(fid,"  F77_FUNC(gh%s,GH%s)(&x,p,&result);\n",
                       lower,upper);
     fprintf(fid,"  return result;\n");
@@ -5878,7 +5900,7 @@ void rectifyProblemName()
   int i,j;
 
   j=0;
-  for(i=0;i<strlen(problemName);i++)
+  for(i=0;i<(int)strlen(problemName);i++)
    {
     if(isalnum(problemName[i])){rectproblemName[j]=problemName[i];j++;}
    }
@@ -5890,7 +5912,7 @@ void rectString(char *s)
  {
   int i;
 
-  for(i=0;i<strlen(s);i++)
+  for(i=0;i<(int)strlen(s);i++)
     if(!isalnum(s[i]))s[i]='Z';
 
   return;
@@ -5930,7 +5952,7 @@ int findConstraintNumber(char *name)
   fflush(stderr);
   abort();
 
-  return;
+  return -1;
  }
 
 void setLinearElementOfGroup(char *group,int iv,double a)

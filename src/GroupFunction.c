@@ -1,3 +1,8 @@
+/*  (c) COPYRIGHT INTERNATIONAL BUSINESS MACHINES
+    CORPORATION 11/11/1997.  ALL RIGHTS RESERVED.
+
+    Please refer to the LICENSE file in the top directory*/
+
 /*      author: Mike Henderson mhender@watson.ibm.com */
 /*      version: @(#)GroupFunction.c	3.2 02/08/02 14:52:05 */
 /*      date:   November 11, 1997                     */
@@ -44,22 +49,26 @@ int NLEvaluateGroupFunctionSecDerNCalls=0;
 void NLRefGroupFunction(NLGroupFunction this)
  {
   static char RoutineName[]="NLRefGroupFunction";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
   this->nRefs++;
  }
 
 void NLFreeGroupFunction(NLGroupFunction this)
  {
   static char RoutineName[]="NLFreeGroupFunction";
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
 
   this->nRefs--;
 
@@ -109,6 +118,7 @@ double NLGEval(NLGroupFunction G,double x, void *data)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(G==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
@@ -119,6 +129,7 @@ double NLGEval(NLGroupFunction G,double x, void *data)
     sprintf(NLGFuncErrorMsg,"Group Function function is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
 
   if(G->G!=(NLScalarFn)NULL)
    {
@@ -142,11 +153,13 @@ double NLGEvalDer(NLGroupFunction G,double x, void *data)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(G==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
 
   if(G->G!=(NLScalarFn)NULL)
    {
@@ -176,11 +189,13 @@ double NLGEvalSecDer(NLGroupFunction G,double x, void *data)
 
   tin=clock();
 
+#ifndef NL_NOINPUTCHECKS
   if(G==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
   if(G->G!=(NLScalarFn)NULL)
    {
     if(G->ddG==(NLScalarFn)NULL)
@@ -213,11 +228,13 @@ int NLGGetType(NLGroupFunction G)
  {
   static char RoutineName[]="NLGGetType";
 
+#ifndef NL_NOINPUTCHECKS
   if(G==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
    }
+#endif
 
   return(G->type);
  }
@@ -226,12 +243,14 @@ int NLGFAssertPolynomialOrder(NLGroupFunction this,int p)
  {
   static char RoutineName[]="NLGFAssertPolynomialOrder";
 
+#ifndef NL_NOINPUTCHECKS
   if(this==(NLGroupFunction)NULL)
    {
     sprintf(NLGFuncErrorMsg,"Group Function (argument 1) is NULL");
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
     return 12;
    }
+#endif
 
   this->polynomialOrder=p;
   return 0;
@@ -251,6 +270,36 @@ NLGroupFunction NLCreateGroupFunctionByString(NLProblem P, char *type, char *var
   NLGroupFunction result;
   static int verbose=0;
   int n;
+
+#ifndef NL_NOINPUTCHECKS
+  if(P==(NLProblem)NULL)
+   {
+    sprintf(NLGFuncErrorMsg,"Problem (argument 1) is NULL");
+    NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
+    return (NLGroupFunction)NULL;
+   }
+
+  if(type==(char*)NULL)
+   {
+    sprintf(NLGFuncErrorMsg,"type (argument 2) is NULL");
+    NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
+    return (NLGroupFunction)NULL;
+   }
+
+  if(var==(char*)NULL)
+   {
+    sprintf(NLGFuncErrorMsg,"var (argument 3) is NULL");
+    NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
+    return (NLGroupFunction)NULL;
+   }
+
+  if(expr==(char*)NULL)
+   {
+    sprintf(NLGFuncErrorMsg,"expr (argument 4) is NULL");
+    NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
+    return (NLGroupFunction)NULL;
+   }
+#endif
 
   result=(NLGroupFunction)malloc(sizeof(struct NLGrpPartGFn));
   if(result==(NLGroupFunction)NULL)
@@ -275,12 +324,14 @@ NLGroupFunction NLCreateGroupFunctionByString(NLProblem P, char *type, char *var
   strcpy(result->expr,expr);
 
   n=ECFunctionM(result->sG);
+#ifndef NL_NOINPUTCHECKS
   if(ECFunctionN(result->sG)!=1||n!=1)
    {
     sprintf(NLGFuncErrorMsg,"String %s is not a scalar valued function of a scalar.",expr);
     NLSetError(12,RoutineName,NLGFuncErrorMsg,__LINE__,__FILE__);
     return (NLGroupFunction)NULL;
    }
+#endif
 
   result->var=(char*)malloc((strlen(var)+1)*sizeof(char));
   if(result->var==(char*)NULL)

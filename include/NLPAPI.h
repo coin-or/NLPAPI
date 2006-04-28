@@ -32,6 +32,7 @@ struct NLGrpPartMat;
 struct NLGrpPartGFn;
 struct NLGrpPartEFn;
 struct NLLancelotSolver;
+struct NLIpoptSolver;
 
 typedef struct NLGrpPart *NLProblem;
 typedef struct NLGrpPartVec *NLVector;
@@ -41,6 +42,7 @@ typedef struct NLGrpPartEFn *NLElementFunction;
 typedef int NLNonlinearElement;
 typedef struct NLGrpPartNEl *NLNonlinearElementPtr;
 typedef struct NLLancelotSolver *NLLancelot;
+typedef struct NLIpoptSolver *NLIpopt;
 
 #ifdef __cplusplus
  extern "C" {
@@ -353,6 +355,13 @@ char *LNGetScalings(NLLancelot);
 int LNGetJiffyTuneTolerance(NLLancelot,double*);
 int LNSetJiffyTuneTolerance(NLLancelot,double);
 
+/* Ipopt Solver */
+
+NLIpopt NLCreateIpopt();
+void NLFreeIpopt(NLIpopt);
+int IPMinimize(NLIpopt,NLProblem,double*,double*,double*,double*);
+int IPMaximize(NLIpopt,NLProblem,double*,double*,double*,double*);
+void IPAddOption(NLIpopt,char*,double);
 
 int NLGetNErrors();
 int NLGetErrorSev(int);
@@ -596,6 +605,7 @@ int NLPAddEqualityConstraintByString(NLProblem,char*,int,int*,char*,char*);
 int NLPAddInequalityConstraintByString(NLProblem,char*,double,double,int,int*,char*,char*);
 int NLPSetObjectiveByString(NLProblem,char*,int,int*,char*,char*);
 
+void NLSetDontInitGradToZero(int i);
 
 #ifdef __cplusplus
  }
