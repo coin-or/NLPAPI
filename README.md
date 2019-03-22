@@ -22,14 +22,14 @@ More information can be found [here](http://www.coin-or.org/NLPAPI/).
 
 The **very short version of the download and installation instructions** for UNIX-like system (including Linux and Cygwin) is this:
 1. Get the code via subversion using the following command
-  
-     svn co https://projects.coin-or.org/svn/NLPAPI/trunk NLPAPI
+
+       svn co https://projects.coin-or.org/svn/NLPAPI/trunk NLPAPI
 
 2. Go into the downloaded directory and edit the file share/config.site to give local lib and include dirs for LANCELOT. (Last two lines in the file).
 
 3. Run the configuration script
 
-     ./configure
+       ./configure
 
    Make sure the last line of output says that the configuration was successful.
    The `configure` script has many customization features.
@@ -39,11 +39,11 @@ The **very short version of the download and installation instructions** for UNI
 
 4. Compile the code:
 
-      make
+       make
 
 5. Install the generated libraries, executables, and header files:
 
-      make install
+       make install
 
    This will create subdirectories `bin`, `lib`, and `include` in the download directory with the product of the compilation.
 
