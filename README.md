@@ -16,7 +16,6 @@ Once the problem is defined our interface to LANCELOT may be used to create a NL
 
 The source code for NLPAPI is stand-alone.
 If the user wishes to use our LANCELOT interface he must obtain his own copy of [LANCELOT](http://www.numerical.rl.ac.uk/lancelot/blurb.html).
-More information can be found [here](http://www.coin-or.org/NLPAPI/).
 
 ## Download and Installation Instructions
 
@@ -56,5 +55,5 @@ It has been tested on AIX 4.3, AIX5.1, Cygwin, and !RedHat 8.0, but should insta
 
 Source for several examples is included, as well as a SIF decoder which will translate many SIF files (no guarantees!) into C and Fortran source for defining the NLPAPI problem.
 
-Documentation is included in a tex file, or the user may view a pdf version of the [User's Guide](http://www.coin-or.org/NLPAPI/NLPAPI-UG.pdf),
-or the [Programming Reference](http://www.coin-or.org/NLPAPI/NLPAPI-Ref.pdf).
+Documentation is included in a tex file, or the user may view a pdf version of the [User's Guide](Doc/NLPAPI-UG.pdf),
+or the [Programming Reference](Doc/NLPAPI-Ref.pdf).
